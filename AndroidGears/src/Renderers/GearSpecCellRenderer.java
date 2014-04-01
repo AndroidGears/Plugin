@@ -47,7 +47,15 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             //Set image
             BufferedImage image = null;
             try {
-                URL url = new URL("http://www.mkyong.com/image/mypic.jpg");
+                URL url = null;
+
+                if (spec.getIcon() != null){
+                    url = new URL(spec.getIcon());
+                }
+                else {
+                    url = new URL("http://www.mkyong.com/image/mypic.jpg");
+                }
+
                 image = ImageIO.read(url);
                 image = resizeImage(image, 35,35, Image.SCALE_DEFAULT);
             } catch (IOException e) {
@@ -63,6 +71,27 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
         }
         else {
             nameLabel.setText(spec.getName());
+
+            //Set image
+            BufferedImage image = null;
+            try {
+                URL url = null;
+
+                if (spec.getIcon() != null){
+                    url = new URL(spec.getIcon());
+                }
+                else {
+                    url = new URL("http://www.mkyong.com/image/mypic.jpg");
+                }
+
+                image = ImageIO.read(url);
+                image = resizeImage(image, 35,35, Image.SCALE_FAST);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            imageLabel.setIcon(new ImageIcon(image));
         }
 
         if(isSelected) {

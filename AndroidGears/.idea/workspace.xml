@@ -50,11 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ManageAndroidGearsForm.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ManageAndroidGearsForm.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Forms/ManageAndroidGearsForm.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3761062" vertical-offset="1140" max-vertical-offset="2655">
-              <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2655">
+              <caret line="87" column="73" selection-start-line="87" selection-start-column="73" selection-end-line="87" selection-end-column="73" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3006#3317#0" expanded="true" />
@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GearSpecCellRenderer.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="GearSpecCellRenderer.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Renderers/GearSpecCellRenderer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="134" max-vertical-offset="1380">
-              <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5470333" vertical-offset="837" max-vertical-offset="1815">
+              <caret line="81" column="17" selection-start-line="81" selection-start-column="17" selection-end-line="81" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -123,10 +123,10 @@
         <option value="$PROJECT_DIR$/src/Models/GearSpec/GearSpec.java" />
         <option value="$PROJECT_DIR$/src/Models/GearProject/GearProject.java" />
         <option value="$PROJECT_DIR$/src/Utilities/Utils.java" />
-        <option value="$PROJECT_DIR$/src/Renderers/GearSpecCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/Forms/Manage Android Gears.form" />
         <option value="$PROJECT_DIR$/src/Forms/ManageAndroidGearsForm.java" />
         <option value="$PROJECT_DIR$/src/Actions/ManageGearsAction.java" />
+        <option value="$PROJECT_DIR$/src/Renderers/GearSpecCellRenderer.java" />
       </list>
     </option>
   </component>
@@ -572,7 +572,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="21" />
+      <option name="time" value="22" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -766,16 +766,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Renderers/GearSpecCellRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="134" max-vertical-offset="1380">
-          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Actions/ManageGearsAction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="405">
@@ -788,8 +778,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Forms/ManageAndroidGearsForm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3761062" vertical-offset="1140" max-vertical-offset="2655">
-          <caret line="93" column="0" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2655">
+          <caret line="87" column="73" selection-start-line="87" selection-start-column="73" selection-end-line="87" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3006#3317#0" expanded="true" />
@@ -797,6 +787,16 @@
             <element signature="e#3883#4340#0" expanded="true" />
             <element signature="e#4329#4330#0" expanded="true" />
             <element signature="e#4632#4642#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Renderers/GearSpecCellRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5470333" vertical-offset="837" max-vertical-offset="1815">
+          <caret line="81" column="17" selection-start-line="81" selection-start-column="17" selection-end-line="81" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
