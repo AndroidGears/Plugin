@@ -1,8 +1,7 @@
 import com.intellij.openapi.components.ApplicationComponent;
-import org.eclipse.jgit.api.CloneCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PullCommand;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.FetchResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -20,25 +19,22 @@ public class GitComponent implements ApplicationComponent {
 
     public void initComponent() {
 
+
         //Setup file
         File androidGearsDirectory = null;
 
         //Setup file
         if (OSValidator.isWindows()) {
-            androidGearsDirectory = new File("C:\\AndroidGears"); //C drive
+            androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"); //C drive
         } else if (OSValidator.isMac()) {
-            androidGearsDirectory = new File("~"); //Home folder
+            androidGearsDirectory = new File(System.getProperty("user.home")+"/.androidgears"); //Home folder
         } else if (OSValidator.isUnix()) {
-            androidGearsDirectory = new File("~/AndroidGears"); //Home folder
+            androidGearsDirectory = new File("~/.androidgears"); //Home folder
         } else if (OSValidator.isSolaris()) {
             androidGearsDirectory = new File("~/AndroidGears");//Home folder
         } else {
             androidGearsDirectory = new File("~/AndroidGears");//Home folder
         }
-
-        //Create path with AndroidGears folder in home directory
-        String slash = (OSValidator.isWindows()) ? "\\" : "/";
-        androidGearsDirectory = new File(System.getProperty("user.home")+slash+"AndroidGears");
 
         //Pull changes or clone repo
         if(androidGearsDirectory.exists()){
@@ -77,11 +73,22 @@ public class GitComponent implements ApplicationComponent {
 
     private void pullChanges(File androidGearsDirectory){
         try {
-            Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+".git"));
-            git.pull();
+            Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+"/.git"));
+            git.pull().call();
+
+            /*
+            PullCommand pullCmd = git.pull();
+
+            PullResult result = pullCmd.call();
+            FetchResult fetchResult = result.getFetchResult();
+            MergeResult mergeResult = result.getMergeResult();
+            mergeResult.getMergeStatus();  // this should be interesting*/
         }
         catch (IOException exception){
-            cloneRepository(androidGearsDirectory);
+            //cloneRepository(androidGearsDirectory);
+        }
+        catch (GitAPIException exception){
+
         }
     }
 }
