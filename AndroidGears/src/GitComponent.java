@@ -1,7 +1,7 @@
+import Utilities.OSValidator;
 import com.intellij.openapi.components.ApplicationComponent;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.transport.FetchResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
