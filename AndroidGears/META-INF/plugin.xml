@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-  <id>com.github.androidgears.plugin2</id>
+  <id>com.github.androidgears.plugin3</id>
   <name>Android Gears</name>
   <version>1.0.0</version>
   <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
