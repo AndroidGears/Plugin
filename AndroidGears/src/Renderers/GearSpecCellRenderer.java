@@ -57,7 +57,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
                 }
 
                 image = ImageIO.read(url);
-                image = resizeImage(image, 35,35, Image.SCALE_DEFAULT);
+                image = resizeImage(image, 35,35, Image.SCALE_FAST);
             } catch (IOException e) {
                 e.printStackTrace();
             }
