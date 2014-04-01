@@ -29,6 +29,7 @@
 
   <application-components>
     <!-- Add your application components here -->
+
       <component>
           <implementation-class>GitComponent</implementation-class>
       </component>
