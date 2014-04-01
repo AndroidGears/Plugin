@@ -12,7 +12,7 @@ import java.awt.*;
  */
 public class ManageGearsAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
-        JFrame frame = new JFrame("ManageAndroidGearsForm");
+        JFrame frame = new JFrame("Manage Android Gears");
         frame.setContentPane(new ManageAndroidGearsForm().MasterPanel);
         frame.pack();
         frame.setLocationRelativeTo(null);
