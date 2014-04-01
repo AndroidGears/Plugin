@@ -1,8 +1,8 @@
 <idea-plugin version="2">
   <id>com.github.androidgears</id>
   <name>Android Gears</name>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">Android Gears</vendor>
+  <version>1.0.0</version>
+  <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
 
   <description><![CDATA[
       Android dependency management made simple

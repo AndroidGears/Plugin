@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class GitComponent implements ApplicationComponent {
 
-    private String REMOTE_SPECS_URL = "";
+    private String REMOTE_SPECS_URL = "https://github.com/AndroidGears/Specs.git";
 
     public GitComponent() {
     }
@@ -27,7 +27,7 @@ public class GitComponent implements ApplicationComponent {
         if (OSValidator.isWindows()) {
             androidGearsDirectory = new File("C:\\AndroidGears"); //C drive
         } else if (OSValidator.isMac()) {
-            androidGearsDirectory = new File("~/AndroidGears"); //Home folder
+            androidGearsDirectory = new File("~"); //Home folder
         } else if (OSValidator.isUnix()) {
             androidGearsDirectory = new File("~/AndroidGears"); //Home folder
         } else if (OSValidator.isSolaris()) {
@@ -36,11 +36,16 @@ public class GitComponent implements ApplicationComponent {
             androidGearsDirectory = new File("~/AndroidGears");//Home folder
         }
 
+        //Create path with AndroidGears folder in home directory
+        String slash = (OSValidator.isWindows()) ? "\\" : "/";
+        androidGearsDirectory = new File(System.getProperty("user.home")+slash+"AndroidGears");
+
         //Pull changes or clone repo
         if(androidGearsDirectory.exists()){
             pullChanges(androidGearsDirectory);
         }
         else {
+            androidGearsDirectory.mkdir();
             cloneRepository(androidGearsDirectory);
         }
     }
