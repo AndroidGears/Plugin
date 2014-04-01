@@ -1,20 +1,28 @@
 package Forms;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Utilities;
+import java.awt.event.*;
 import java.io.File;
-import java.io.FilenameFilter;
 
+import Renderers.GearSpecCellRenderer;
+import Utilities.Utils;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+
+import Models.GearSpec.GearSpec;
 import Utilities.OSValidator;
+import com.google.gson.Gson;
 
 /**
  * Created by matthewyork on 4/1/14.
  */
 public class ManageAndroidGearsForm{
-    private JTextField searchAndroidGearsTextField;
+    File androidGearsDirectory;
+    private ArrayList<GearSpec> projects;
+
+    private JTextField SearchTextField;
     private JTabbedPane tabbedPane1;
     private JEditorPane editorPane1;
     private JButton doneButton;
@@ -22,7 +30,8 @@ public class ManageAndroidGearsForm{
     private JPanel SearchPanel;
     private JPanel ReadmePanel;
     private JPanel DetailsPanel;
-    private JTable InstalledTable;
+    private JList SearchList;
+    private JList InstalledList;
     private JTable SearchTable;
 
     private void createUIComponents() {
@@ -31,13 +40,11 @@ public class ManageAndroidGearsForm{
 
     public ManageAndroidGearsForm() {
         setupSearchTable();
+        setupSearchTextField();
         setupDoneButton();
     }
 
     private void setupSearchTable() {
-        //Setup file
-        File androidGearsDirectory = null;
-
         //Setup file
         if (OSValidator.isWindows()) {
             androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"); //C drive
@@ -51,7 +58,42 @@ public class ManageAndroidGearsForm{
             androidGearsDirectory = new File("~/AndroidGears");//Home folder
         }
 
-        String[] directories = projectsList(androidGearsDirectory);
+        //Add directories model
+        projects = projectsList(androidGearsDirectory, "");
+
+    }
+
+    private void setupSearchTextField() {
+        SearchTextField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                //Get pressed character
+                char c = keyEvent.getKeyChar();
+
+                //Build searchString
+                String searchString = SearchTextField.getText();
+                if(c == 8 && searchString.length() > 0){
+                    searchString = SearchTextField.getText().substring(0, searchString.length()-1);
+                }
+                else {
+                    searchString = SearchTextField.getText()+keyEvent.getKeyChar();
+                }
+
+                //Get projects and reload
+                projects = projectsList(androidGearsDirectory, searchString);
+                reloadList();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+
+            }
+        });
     }
 
     private void setupDoneButton(){
@@ -64,15 +106,66 @@ public class ManageAndroidGearsForm{
         });
     }
 
-    private String[] projectsList(File androidGearsDirectory){
-        return  androidGearsDirectory.list(new FilenameFilter() {
+    private void reloadList(){
+        SearchList.setListData(projects.toArray());
+        SearchList.setCellRenderer(new GearSpecCellRenderer());
+        SearchList.setVisibleRowCount(projects.size());
+
+    }
+
+    private ArrayList<GearSpec> projectsList(File androidGearsDirectory, final String searchString){
+        //Check for empty search string
+        if(searchString.equals("")){
+            return new ArrayList<GearSpec>();
+        }
+
+        //If there is a searchstring, get matches!
+        String directories[] =  androidGearsDirectory.list(new FilenameFilter() {
             @Override
             public boolean accept(File file, String name) {
-                if(name.contains(".")){
+                if(name.contains(".")){ //No hidden folders!
                     return  false;
                 }
-                return new File(file, name).isDirectory();
+                else if (name.toLowerCase().contains(searchString.toLowerCase())){ //Accept only those that match your search string
+                    return true;
+                }
+
+                return false;
             }
         });
+
+        //Create gson instance for use in parsing specs
+        Gson gson = new Gson();
+
+        //Get path separator
+        String pathSeparator = (OSValidator.isWindows()) ? "\\":"/";
+
+        //Create and populate projects array
+        ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
+        for (String directory : directories){
+            //Get versions for spec
+            String[] versions = versionsForProject(directory, pathSeparator);
+
+            //Build spec location
+            File specFile = new File(androidGearsDirectory.getAbsolutePath()+pathSeparator+directory+pathSeparator+versions[versions.length-1]+pathSeparator+directory+".gearspec");
+
+            //Read file
+            String specString = Utils.stringFromFile(specFile);
+
+            //Get spec
+            GearSpec spec = gson.fromJson(specString, GearSpec.class);
+
+            //Create project and add to project list
+            projectList.add(spec);
+        }
+
+        return projectList;
     }
+
+    private String[] versionsForProject(String project, String pathSeparator){
+        File versionsDirectory = new File(androidGearsDirectory.getAbsolutePath()+pathSeparator+project);
+        return versionsDirectory.list();
+    }
+
+
 }
