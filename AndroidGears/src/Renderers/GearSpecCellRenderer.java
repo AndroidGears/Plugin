@@ -44,6 +44,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             nameLabel = new JLabel(spec.getName(), JLabel.LEFT);
             nameLabel.setFont(new Font(nameLabel.getFont().getName(), Font.PLAIN, 18));
 
+            /*
             //Set image
             BufferedImage image = null;
             try {
@@ -66,12 +67,13 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             imageLabel = new JLabel(new ImageIcon(image));
 
             //Add components
-            this.add(imageLabel);
+            this.add(imageLabel);*/
             this.add(nameLabel);
         }
         else {
             nameLabel.setText(spec.getName());
 
+            /*
             //Set image
             BufferedImage image = null;
             try {
@@ -91,7 +93,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             }
 
 
-            imageLabel.setIcon(new ImageIcon(image));
+            imageLabel.setIcon(new ImageIcon(image));*/
         }
 
         if(isSelected) {

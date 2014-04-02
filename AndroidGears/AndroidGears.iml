@@ -19,6 +19,51 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/js.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/lobo.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/cobra-no-commons.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/javafx-swing.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/javafxc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/javafxgui.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/javafxrt.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jmc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jweb-ext.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/primary.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Scenario.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/websvc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/libs/javafxgui.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="lobo-pub" level="project" />
+    <orderEntry type="library" name="cssbox-4.5" level="project" />
+    <orderEntry type="library" name="antlr-runtime-3.1" level="project" />
+    <orderEntry type="library" name="swingbox-1.0" level="project" />
+    <orderEntry type="library" name="cssbox-4.5 (2)" level="project" />
+    <orderEntry type="library" name="antlr-2.7.7" level="project" />
+    <orderEntry type="library" name="swingbox-1.0-bin" level="project" />
   </component>
 </module>
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="lobo-pub">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/lobo-pub.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
