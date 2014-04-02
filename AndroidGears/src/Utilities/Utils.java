@@ -37,4 +37,8 @@ public class Utils {
 
         return sb.toString();
     }
+
+    public static String wrappedStringForString(String inputString, int wrapWidth){
+        return String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 190, inputString);
+    }
 }
