@@ -41,11 +41,25 @@
 
   <actions>
     <!-- Add your actions here -->
-      <action id="AndroidGears.ManageAction" class="Actions.ManageGearsAction" text="Manage _Android Gears"
-              description="Add, edit and remove android gear dependencies">
+
+      <group id="AndroidGears.Menu" text="Android Gears" description="AndroidGears" popup="true">
+          <separator/>
           <add-to-group group-id="ToolsMenu" anchor="after"
                         relative-to-action="org.jetbrains.plugins.terminal.OpenLocalTerminalAction"/>
-      </action>
+
+          <action id="AndroidGears.ManageAction" class="Actions.ManageGearsAction" text="Manage _Android Gears"
+                  description="Add, edit and remove android gear dependencies" >
+          </action>
+
+          <action id="AndroidGears.CreateGearAction" class="Actions.CreateGearAction" text="Create Gear"
+                  description="Form for creating an Android Gear">
+          </action>
+
+
+      </group>
+
+
+
   </actions>
 
 </idea-plugin>

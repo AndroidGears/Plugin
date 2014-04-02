@@ -5,22 +5,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.io.*;
-
 import Panels.SpecDetailsPanel;
 import Renderers.GearSpecCellRenderer;
 import Utilities.Utils;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
 import Models.GearSpec.GearSpec;
-import Utilities.OSValidator;
 import Workers.GitWorker;
 import Workers.SearchProjectListWorker;
-import com.google.gson.Gson;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.fit.cssbox.swingbox.BrowserPane;
 
 /**
@@ -203,6 +196,13 @@ public class ManageAndroidGearsForm{
                 ReadmeScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 ReadmeScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             }
+
+            /*
+            try {
+                swingbox.setPage(fetchUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
         }
 
         //Set panel in scrollpane
