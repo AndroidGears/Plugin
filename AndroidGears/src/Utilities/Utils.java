@@ -59,4 +59,9 @@ public class Utils {
 
         return androidGearsDirectory;
     }
+
+    public static String pathSeparator(){
+        return (OSValidator.isWindows()) ? "\\":"/";
+    }
+
 }
