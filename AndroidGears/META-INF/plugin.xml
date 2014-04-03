@@ -55,7 +55,9 @@
                   description="Form for creating an Android Gear">
           </action>
 
-
+          <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Android Gear"
+                  description="Takes in a .gearspec file and lints it to make sure it is valid.">
+          </action>
       </group>
 
 
