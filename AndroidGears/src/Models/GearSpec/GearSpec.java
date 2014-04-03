@@ -8,8 +8,10 @@ import java.util.ArrayList;
 public class GearSpec {
     private String name;
     private String summary;
+    private String release_notes;
     private String version;
     private String type;
+    private String copyright;
     private String homepage;
     private String icon;
     private String license;
@@ -17,6 +19,7 @@ public class GearSpec {
     private int minimum_api;
     private GearSpecSource source;
     private ArrayList<GearSpecDependency> dependencies;
+    private ArrayList<String> tags;
 
     public String getName() {
         return name;
@@ -34,6 +37,14 @@ public class GearSpec {
         this.summary = summary;
     }
 
+    public String getRelease_notes() {
+        return release_notes;
+    }
+
+    public void setRelease_notes(String release_notes) {
+        this.release_notes = release_notes;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -48,6 +59,14 @@ public class GearSpec {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
     }
 
     public String getHomepage() {
@@ -104,5 +123,13 @@ public class GearSpec {
 
     public void setDependencies(ArrayList<GearSpecDependency> dependencies) {
         this.dependencies = dependencies;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 }
