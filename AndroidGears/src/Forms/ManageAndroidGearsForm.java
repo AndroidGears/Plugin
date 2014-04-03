@@ -11,6 +11,7 @@ import Renderers.GearSpecCellRenderer;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import Models.GearSpec.GearSpec;
@@ -18,37 +19,34 @@ import Workers.GetProjectVersionsWorker;
 import Workers.GitWorker;
 import Workers.SearchProjectListWorker;
 import com.google.gson.Gson;
-import org.fit.cssbox.swingbox.BrowserPane;
 
 /**
  * Created by matthewyork on 4/1/14.
  */
 public class ManageAndroidGearsForm{
-    public static final int DETAILS_INNER_WIDTH = 240;
+    public static final int DETAILS_INNER_WIDTH = 320;
 
     File androidGearsDirectory;
     private GearSpec selectedSpec;
     private ArrayList<GearSpec> searchProjects;
     private ArrayList<GearSpec> installedProjects;
     private ArrayList<String> projectVersions;
-    private BrowserPane swingbox;
 
     private JTextField SearchTextField;
     private JTabbedPane tabbedPane1;
     private JButton doneButton;
     public JPanel MasterPanel;
     private JPanel SearchPanel;
-    private JPanel ReadmePanel;
     private JPanel DetailsPanel;
     private JList SearchList;
     private JList InstalledList;
     private JScrollPane DetailsScrollPane;
-    private JScrollPane ReadmeScrollPane;
     private JButton SyncButton;
     private JLabel StatusLabel;
     private JList VersionsList;
     private JLabel ChangeVersionsLabel;
     private JButton InstallUninstallButton;
+    private JButton OpenInBrowserButton;
     private JTable SearchTable;
 
     private void createUIComponents() {
@@ -166,7 +164,19 @@ public class ManageAndroidGearsForm{
             }
         });
 
+        //Install/Uninstall button
         InstallUninstallButton.setVisible(false);
+
+        //Show homepage button
+        OpenInBrowserButton.setVisible(false);
+
+        //Show in browser
+        OpenInBrowserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                openSpecHomePageInBrowser();
+            }
+        });
     }
 
     private void setupMiscUI() {
@@ -214,33 +224,6 @@ public class ManageAndroidGearsForm{
 
         SpecDetailsPanel specDetailsPanel = new SpecDetailsPanel(selectedSpec);
 
-        if(selectedSpec.getHomepage() != null){
-            //Fetch page/readme
-            String fetchUrl = selectedSpec.getHomepage();
-            Boolean isGithub = false;
-            if (selectedSpec.getHomepage().contains("github.com")) {
-                isGithub = true;
-                fetchUrl = fetchUrl + "/blob/master/README.md";
-            }
-
-            final String url = fetchUrl;
-
-            if(swingbox == null){
-                swingbox = new BrowserPane();
-                ReadmeScrollPane.setViewportView(swingbox);
-                ReadmeScrollPane.revalidate();
-                ReadmeScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-                ReadmeScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            }
-
-            /*
-            try {
-                swingbox.setPage(fetchUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-        }
-
         //Set panel in scrollpane
         DetailsScrollPane.setViewportView(specDetailsPanel);
         DetailsScrollPane.revalidate();
@@ -252,6 +235,9 @@ public class ManageAndroidGearsForm{
         //Set install/uninstall button
         //CHECK HERE FOR INSTALLATION STATUS
         InstallUninstallButton.setVisible(true);
+
+        //Enable show homepage button again
+        OpenInBrowserButton.setVisible(true);
     }
 
     private void getVersionDetailsForSepc(){
@@ -305,6 +291,24 @@ public class ManageAndroidGearsForm{
         }
     }
 
+    ///////////////////////
+    // Website loading
+    ///////////////////////
+    private void openSpecHomePageInBrowser(){
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                if (selectedSpec.getHomepage().contains("github.com")){
+                    desktop.browse(URI.create(selectedSpec.getHomepage()+"/tree/"+selectedSpec.getSource().getTag()));
+                }
+                else {
+                    desktop.browse(URI.create(selectedSpec.getHomepage()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
 
