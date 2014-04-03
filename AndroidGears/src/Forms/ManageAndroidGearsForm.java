@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import Models.GearSpec.GearSpec;
 import Workers.GetProjectVersionsWorker;
+import Workers.GetSpecIconWorker;
 import Workers.GitWorker;
 import Workers.SearchProjectListWorker;
 import com.google.gson.Gson;
@@ -47,6 +48,7 @@ public class ManageAndroidGearsForm{
     private JLabel ChangeVersionsLabel;
     private JButton InstallUninstallButton;
     private JButton OpenInBrowserButton;
+    private JLabel IconLabel;
     private JTable SearchTable;
 
     private void createUIComponents() {
@@ -238,6 +240,18 @@ public class ManageAndroidGearsForm{
 
         //Enable show homepage button again
         OpenInBrowserButton.setVisible(true);
+
+        //Set icon
+        GetSpecIconWorker worker = new GetSpecIconWorker(spec.getIcon()){
+            @Override
+            protected void done() {
+                super.done();
+
+                IconLabel.setIcon(this.icon);
+            }
+        };
+        worker.run();
+
     }
 
     private void getVersionDetailsForSepc(){
