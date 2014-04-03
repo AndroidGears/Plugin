@@ -20,7 +20,7 @@ public class SpecDetailsPanel extends JPanel{
 
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setSize(200, -1);
+
 
         //Add repo name
         JLabel nameLabel = new JLabel(selectedSpec.getName(), JLabel.LEFT);
@@ -32,11 +32,24 @@ public class SpecDetailsPanel extends JPanel{
         versionLabel.setFont(new Font(versionLabel.getFont().getName(), Font.BOLD, 12));
         this.add(versionLabel);
 
-        //Add repo name
+        //Add summary
         if (selectedSpec.getSummary() != null) {
             JLabel summaryLabel = new JLabel(Utils.wrappedStringForString(selectedSpec.getSummary(), ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
             summaryLabel.setFont(new Font(summaryLabel.getFont().getName(), Font.PLAIN, 12));
             this.add(summaryLabel);
+        }
+
+        //Add authors
+        if (selectedSpec.getRelease_notes() != null) {
+            //Add header
+            JLabel header = new JLabel(Utils.wrappedStringForString("<br/>"+selectedSpec.getVersion()+" - Release Notes", ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            header.setFont(new Font(header.getFont().getName(), Font.BOLD, 12));
+            this.add(header);
+
+            //Add release notes
+            JLabel releaseNotesLabel = new JLabel(Utils.wrappedStringForString(selectedSpec.getRelease_notes(), ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            releaseNotesLabel.setFont(new Font(releaseNotesLabel.getFont().getName(), Font.PLAIN, 12));
+            this.add(releaseNotesLabel);
         }
 
         //Add authors
@@ -76,10 +89,23 @@ public class SpecDetailsPanel extends JPanel{
             header.setFont(new Font(header.getFont().getName(), Font.BOLD, 12));
             this.add(header);
 
-            //Add authors header
+            //Add license
             JLabel licenseLabel = new JLabel(selectedSpec.getLicense(), JLabel.LEFT);
             licenseLabel.setFont(new Font(licenseLabel.getFont().getName(), Font.PLAIN, 12));
             this.add(licenseLabel);
+        }
+
+        //Add Copyright
+        if (selectedSpec.getCopyright() != null) {
+            //Add header
+            JLabel header = new JLabel(Utils.wrappedStringForString("<br/>Copyright", ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            header.setFont(new Font(header.getFont().getName(), Font.BOLD, 12));
+            this.add(header);
+
+            //Add copyright
+            JLabel copyrightLabel = new JLabel(selectedSpec.getCopyright(), JLabel.LEFT);
+            copyrightLabel.setFont(new Font(copyrightLabel.getFont().getName(), Font.PLAIN, 12));
+            this.add(copyrightLabel);
         }
 
         //Add homepage
@@ -95,6 +121,28 @@ public class SpecDetailsPanel extends JPanel{
             this.add(homepageLabel);
 
 
+        }
+
+        //Add Tags
+        if (selectedSpec.getTags() != null) {
+            //Add header
+            JLabel header = new JLabel(Utils.wrappedStringForString("<br/>Tags", ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            header.setFont(new Font(header.getFont().getName(), Font.BOLD, 12));
+            this.add(header);
+
+            //Gather tags
+            String tagsString = "";
+            for (String tag : selectedSpec.getTags()) {
+                tagsString = tagsString+tag+", ";
+            }
+            if (tagsString.length() > 2){
+                tagsString = tagsString.substring(0, tagsString.length()-2);
+            }
+
+            //Create tags label
+            JLabel tagsLabel = new JLabel(Utils.wrappedStringForString(tagsString, ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            tagsLabel.setFont(new Font(tagsLabel.getFont().getName(), Font.PLAIN, 12));
+            this.add(tagsLabel);
         }
 
     }

@@ -1,6 +1,7 @@
 package Workers;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecAuthor;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import com.google.gson.Gson;
@@ -37,6 +38,12 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
             return new ArrayList<GearSpec>();
         }
 
+        //Create gson instance for use in parsing specs
+        final Gson gson = new Gson();
+
+        //Get path separator
+        final String pathSeparator = (OSValidator.isWindows()) ? "\\":"/";
+
         //If there is a searchstring, get matches!
         String directories[] =  androidGearsDirectory.list(new FilenameFilter() {
             @Override
@@ -44,19 +51,46 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 if(name.contains(".")){ //No hidden folders!
                     return  false;
                 }
+                else if (!(new File(file.getAbsolutePath()+pathSeparator+name).isDirectory())){
+                    return false;
+                }
                 else if (name.toLowerCase().contains(searchString.toLowerCase())){ //Accept only those that match your search string
                     return true;
+                }
+
+
+                //Get versions for spec
+                String[] versions = versionsForProject(name, pathSeparator);
+
+                //Build spec location
+                File specFile = new File(Utils.androidGearsDirectory()+pathSeparator+name+pathSeparator+versions[versions.length-1]+pathSeparator+name+".gearspec");
+
+                if(specFile.exists()) {
+                    String specString = Utils.stringFromFile(specFile);
+
+                    //Get spec
+                    GearSpec spec = gson.fromJson(specString, GearSpec.class);
+
+                    //Gather tags
+                    String filterString = "";
+                    for (String tag : spec.getTags()) {
+                        filterString = filterString+tag.toLowerCase()+" ";
+                    }
+
+                    //Gather authors
+                    for (GearSpecAuthor author : spec.getAuthors()) {
+                        filterString = filterString+author.getName().toLowerCase()+" ";
+                    }
+
+                    //Filter with the search string over spec metadata
+                    if(filterString.contains(searchString.toLowerCase())){
+                        return true;
+                    }
                 }
 
                 return false;
             }
         });
-
-        //Create gson instance for use in parsing specs
-        Gson gson = new Gson();
-
-        //Get path separator
-        String pathSeparator = (OSValidator.isWindows()) ? "\\":"/";
 
         //Create and populate searchProjects array
         ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
