@@ -8,6 +8,12 @@ public class GearSpecSource {
     private String tag;
     private String source_files;
 
+    public GearSpecSource(String source_files, String url, String tag) {
+        this.source_files = source_files;
+        this.url = url;
+        this.tag = tag;
+    }
+
     public String getUrl() {
         return url;
     }

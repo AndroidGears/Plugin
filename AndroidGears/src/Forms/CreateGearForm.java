@@ -1,16 +1,15 @@
 package Forms;
 
 import CustomPanel.ImagePanel;
+import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecAuthor;
+import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by matthewyork on 4/2/14.
@@ -23,7 +22,7 @@ public class CreateGearForm {
     private JTextField txtProjectVersion;
     private JTextField txtSourceURL;
     private JTextField txtSourceLibLocation;
-    private JTextField textField1;
+    private JTextField txtLibraryTag;
     private JTextField txtAuthorName;
     private JTextField txtAuthorEmail;
     private JButton btnAddAuthor;
@@ -33,11 +32,109 @@ public class CreateGearForm {
     private JTextArea txtProjectSummary;
     private JButton btnCreateAndroidGearSpec;
     private Gson gson;
+    private GearSpec newSpec;
 
 
     public CreateGearForm() {
         this.gson = new Gson();
         initImageURLPanel();
+        initButtons();
+    }
+
+    private void initButtons() {
+        btnCreateAndroidGearSpec.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                newSpec = CreateNewGearSpec(newSpec);
+                System.out.print(gson.toJson(newSpec));
+            }
+        });
+    }
+
+    private GearSpec CreateNewGearSpec(GearSpec newSpec) {
+        newSpec = new GearSpec();
+        if(!txtProgectName.getText().isEmpty())
+            newSpec.setName(txtProgectName.getText());
+
+        if(!txtProjectMinSDK.getText().isEmpty())//TODO Also create a interger only check
+            newSpec.setMinimum_api(Integer.parseInt(txtProjectMinSDK.getText()));
+
+        if(!txtProjectVersion.getText().isEmpty())
+            newSpec.setVersion(txtProjectVersion.getText());
+
+        if(!txtProjectTags.getText().isEmpty())
+            newSpec.setTags(ParseStringWithCommas(txtProjectTags.getText()));
+
+        if(!txtImageURL.getText().isEmpty())// TODO check for valid url
+            newSpec.setIcon(txtImageURL.getText());
+
+        if(!txtLibraryTag.getText().isEmpty() && !txtSourceLibLocation.getText().isEmpty() && !txtSourceURL.getText().isEmpty())//TODO check for all 3 urls and file paths source must end with .git
+            newSpec.setSource(new GearSpecSource(txtSourceURL.getText(),txtSourceLibLocation.getText(),txtLibraryTag.getText()));
+
+        if(!txtAuthorName.getText().isEmpty()&&!txtAuthorEmail.getText().isEmpty())
+            newSpec.setAuthors(CreateAuthorsArray());
+
+        if(!txtProjectSummary.getText().isEmpty())
+            newSpec.setSummary(txtProjectSummary.getText());
+
+        newSpec.setRelease_notes("Nothing to see here.");
+        newSpec.setType("jar");
+        newSpec.setCopyright("That Other Guy 2014");
+        newSpec.setHomepage("www.google.com");
+
+        return newSpec;
+    }
+
+
+
+    private ArrayList<GearSpecAuthor> CreateAuthorsArray() {
+        ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
+        authors.add(new GearSpecAuthor(txtAuthorName.getText(),txtAuthorEmail.getText()));
+        return authors;
+    }
+
+    //TODO Create checks.
+    private ArrayList<String> ParseStringWithCommas(String text) {
+        String[] Strings = text.split(",");
+        ArrayList<String> temp = new ArrayList<String>();
+        for(int i = 0 ; i < Strings.length; i++){
+            //Check for Spaces in front of the String.
+            Strings[i] = RemovePrecedingSpaces(Strings[i]);
+            //Check for Spaces at end of String.
+            Strings[i] = RemoveSpacesAtEnd(Strings[i]);
+            //Is empty check
+            if(!Strings[i].isEmpty()){
+                temp.add(Strings[i]);
+            }
+        }
+        return temp;
+    }
+    //TODO Check if valid
+
+    /**
+     * Checks for spaces at the end of the string and recursively calls itself until the deed is finished
+     * @param string String spaces are checked on
+     * @return
+     */
+    private String RemovePrecedingSpaces(String string) {
+        if(string.startsWith(" ")){
+            string = string.substring(1);
+            RemovePrecedingSpaces(string);
+        }
+        return string;
+    }
+    //TODO Check if valid
+    /**
+     * Checks for spaces in front of the string and recursively calls itself until the deed is finished
+     * @param string String spaces are checked on
+     * @return
+     */
+    private String RemoveSpacesAtEnd(String string) {
+        if(string.endsWith(" ")){
+            string = string.substring(0,string.length()-1);
+            RemoveSpacesAtEnd(string);
+        }
+        return string;
     }
 
     private void initImageURLPanel() {
