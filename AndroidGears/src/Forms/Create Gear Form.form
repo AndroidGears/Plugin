@@ -320,7 +320,7 @@
           </component>
           <scrollpane id="95486">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="50"/>
                 <preferred-size width="-1" height="50"/>
                 <maximum-size width="-1" height="50"/>
@@ -331,7 +331,9 @@
             <children>
               <component id="fb8b1" class="javax.swing.JTable" binding="authorsTable">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <toolTipText value="All Authors that contributed to Library"/>
+                </properties>
               </component>
             </children>
           </scrollpane>
@@ -366,7 +368,9 @@
             <children>
               <component id="9c873" class="javax.swing.JTable" binding="dependencyTable">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <toolTipText value="All library depencencies that are need to make this Library work"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

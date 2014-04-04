@@ -5,8 +5,10 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
+import com.thaiopensource.xml.dtd.om.Def;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -40,12 +42,38 @@ public class CreateGearForm {
     private JTextField txtCopyRight;
     private Gson gson;
     private GearSpec newSpec;
+    private static final String authorTableColumns[] = {"Authors Name", "Email"};
+    private static final String dependencyTableColumns[] = {"Authors Name", "Email"};
 
 
     public CreateGearForm() {
         this.gson = new Gson();
         initImageURLPanel();
+        initAuthorTable();
         initButtons();
+    }
+
+    private void initAuthorTable() {
+        ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
+        DefaultTableModel model = (DefaultTableModel) authorsTable.getModel();
+        model.addColumn("Author's Name");
+        model.addColumn("Author's Email");
+        authors.add(new GearSpecAuthor("Aaron","adfleshner@gmail.com"));
+        authors.add(new GearSpecAuthor("Matt","my3681@gmail.com"));
+        authors.add(new GearSpecAuthor("Matt","my3681@gmail.com"));
+        authors.add(new GearSpecAuthor("Matt","my3681@gmail.com"));
+        authors.add(new GearSpecAuthor("Matt","my3681@gmail.com"));
+        AddAllNewAuthors(authors,model);
+    }
+
+    private void AddAllNewAuthors(ArrayList<GearSpecAuthor> authors,DefaultTableModel model){
+        for (GearSpecAuthor author : authors) {
+            AddNewAuthor(author,model);
+        }
+    }
+
+    private void AddNewAuthor(GearSpecAuthor gearSpecAuthor,DefaultTableModel model) {
+      model.addRow(new Object[]{gearSpecAuthor.getName(),gearSpecAuthor.getEmail()});
     }
 
     private void initButtons() {
