@@ -24,8 +24,4 @@ public class LintGearSpecWorker extends SwingWorker<Void, String> {
         result = GearSpecLinter.lintSpec(this.spec, this);
         return null;
     }
-
-    public void update(String update){
-        this.publish(update);
-    }
 }
