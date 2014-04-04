@@ -53,12 +53,6 @@ public class GearSpecLinter {
                 failureReasons.add("Spec must have a homepage. If the project is hosted on github, use the projects github page (http://github.com/username/projectname)");
             }
 
-            //Check for icon type
-            if (existsAndNotBlank(spec.getIcon())){
-                if (!spec.getIcon().toLowerCase().contains(".png") && !spec.getIcon().toLowerCase().contains(".jpeg") && !spec.getIcon().toLowerCase().contains(".jpg"))
-                    failureReasons.add("Spec image must be a .png, .jpeg or .jpg. Preferred size is 50x50 pixels.");
-            }
-
             //Check authors
             checkAuthors(spec, failureReasons);
 

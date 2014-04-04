@@ -2,12 +2,9 @@ package Renderers;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
-import Workers.GetSpecIconWorker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 /**
  * Created by matthewyork on 4/1/14.

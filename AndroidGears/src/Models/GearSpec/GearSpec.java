@@ -13,7 +13,6 @@ public class GearSpec {
     private String type;
     private String copyright;
     private String homepage;
-    private String icon;
     private String license;
     private ArrayList<GearSpecAuthor> authors;
     private int minimum_api;
@@ -75,14 +74,6 @@ public class GearSpec {
 
     public void setHomepage(String homepage) {
         this.homepage = homepage;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getLicense() {
