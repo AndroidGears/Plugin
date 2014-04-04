@@ -31,6 +31,13 @@ public class CreateGearForm {
     private JPanel imgProjectIcon;
     private JTextArea txtProjectSummary;
     private JButton btnCreateAndroidGearSpec;
+    private JTable authorsTable;
+    private JTable dependencyTable;
+    private JTextArea txtReleaseNotes;
+    private JTextField txtHomePage;
+    private JTextField txtLicense;
+    private JTextField txtLibraryType;
+    private JTextField txtCopyRight;
     private Gson gson;
     private GearSpec newSpec;
 
@@ -65,8 +72,8 @@ public class CreateGearForm {
         if(!txtProjectTags.getText().isEmpty())
             newSpec.setTags(ParseStringWithCommas(txtProjectTags.getText()));
 
-        if(!txtImageURL.getText().isEmpty())// TODO check for valid url
-            newSpec.setIcon(txtImageURL.getText());
+//        if(!txtImageURL.getText().isEmpty())// TODO check for valid url
+//            newSpec.setIcon(txtImageURL.getText());
 
         if(!txtLibraryTag.getText().isEmpty() && !txtSourceLibLocation.getText().isEmpty() && !txtSourceURL.getText().isEmpty())//TODO check for all 3 urls and file paths source must end with .git
             newSpec.setSource(new GearSpecSource(txtSourceURL.getText(),txtSourceLibLocation.getText(),txtLibraryTag.getText()));
@@ -77,10 +84,21 @@ public class CreateGearForm {
         if(!txtProjectSummary.getText().isEmpty())
             newSpec.setSummary(txtProjectSummary.getText());
 
-        newSpec.setRelease_notes("Nothing to see here.");
-        newSpec.setType("jar");
-        newSpec.setCopyright("That Other Guy 2014");
-        newSpec.setHomepage("www.google.com");
+        if(!txtReleaseNotes.getText().isEmpty())
+            newSpec.setRelease_notes(txtReleaseNotes.getText());
+
+        if(!txtCopyRight.getText().isEmpty())
+            newSpec.setCopyright(txtCopyRight.getText());
+
+        if(!txtHomePage.getText().isEmpty())
+            newSpec.setHomepage(txtHomePage.getText());
+
+        if(!txtLibraryType.getText().isEmpty())
+            newSpec.setType(txtLibraryType.getText());
+
+        if(!txtLicense.getText().isEmpty())
+            newSpec.setLicense(txtLicense.getText());
+
 
         return newSpec;
     }
