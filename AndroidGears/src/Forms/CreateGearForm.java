@@ -65,9 +65,6 @@ public class CreateGearForm {
         if(!txtProjectTags.getText().isEmpty())
             newSpec.setTags(ParseStringWithCommas(txtProjectTags.getText()));
 
-        if(!txtImageURL.getText().isEmpty())// TODO check for valid url
-            newSpec.setIcon(txtImageURL.getText());
-
         if(!txtLibraryTag.getText().isEmpty() && !txtSourceLibLocation.getText().isEmpty() && !txtSourceURL.getText().isEmpty())//TODO check for all 3 urls and file paths source must end with .git
             newSpec.setSource(new GearSpecSource(txtSourceURL.getText(),txtSourceLibLocation.getText(),txtLibraryTag.getText()));
 

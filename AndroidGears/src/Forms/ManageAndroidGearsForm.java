@@ -47,6 +47,7 @@ public class ManageAndroidGearsForm{
     private JLabel ChangeVersionsLabel;
     private JButton InstallUninstallButton;
     private JButton OpenInBrowserButton;
+    private JLabel LoadingSpinnerLabel;
 
     private void createUIComponents() {
 
@@ -112,7 +113,7 @@ public class ManageAndroidGearsForm{
                 if(c == 8 && searchString.length() > 0){
                     searchString = SearchTextField.getText().substring(0, searchString.length()-1);
                 }
-                else {
+                else if(isValidCharacter(c)){
                     searchString = SearchTextField.getText()+keyEvent.getKeyChar();
                 }
 
@@ -150,6 +151,7 @@ public class ManageAndroidGearsForm{
             public void actionPerformed(ActionEvent actionEvent) {
                 //Set synchronizing
                 StatusLabel.setText("Synchronizing available gears with server...");
+                LoadingSpinnerLabel.setVisible(true);
 
                 //Synchronize Specs
                 GitWorker worker = new GitWorker(){
@@ -157,6 +159,7 @@ public class ManageAndroidGearsForm{
                     protected void done() {
                         super.done();
                         StatusLabel.setText("Gears successfully synced with server");
+                        LoadingSpinnerLabel.setVisible(false);
                     }
                 };
                 worker.run();
@@ -180,6 +183,8 @@ public class ManageAndroidGearsForm{
 
     private void setupMiscUI() {
         ChangeVersionsLabel.setFont(new Font(ChangeVersionsLabel.getFont().getName(), Font.PLAIN, 12));
+        StatusLabel.setText("");
+        LoadingSpinnerLabel.setVisible(false);
     }
 
     private void reloadList(){
@@ -187,6 +192,15 @@ public class ManageAndroidGearsForm{
         SearchList.setCellRenderer(new GearSpecCellRenderer());
         SearchList.setVisibleRowCount(searchProjects.size());
 
+    }
+
+    private Boolean isValidCharacter(char c){
+        //Number
+        if(c >= 32 && c <= 126){
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -309,6 +323,7 @@ public class ManageAndroidGearsForm{
             }
         }
     }
+
 }
 
 
