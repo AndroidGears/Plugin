@@ -2,6 +2,7 @@ package Renderers;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
+import Workers.GetSpecIconWorker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,6 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
     JPanel specInfoPanel;
     JLabel nameLabel;
     JLabel authorLabel;
-    JLabel imageLabel;
 
     public GearSpecCellRenderer() {
         setOpaque(true);
@@ -37,6 +37,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
         //Check for first runthrough
         if(nameLabel == null){
             //Initialize name panel
+            this.setLayout(new FlowLayout());
             specInfoPanel = new JPanel();
             specInfoPanel.setLayout(new BoxLayout(specInfoPanel, BoxLayout.Y_AXIS));
             specInfoPanel.setOpaque(false);
@@ -66,31 +67,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
                 authorLabel.setText(authors);
             }
 
-
-            /*
-            //Set image
-            BufferedImage image = null;
-            try {
-                URL url = null;
-
-                if (spec.getIcon() != null){
-                    url = new URL(spec.getIcon());
-                }
-                else {
-                    url = new URL("http://www.mkyong.com/image/mypic.jpg");
-                }
-
-                image = ImageIO.read(url);
-                image = resizeImage(image, 35,35, Image.SCALE_FAST);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            imageLabel = new JLabel(new ImageIcon(image));
-
             //Add components
-            this.add(imageLabel);*/
             this.add(specInfoPanel);
             specInfoPanel.add(nameLabel);
             specInfoPanel.add(authorLabel);
@@ -112,27 +89,6 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
                 authorLabel.setText(authors);
             }
 
-            /*
-            //Set image
-            BufferedImage image = null;
-            try {
-                URL url = null;
-
-                if (spec.getIcon() != null){
-                    url = new URL(spec.getIcon());
-                }
-                else {
-                    url = new URL("http://www.mkyong.com/image/mypic.jpg");
-                }
-
-                image = ImageIO.read(url);
-                image = resizeImage(image, 35,35, Image.SCALE_FAST);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            imageLabel.setIcon(new ImageIcon(image));*/
         }
 
         if(isSelected) {
@@ -144,13 +100,5 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             //setForeground(Color.black);
         }
         return this;
-    }
-
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
-        BufferedImage resizedImage = new BufferedImage(width, height, type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width, height, null);
-        g.dispose();
-        return resizedImage;
     }
 }
