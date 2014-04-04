@@ -117,11 +117,12 @@ public class CreateGearForm {
      * @return
      */
     private String RemovePrecedingSpaces(String string) {
-        if(string.startsWith(" ")){
-            string = string.substring(1);
-            RemovePrecedingSpaces(string);
+        String temp = string;
+        if(temp.startsWith(" ")){
+            temp = temp.substring(1);
+            RemovePrecedingSpaces(temp);
         }
-        return string;
+        return temp;
     }
     //TODO Check if valid
     /**
@@ -130,11 +131,12 @@ public class CreateGearForm {
      * @return
      */
     private String RemoveSpacesAtEnd(String string) {
-        if(string.endsWith(" ")){
-            string = string.substring(0,string.length()-1);
-            RemoveSpacesAtEnd(string);
+        String temp = string;
+        if(temp.endsWith(" ")){
+            temp = temp.substring(0,temp.length()-1);
+            RemoveSpacesAtEnd(temp);
         }
-        return string;
+        return temp;
     }
 
     private void initImageURLPanel() {
