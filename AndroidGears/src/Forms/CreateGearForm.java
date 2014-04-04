@@ -16,8 +16,12 @@ import java.util.ArrayList;
  */
 public class CreateGearForm {
     public JPanel MasterPanel;
-    private JTextField txtImageURL;
     private JTextField txtProgectName;
+    private JTextField txtHomePage;
+    private JTextField txtLicense;
+    private JTextField txtCopyRight;
+    private JTextField txtLibraryType;
+    private JTextArea txtReleaseNotes;
     private JTextField txtProjectMinSDK;
     private JTextField txtProjectVersion;
     private JTextField txtSourceURL;
@@ -25,8 +29,10 @@ public class CreateGearForm {
     private JTextField txtLibraryTag;
     private JTextField txtAuthorName;
     private JTextField txtAuthorEmail;
+    private JTable authorsTable;
     private JButton btnAddAuthor;
     private JButton btnAddDependency;
+    private JTable dependencyTable;
     private JTextField txtProjectTags;
     private JPanel imgProjectIcon;
     private JTextArea txtProjectSummary;
@@ -37,7 +43,6 @@ public class CreateGearForm {
 
     public CreateGearForm() {
         this.gson = new Gson();
-        initImageURLPanel();
         initButtons();
     }
 
@@ -134,28 +139,6 @@ public class CreateGearForm {
         return string;
     }
 
-    private void initImageURLPanel() {
-        txtImageURL.setText("http://www.mkyong.com/image/mypic.jpg");
-//        txtImageURL.setText("resources/icons/gears@2x.png");
-//        checkImageURL(txtImageURL.getText());
-//        txtImageURL.getDocument().addDocumentListener(new DocumentListener() {
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//               checkImageURL(txtImageURL.getText());
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                checkImageURL(txtImageURL.getText());
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                checkImageURL(txtImageURL.getText());
-//            }
-//        });
-
-    }
 // TODO THIS DOESNT WORK DO NOT REUSE JUST YET
     private void checkImageURL(String urlString) {
 //        JFrame imageFrame = new JFrame();
@@ -188,5 +171,9 @@ public class CreateGearForm {
 //            imageFrame.add(label);
 //            imageFrame.setVisible(true);
 //        }
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

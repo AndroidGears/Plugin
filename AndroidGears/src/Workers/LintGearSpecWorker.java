@@ -5,11 +5,13 @@ import Models.GearSpecLinter.GearSpecLintResult;
 import Utilities.GearSpecLinter;
 
 import javax.swing.*;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by matthewyork on 4/3/14.
  */
-public class LintGearSpecWorker extends SwingWorker<Void, Void> {
+public class LintGearSpecWorker extends SwingWorker<Void, String> {
     private GearSpec spec;
     public GearSpecLintResult result = new GearSpecLintResult();
 
@@ -19,7 +21,11 @@ public class LintGearSpecWorker extends SwingWorker<Void, Void> {
 
     @Override
     protected Void doInBackground() throws Exception {
-        result = GearSpecLinter.lintSpec(this.spec);
+        result = GearSpecLinter.lintSpec(this.spec, this);
         return null;
+    }
+
+    public void update(String update){
+        this.publish(update);
     }
 }
