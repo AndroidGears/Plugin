@@ -16,41 +16,42 @@ public class GearSpecLinter {
     public static GearSpecLintResult lintSpec(GearSpec spec, LintGearSpecWorker worker){
 
         ArrayList<String> failureReasons = new ArrayList<String>();
+        ArrayList<String> successReasons = new ArrayList<String>();
 
         //Check for spec existence
         if(spec == null){
-            failureReasons.add("Spec file could not be linted. Consider reviewing/linting your JSON syntax. http://jsonlint.com/");
+            failureReasons.add("Spec file could not be linted either because it was not found or because of invalid syntax.\n    Consider reviewing/linting your JSON syntax. http://jsonlint.com/\n    For best results, use the \"Create Gear Spec\" utility in the Android Gears menu.");
         }
         else {
-            worker.update("Spec correctly parsed from JSON.");
+            successReasons.add("Spec correctly parsed from JSON.");
 
             //Check for name
             if (!existsAndNotBlank(spec.getName())){
                 failureReasons.add("Spec must have a name.");
             }
             else {
-                worker.update("Spec has valid name.");
+                successReasons.add("Spec has valid name.");
             }
             //Check for summary
             if (!existsAndNotBlank(spec.getSummary())){
                 failureReasons.add("Spec must have a summary.");
             }
             else {
-                worker.update("Spec has valid summary.");
+                successReasons.add("Spec has valid summary.");
             }
             //Check for release notes
             if (!existsAndNotBlank(spec.getRelease_notes())){
                 failureReasons.add("Spec must have release notes.");
             }
             else {
-                worker.update("Spec has valid release notes.");
+                successReasons.add("Spec has valid release notes.");
             }
             //Check for version
             if (!existsAndNotBlank(spec.getVersion())){
                 failureReasons.add("Spec must have a version.");
             }
             else {
-                worker.update("Spec has valid version number.");
+                successReasons.add("Spec has valid version number.");
             }
             //Check for type
             if (!existsAndNotBlank(spec.getType())){
@@ -60,38 +61,38 @@ public class GearSpecLinter {
                 failureReasons.add("Spec must be of type \"module\" or \"jar\". The type is case sensitive.");
             }
             else {
-                worker.update("Spec has valid type.");
+                successReasons.add("Spec has valid type.");
             }
             //Check for copyright
             if (!existsAndNotBlank(spec.getCopyright())){
                 failureReasons.add("Spec must have a copyright.");
             }
             else {
-                worker.update("Spec has valid copyright.");
+                successReasons.add("Spec has valid copyright.");
             }
             //Check for homepage
             if (!existsAndNotBlank(spec.getHomepage())){
                 failureReasons.add("Spec must have a homepage. If the project is hosted on github, use the projects github page (http://github.com/username/projectname)");
             }
             else {
-                worker.update("Spec has valid homepage.");
+                successReasons.add("Spec has valid homepage.");
             }
             //Check authors
-            checkAuthors(spec, failureReasons, worker);
+            checkAuthors(spec, failureReasons, successReasons, worker);
 
             //Check for minimum api level
             if (spec.getMinimum_api() > 0){
-                failureReasons.add("Spec must have a minimum api level above 0.");
+                successReasons.add("Spec has valid api level.");
             }
             else {
-                worker.update("Spec has valid api level.");
+                failureReasons.add("Spec must have a minimum api level above 0.");
             }
 
             //Check source
-            checkSources(spec, failureReasons, worker);
+            checkSources(spec, failureReasons, successReasons, worker);
 
             //Check dependencies
-            checkDependencies(spec, failureReasons, worker);
+            checkDependencies(spec, failureReasons, successReasons, worker);
         }
 
         //Return lint result
@@ -99,7 +100,7 @@ public class GearSpecLinter {
             return lintFailedForReason(failureReasons);
         }
         else {
-            return lintPassed();
+            return lintPassed(successReasons);
         }
     }
 
@@ -118,7 +119,7 @@ public class GearSpecLinter {
         return true;
     }
 
-    private static void checkAuthors(GearSpec spec, ArrayList<String> failureReasons, LintGearSpecWorker worker){
+    private static void checkAuthors(GearSpec spec, ArrayList<String> failureReasons, ArrayList<String> successReasons, LintGearSpecWorker worker){
         if (spec.getAuthors() == null){
             failureReasons.add("Spec must have at least one author.");
         }
@@ -128,7 +129,7 @@ public class GearSpecLinter {
                     failureReasons.add("Spec authors must have a name and email.");
                 }
                 else {
-                    worker.update("Spec has valid author: "+author.getName());
+                    successReasons.add("Spec has valid author: "+author.getName());
                 }
             }
         }
@@ -137,7 +138,7 @@ public class GearSpecLinter {
         }
     }
 
-    private static void checkSources(GearSpec spec, ArrayList<String> failureReasons, LintGearSpecWorker worker){
+    private static void checkSources(GearSpec spec, ArrayList<String> failureReasons, ArrayList<String> successReasons, LintGearSpecWorker worker){
         if (spec.getSource() == null){
             failureReasons.add("Spec must have a source.");
         }
@@ -158,7 +159,7 @@ public class GearSpecLinter {
                         return;
                     }
 
-                    worker.update("Spec has valid api level.");
+                    successReasons.add("Spec has valid api level.");
                 }
                 //If jar
                 else if (spec.getType().equals("jar")){
@@ -167,13 +168,13 @@ public class GearSpecLinter {
                         return;
                     }
 
-                    worker.update("Spec has valid api level.");
+                    successReasons.add("Spec has valid api level.");
                 }
             }
         }
     }
 
-    private static void checkDependencies(GearSpec spec, ArrayList<String> failureReasons, LintGearSpecWorker worker){
+    private static void checkDependencies(GearSpec spec, ArrayList<String> failureReasons, ArrayList<String> successReasons, LintGearSpecWorker worker){
         if (spec.getDependencies() != null){
             if (spec.getDependencies().size() > 0){
                 //Iterate over all dependencies, checking for valid dependencies
@@ -185,7 +186,7 @@ public class GearSpecLinter {
                         failureReasons.add("Could not find dependency "+dependency.getName()+" for version "+dependency.getVersion()+"Consider syncing Android Gears to pull any new changes from the specs repository.");
                     }
                     else {
-                        worker.update("Spec has valid dependency: "+dependency.getName());
+                        successReasons.add("Spec has valid dependency: "+dependency.getName());
                     }
                 }
             }
@@ -233,21 +234,26 @@ public class GearSpecLinter {
 
         GearSpecLintResult result = new GearSpecLintResult();
         result.setPassed(false);
-        result.setResponseMessage("Gear Spec lint failed: ");
+        result.setResponseMessage("Gear Spec lint failed:\n");
 
         //Show all error reasons
         for (String reason : reasons){
-            result.setResponseMessage(result.getResponseMessage()+"\n\n"+reason);
+            result.setResponseMessage(result.getResponseMessage()+"\n - "+reason);
         }
 
         return  result;
     }
 
-    private static GearSpecLintResult lintPassed(){
+    private static GearSpecLintResult lintPassed(ArrayList<String> reasons){
 
         GearSpecLintResult result = new GearSpecLintResult();
         result.setPassed(true);
-        result.setResponseMessage("Gear Spec is valid.");
+        result.setResponseMessage("Gear Spec lint passed:\n");
+
+        //Show all error reasons
+        for (String reason : reasons){
+            result.setResponseMessage(result.getResponseMessage()+"\n - "+reason);
+        }
 
         return  result;
     }

@@ -51,11 +51,11 @@
                   description="Add, edit and remove android gear dependencies" >
           </action>
 
-          <action id="AndroidGears.CreateGearAction" class="Actions.CreateGearAction" text="Create Gear"
+          <action id="AndroidGears.CreateGearAction" class="Actions.CreateGearAction" text="Create Gear Spec"
                   description="Form for creating an Android Gear">
           </action>
 
-          <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Android Gear"
+          <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Gear Spec"
                   description="Takes in a .gearspec file and lints it to make sure it is valid.">
           </action>
       </group>

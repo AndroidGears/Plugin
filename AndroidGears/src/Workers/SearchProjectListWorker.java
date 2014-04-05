@@ -5,6 +5,7 @@ import Models.GearSpec.GearSpecAuthor;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.intellij.util.Url;
 
 import javax.swing.*;
@@ -69,22 +70,30 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                     String specString = Utils.stringFromFile(specFile);
 
                     //Get spec
-                    GearSpec spec = gson.fromJson(specString, GearSpec.class);
+                    try {
+                        GearSpec spec = gson.fromJson(specString, GearSpec.class);
 
-                    //Gather tags
-                    String filterString = "";
-                    for (String tag : spec.getTags()) {
-                        filterString = filterString+tag.toLowerCase()+" ";
+                        //Gather tags
+                        String filterString = "";
+                        for (String tag : spec.getTags()) {
+                            filterString = filterString+tag.toLowerCase()+" ";
+                        }
+
+                        //Gather authors
+                        for (GearSpecAuthor author : spec.getAuthors()) {
+                            filterString = filterString+author.getName().toLowerCase()+" ";
+                        }
+
+                        //Filter with the search string over spec metadata
+                        if(filterString.contains(searchString.toLowerCase())){
+                            return true;
+                        }
                     }
+                    catch (JsonParseException exception){
 
-                    //Gather authors
-                    for (GearSpecAuthor author : spec.getAuthors()) {
-                        filterString = filterString+author.getName().toLowerCase()+" ";
                     }
+                    catch (Exception exception){
 
-                    //Filter with the search string over spec metadata
-                    if(filterString.contains(searchString.toLowerCase())){
-                        return true;
                     }
                 }
 

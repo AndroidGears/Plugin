@@ -1,5 +1,8 @@
 package Utilities;
 
+import Models.GearSpec.GearSpec;
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -9,39 +12,58 @@ import java.net.URL;
  */
 public class Utils {
     public static String stringFromFile(File file){
-        //Open file
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (file != null){
+            if (file.exists()){
+                if (file.isFile()){
+                    //Get extension
+                    String extension = "";
+                    String fileName = file.getAbsolutePath();
+                    int i = fileName.lastIndexOf(".");
+                    if (i > 0){
+                        extension = fileName.substring(i+1);
+                    }
+
+                    //Check extension
+                    if (extension.equals("gearspec")){
+                        //Open file
+                        BufferedReader br = null;
+                        try {
+                            br = new BufferedReader(new FileReader(file.getAbsolutePath()));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        //Build string from file
+                        StringBuilder sb = new StringBuilder();
+                        try {
+                            String line = br.readLine();
+
+                            while (line != null) {
+                                sb.append(line);
+                                line = br.readLine();
+                            }
+                            String everything = sb.toString();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                br.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        return sb.toString();
+                    }
+                }
+            }
         }
 
-        //Build string from file
-        StringBuilder sb = new StringBuilder();
-        try {
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                line = br.readLine();
-            }
-            String everything = sb.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return sb.toString();
+        return "";
     }
 
     public static String wrappedStringForString(String inputString, int wrapWidth){
-        return String.format("<html><div style=\"width:%dpx;\">%s</div><html>", 190, inputString);
+        return String.format("<html><div style=\"width:%dpx;\">%s</div><html>", wrapWidth, inputString);
     }
 
     public static File androidGearsDirectory(){
@@ -79,5 +101,21 @@ public class Utils {
         } catch (IOException exception) {
             return false;
         }
+    }
+
+    public static GearSpec specForFile(File specFile){
+        GearSpec spec = null;
+
+        if (specFile != null){
+            if(specFile.exists()) {
+                //Get string data
+                String specString = Utils.stringFromFile(specFile);
+
+                //Get spec
+                spec = new Gson().fromJson(specString, GearSpec.class);
+            }
+        }
+
+        return spec;
     }
 }

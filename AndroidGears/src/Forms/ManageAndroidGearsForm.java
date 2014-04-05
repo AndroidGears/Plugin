@@ -24,7 +24,7 @@ import com.google.gson.Gson;
  * Created by matthewyork on 4/1/14.
  */
 public class ManageAndroidGearsForm{
-    public static final int DETAILS_INNER_WIDTH = 320;
+    public static final int DETAILS_INNER_WIDTH = 250;
 
     File androidGearsDirectory;
     private GearSpec selectedSpec;
