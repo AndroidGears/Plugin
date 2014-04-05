@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="MasterPanel" layout-manager="GridLayoutManager" row-count="7" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="15" y="6" width="1115" height="849"/>
+      <xy x="15" y="6" width="1115" height="922"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -24,7 +24,7 @@
               <text value="Name:"/>
             </properties>
           </component>
-          <component id="9c59e" class="javax.swing.JTextField" binding="txtProgectName">
+          <component id="9c59e" class="javax.swing.JTextField" binding="txtProjectName">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <minimum-size width="300" height="-1"/>
@@ -38,18 +38,6 @@
             </constraints>
             <properties>
               <text value="Min. SDK:"/>
-            </properties>
-          </component>
-          <component id="dbc8" class="javax.swing.JTextField" binding="txtProjectMinSDK">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="50" height="-1"/>
-                <preferred-size width="50" height="-1"/>
-                <maximum-size width="50" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value=""/>
             </properties>
           </component>
           <component id="22e86" class="javax.swing.JLabel">
@@ -138,6 +126,34 @@
             </constraints>
             <properties/>
           </component>
+          <component id="c716d" class="javax.swing.JComboBox" binding="cbMinSDK" default-binding="true">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="1 "/>
+                <item value="2"/>
+                <item value="3"/>
+                <item value="4"/>
+                <item value="5"/>
+                <item value="6"/>
+                <item value="7"/>
+                <item value="8"/>
+                <item value="9"/>
+                <item value="10"/>
+                <item value="11"/>
+                <item value="12"/>
+                <item value="13"/>
+                <item value="14"/>
+                <item value="15"/>
+                <item value="16"/>
+                <item value="17"/>
+                <item value="18"/>
+                <item value="19"/>
+              </model>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="78aa5" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -164,7 +180,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value=""/>
+              <text value="https://github.com/"/>
             </properties>
           </component>
           <component id="45000" class="javax.swing.JLabel">
@@ -185,6 +201,7 @@
             </constraints>
             <properties>
               <text value=""/>
+              <toolTipText value="The Tag for the repo that you are submitting."/>
             </properties>
           </component>
           <component id="8b923" class="javax.swing.JTextField" binding="txtSourceLibLocation">
@@ -193,6 +210,7 @@
             </constraints>
             <properties>
               <text value=""/>
+              <toolTipText value="The Folder in the repo that the library is located in."/>
             </properties>
           </component>
           <component id="eacf1" class="javax.swing.JLabel">
@@ -211,21 +229,20 @@
               <text value="Type"/>
             </properties>
           </component>
-          <component id="a6a47" class="javax.swing.JTextField" binding="txtLibraryType">
+          <component id="75b7c" class="javax.swing.JComboBox" binding="cbLibraryType">
             <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="200" height="-1"/>
-                <preferred-size width="200" height="-1"/>
-                <maximum-size width="200" height="-1"/>
-              </grid>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value=""/>
+              <model>
+                <item value="jar"/>
+                <item value="module"/>
+              </model>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="84e83" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="84e83" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -271,15 +288,15 @@
           </component>
           <component id="1d84b" class="javax.swing.JButton" binding="btnAddAuthor">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Add Author"/>
+              <text value=" + Add Author"/>
             </properties>
           </component>
           <scrollpane id="95486">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="50"/>
                 <preferred-size width="-1" height="50"/>
                 <maximum-size width="-1" height="50"/>
@@ -296,27 +313,32 @@
               </component>
             </children>
           </scrollpane>
+          <component id="1a4e6" class="javax.swing.JButton" binding="btnRemoveAuthor">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="  - Remove Author"/>
+            </properties>
+          </component>
+          <vspacer id="44035">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
-      <grid id="d618" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="d618" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
-        <border type="etched" title="Dependencies"/>
+        <border type="etched" title="Dependencies - note Dependency must Already be an Android Gear Spec."/>
         <children>
-          <component id="aaab8" class="javax.swing.JButton" binding="btnAddDependency">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Add Dependency"/>
-            </properties>
-          </component>
           <scrollpane id="5042f">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="50"/>
                 <preferred-size width="-1" height="50"/>
                 <maximum-size width="-1" height="50"/>
@@ -333,6 +355,61 @@
               </component>
             </children>
           </scrollpane>
+          <component id="6d36" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Name:"/>
+            </properties>
+          </component>
+          <component id="c1058" class="javax.swing.JTextField" binding="txtDependencyName">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="75ff2" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Verison:"/>
+            </properties>
+          </component>
+          <component id="db474" class="javax.swing.JTextField" binding="txtDependencyVersion">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="aaab8" class="javax.swing.JButton" binding="btnAddDependency">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value=" + Add Dependency"/>
+            </properties>
+          </component>
+          <component id="a464d" class="javax.swing.JButton" binding="btnRemoveDependency">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value=" - Remove Dependency"/>
+            </properties>
+          </component>
+          <vspacer id="3c468">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
       <grid id="8a8b4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

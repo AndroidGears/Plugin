@@ -7,6 +7,11 @@ public class GearSpecDependency {
     private String name;
     private String version;
 
+    public GearSpecDependency(String name, String version) {
+        this.name = name;
+        this.version = version;
+    }
+
     public String getName() {
         return name;
     }
