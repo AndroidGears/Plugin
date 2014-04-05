@@ -31,28 +31,29 @@ public class LintGearForm extends Component {
         FindURLButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                JFileChooser fc = new JFileChooser();
-                fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fc.setControlButtonsAreShown(true);
+                //Get top level frame
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
-                int returnVal = fc.showOpenDialog(LintGearForm.this);
+                //Create dialog for choosing gearspec file
+                FileDialog fd = new FileDialog(topFrame, "Choose a .gearspec file", FileDialog.LOAD);
+                fd.setDirectory(System.getProperty("user.home"));
+                fd.setFile("*.gearspec");
+                fd.setVisible(true);
+                //Get file
+                String filename = fd.getFile();
+                if (filename == null)
+                    System.out.println("You cancelled the choice");
+                else {
+                    System.out.println("You chose " + filename);
 
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
+                    //Get spec file
+                    File specFile = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
 
-                    //Check one more time for existence
-                    if (file.exists()){
-
-                        SpecUrlTextField.setText(file.getAbsolutePath());
-                    }
-                    else {
-                        //SHOW DIALOG ABOUT NO FILE EXISTING
+                    //If it exists, set it as the selected file path
+                    if (specFile.exists()){
+                        SpecUrlTextField.setText(specFile.getAbsolutePath());
                     }
                 }
-
-                //Bring window back to the front
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
-                topFrame.toFront();
             }
         });
 
