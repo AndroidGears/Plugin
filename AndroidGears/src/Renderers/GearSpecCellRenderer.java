@@ -12,6 +12,7 @@ import java.awt.*;
 
 public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
     private static final Color HIGHLIGHT_COLOR = Color.decode("0x2B2B2B");
+    private Color cellBackgroundColor = null;
 
     JPanel specInfoPanel;
     JLabel nameLabel;
@@ -19,7 +20,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
 
     public GearSpecCellRenderer() {
         setOpaque(true);
-
+        cellBackgroundColor = getBackground();
     }
 
     public Component getListCellRendererComponent(
@@ -89,7 +90,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
         }
 
         if(isSelected) {
-            setBackground(HIGHLIGHT_COLOR);
+            setBackground(cellBackgroundColor.darker());
             setOpaque(true);
             //setForeground(Color.white);
         } else {
