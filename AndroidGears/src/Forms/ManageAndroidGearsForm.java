@@ -13,11 +13,11 @@ import Utilities.Utils;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
+
 import Models.GearSpec.GearSpec;
-import Workers.GetProjectVersionsWorker;
-import Workers.GitWorker;
-import Workers.SearchProjectListWorker;
+import Workers.*;
 import com.google.gson.Gson;
 
 /**
@@ -168,6 +168,12 @@ public class ManageAndroidGearsForm{
 
         //Install/Uninstall button
         InstallUninstallButton.setVisible(false);
+        InstallUninstallButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                toggleDependency();
+            }
+        });
 
         //Show homepage button
         OpenInBrowserButton.setVisible(false);
@@ -247,6 +253,8 @@ public class ManageAndroidGearsForm{
 
         //Set install/uninstall button
         //CHECK HERE FOR INSTALLATION STATUS
+        String buttonText = (Utils.specIsInstalled(selectedSpec)) ? "Uninstall Gear" : "Install Gear";
+        InstallUninstallButton.setText(buttonText);
         InstallUninstallButton.setVisible(true);
 
         //Enable show homepage button again
@@ -324,6 +332,44 @@ public class ManageAndroidGearsForm{
         }
     }
 
+
+    ///////////////////////
+    // Install / Uninstall
+    ///////////////////////
+
+    private void toggleDependency(){
+        if (Utils.specIsInstalled(this.selectedSpec)){
+            UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(this.selectedSpec){
+
+                @Override
+                protected void done() {
+                    super.done();
+
+                    //Flip button text
+                    if (this.successful){
+                        InstallUninstallButton.setText("Install Gear");
+                    }
+                }
+            };
+            worker.run();
+
+        }
+        else {
+            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec){
+
+                @Override
+                protected void done() {
+                    super.done();
+
+                    //Flip button text
+                    if (this.successful){
+                        InstallUninstallButton.setText("Uninstall Gear");
+                    }
+                }
+            };
+            worker.run();;
+        }
+    }
 }
 
 

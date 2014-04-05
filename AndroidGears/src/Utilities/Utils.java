@@ -11,6 +11,9 @@ import java.net.URL;
  * Created by matthewyork on 4/1/14.
  */
 public class Utils {
+    public static String SPEC_TYPE_MODULE = "module";
+    public static String SPEC_TYPE_JAR = "jar";
+
     public static String stringFromFile(File file){
         if (file != null){
             if (file.exists()){
@@ -117,5 +120,21 @@ public class Utils {
         }
 
         return spec;
+    }
+
+    public static boolean specIsInstalled(GearSpec spec){
+        if (spec.getType().equals(SPEC_TYPE_JAR)){
+
+        }
+        else if(spec.getType().equals(SPEC_TYPE_MODULE)){
+            File specDirectory = new File(System.getProperty("user.dir")+pathSeparator()+spec.getName());
+
+            if (specDirectory.exists()){
+                return true;
+            }
+        }
+
+
+        return false;
     }
 }
