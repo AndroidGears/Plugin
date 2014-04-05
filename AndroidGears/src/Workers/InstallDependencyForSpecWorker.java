@@ -1,40 +1,44 @@
 package Workers;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecSource;
 import Utilities.Utils;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by matthewyork on 4/4/14.
  */
 public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
-    private GearSpec spec;
+    private GearSpec selectedSpec;
     private Project project;
     public boolean successful;
 
     public InstallDependencyForSpecWorker(GearSpec spec, Project project) {
-        this.spec = spec;
+        this.selectedSpec = spec;
         this.project = project;
     }
 
     @Override
     protected Void doInBackground() throws Exception {
 
-        if (spec != null){
-            if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-
+        if (selectedSpec != null){
+            if (selectedSpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                if (installJar(this.selectedSpec)){
+                    successful = true;
+                    return null;
+                }
             }
-            else if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                if (installModule()){
+            else if (selectedSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                if (installModule(this.selectedSpec)){
                     successful = true;
                     return null;
                 }
@@ -48,7 +52,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
 
-    private Boolean installModule(){
+    private Boolean installModule(GearSpec spec){
         //Install dependency and sub-dependencies
         File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + spec.getName());
 
@@ -138,13 +142,53 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             }
         }
 
-
-
+        //Download dependencies
+        //TODO:Download Dependencies for Modules
 
         return true;
     }
 
-    private void installJar(){
+    private Boolean installJar(GearSpec spec){
+        //Create GearsJars directory if not already there
+        File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "GearsJars");
+        if (!libsDirectory.exists()){
+            try {
+                FileUtils.forceMkdir(libsDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+        //Build jar file
+        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+jarFileNameForSpecSource(spec.getSource()));
+
+        //Build url for gear
+        String jarUrl = spec.getSource().getUrl()+"/raw/"+spec.getSource().getTag()+"/"+spec.getSource().getSource_files();
+        jarUrl = jarUrl.replace(".git", "");
+
+        //Download file
+        try {
+            FileUtils.copyURLToFile(new URL(jarUrl), jarFile, 2000, 30000);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        //Download dependencies
+        //TODO:Download Dependencies for Jars
+
+        return true;
+    }
+
+    private String jarFileNameForSpecSource(GearSpecSource source){
+        if (source.getSource_files().contains("/")){
+            int lastPathSeparatorIndex = source.getSource_files().lastIndexOf("/");
+            String fileName = source.getSource_files().substring(lastPathSeparatorIndex+1);
+
+            return fileName;
+        }
+        else {
+            return source.getSource_files();
+        }
     }
 }
