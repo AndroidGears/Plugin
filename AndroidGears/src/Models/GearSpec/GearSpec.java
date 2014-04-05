@@ -1,11 +1,18 @@
 package Models.GearSpec;
 
+import Utilities.Utils;
+import com.intellij.openapi.project.Project;
+
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by matthewyork on 3/31/14.
  */
 public class GearSpec {
+    public static final String SPEC_TYPE_MODULE = "module";
+    public static final String SPEC_TYPE_JAR = "jar";
+
     private String name;
     private String summary;
     private String release_notes;
@@ -122,5 +129,25 @@ public class GearSpec {
 
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
+    }
+
+    ///////////////////////
+    // Helper Methods
+    ///////////////////////
+
+    public Boolean isInstalled(Project project){
+        if (this.getType().equals(SPEC_TYPE_JAR)){
+
+        }
+        else if(this.getType().equals(SPEC_TYPE_MODULE)){
+            File specDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+this.getName());
+
+            if (specDirectory.exists()){
+                return true;
+            }
+        }
+
+
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package Workers;
 
 import Utilities.OSValidator;
+import Utilities.Utils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -62,7 +63,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
 
     private void pullChanges(File androidGearsDirectory){
         try {
-            Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+"/.git"));
+            Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+ Utils.pathSeparator()+".git"));
             git.pull().call();
 
             /*
@@ -77,7 +78,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
             //cloneRepository(androidGearsDirectory);
         }
         catch (GitAPIException exception){
-
+            exception.printStackTrace();
         }
     }
 }

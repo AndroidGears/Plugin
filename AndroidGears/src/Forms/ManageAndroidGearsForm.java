@@ -8,17 +8,20 @@ import java.awt.event.*;
 import java.io.*;
 import Panels.SpecDetailsPanel;
 import Renderers.GearSpecCellRenderer;
+import Renderers.ProjectCellRenderer;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
-import java.util.List;
 
 import Models.GearSpec.GearSpec;
 import Workers.*;
 import com.google.gson.Gson;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
 /**
  * Created by matthewyork on 4/1/14.
@@ -31,6 +34,7 @@ public class ManageAndroidGearsForm{
     private ArrayList<GearSpec> searchProjects;
     private ArrayList<GearSpec> installedProjects;
     private ArrayList<String> projectVersions;
+    Project[] targetProjects;
 
     private JTextField SearchTextField;
     private JTabbedPane tabbedPane1;
@@ -48,6 +52,7 @@ public class ManageAndroidGearsForm{
     private JButton InstallUninstallButton;
     private JButton OpenInBrowserButton;
     private JLabel LoadingSpinnerLabel;
+    private JComboBox TargetProjectComboBox;
 
     private void createUIComponents() {
 
@@ -191,6 +196,20 @@ public class ManageAndroidGearsForm{
         ChangeVersionsLabel.setFont(new Font(ChangeVersionsLabel.getFont().getName(), Font.PLAIN, 12));
         StatusLabel.setText("");
         LoadingSpinnerLabel.setVisible(false);
+
+        //Setup project list
+        ProjectManager pm = ProjectManager.getInstance();
+        targetProjects = pm.getOpenProjects();
+
+        TargetProjectComboBox.setModel(new ListComboBoxModel<Project>(Arrays.asList(targetProjects)));
+        TargetProjectComboBox.setSelectedIndex(0);
+        TargetProjectComboBox.setRenderer(new ProjectCellRenderer());
+        TargetProjectComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+            }
+        });
     }
 
     private void reloadList(){
@@ -253,7 +272,7 @@ public class ManageAndroidGearsForm{
 
         //Set install/uninstall button
         //CHECK HERE FOR INSTALLATION STATUS
-        String buttonText = (Utils.specIsInstalled(selectedSpec)) ? "Uninstall Gear" : "Install Gear";
+        String buttonText = (selectedSpec.isInstalled(targetProjects[TargetProjectComboBox.getSelectedIndex()])) ? "Uninstall Gear" : "Install Gear";
         InstallUninstallButton.setText(buttonText);
         InstallUninstallButton.setVisible(true);
 
@@ -338,7 +357,7 @@ public class ManageAndroidGearsForm{
     ///////////////////////
 
     private void toggleDependency(){
-        if (Utils.specIsInstalled(this.selectedSpec)){
+        if (this.selectedSpec.isInstalled(targetProjects[TargetProjectComboBox.getSelectedIndex()])){
             UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(this.selectedSpec){
 
                 @Override
@@ -355,7 +374,7 @@ public class ManageAndroidGearsForm{
 
         }
         else {
-            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec){
+            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
 
                 @Override
                 protected void done() {
