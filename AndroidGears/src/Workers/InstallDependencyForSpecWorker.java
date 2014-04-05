@@ -1,8 +1,10 @@
 package Workers;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecDependency;
 import Models.GearSpec.GearSpecSource;
 import Utilities.Utils;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -12,6 +14,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by matthewyork on 4/4/14.
@@ -160,7 +163,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Build jar file
-        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+jarFileNameForSpecSource(spec.getSource()));
+        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource()));
 
         //Build url for gear
         String jarUrl = spec.getSource().getUrl()+"/raw/"+spec.getSource().getTag()+"/"+spec.getSource().getSource_files();
@@ -175,20 +178,28 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Download dependencies
-        //TODO:Download Dependencies for Jars
+        if (spec.getDependencies() != null){
+            if (spec.getDependencies().size() > 0){
+                for(GearSpecDependency dependency : spec.getDependencies()){
+                    //Get spec from dependency
+                    GearSpec dependencySpec = Utils.specForInfo(dependency.getName(), dependency.getVersion());
+
+                    //If we get a valid spec from the dependency, go ahead and download the dependency
+                    if (dependencySpec != null){
+                        if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                            installJar(dependencySpec);
+                        }
+                        else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                            installModule(dependencySpec);
+                        }
+                    }
+                }
+            }
+        }
+
 
         return true;
     }
 
-    private String jarFileNameForSpecSource(GearSpecSource source){
-        if (source.getSource_files().contains("/")){
-            int lastPathSeparatorIndex = source.getSource_files().lastIndexOf("/");
-            String fileName = source.getSource_files().substring(lastPathSeparatorIndex+1);
 
-            return fileName;
-        }
-        else {
-            return source.getSource_files();
-        }
-    }
 }

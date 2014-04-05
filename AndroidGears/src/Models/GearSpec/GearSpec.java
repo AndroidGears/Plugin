@@ -137,7 +137,10 @@ public class GearSpec {
 
     public Boolean isInstalled(Project project){
         if (this.getType().equals(SPEC_TYPE_JAR)){
-
+            File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "GearsJars"+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(this.getSource()));
+            if (libsDirectory.exists()){
+                return true;
+            }
         }
         else if(this.getType().equals(SPEC_TYPE_MODULE)){
             File specDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+this.getName());

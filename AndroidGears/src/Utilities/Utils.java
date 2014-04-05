@@ -1,8 +1,10 @@
 package Utilities;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -118,5 +120,38 @@ public class Utils {
         }
 
         return spec;
+    }
+
+    public static GearSpec specForInfo(String name, String version){
+        //Create spec file
+        File specFile = null;
+        if (version != null){
+            specFile = new File(Utils.androidGearsDirectory()+Utils.pathSeparator()+name+Utils.pathSeparator()+version+Utils.pathSeparator()+name+".gearspec");
+        }
+        else {
+            String[] versions = versionsForProject(name);
+            if (versions.length > 0){
+                specFile = new File(Utils.androidGearsDirectory()+Utils.pathSeparator()+name+Utils.pathSeparator()+versions[versions.length-1]+Utils.pathSeparator()+name+".gearspec");
+            }
+        }
+
+        return specForFile(specFile);
+    }
+
+    public static String[] versionsForProject(String project){
+        File versionsDirectory = new File(Utils.androidGearsDirectory().getAbsolutePath()+Utils.pathSeparator()+project);
+        return versionsDirectory.list();
+    }
+
+    public static String jarFileNameForSpecSource(GearSpecSource source){
+        if (source.getSource_files().contains("/")){
+            int lastPathSeparatorIndex = source.getSource_files().lastIndexOf("/");
+            String fileName = source.getSource_files().substring(lastPathSeparatorIndex+1);
+
+            return fileName;
+        }
+        else {
+            return source.getSource_files();
+        }
     }
 }
