@@ -211,9 +211,11 @@ public class ManageAndroidGearsForm{
 
             }
         });
+        TargetProjectComboBox.setFocusable(false);
 
         //Focus search bar
-        SearchTextField.requestFocus();
+        SearchTextField.setVisible(true);
+        SearchTextField.requestFocusInWindow();
     }
 
     private void reloadList(){

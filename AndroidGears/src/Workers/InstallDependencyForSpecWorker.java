@@ -198,7 +198,6 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                                 installModule(dependencySpec);
                             }
                         }
-
                     }
                 }
             }
