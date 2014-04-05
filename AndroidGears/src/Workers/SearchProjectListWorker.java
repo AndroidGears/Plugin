@@ -7,10 +7,12 @@ import Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.intellij.util.Url;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -67,7 +69,13 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 File specFile = new File(Utils.androidGearsDirectory()+pathSeparator+name+pathSeparator+versions[versions.length-1]+pathSeparator+name+".gearspec");
 
                 if(specFile.exists()) {
-                    String specString = Utils.stringFromFile(specFile);
+                    String specString = null;
+                    try {
+                        specString = FileUtils.readFileToString(specFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
 
                     //Get spec
                     try {
@@ -112,7 +120,13 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
 
             //Read file
             if(specFile.exists()) {
-                String specString = Utils.stringFromFile(specFile);
+                String specString = null;
+                try {
+                    specString = FileUtils.readFileToString(specFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
 
                 //Get spec
                 GearSpec spec = gson.fromJson(specString, GearSpec.class);

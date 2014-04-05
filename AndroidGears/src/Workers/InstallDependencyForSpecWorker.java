@@ -3,6 +3,7 @@ package Workers;
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpec.GearSpecSource;
+import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -186,19 +187,30 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
                     //If we get a valid spec from the dependency, go ahead and download the dependency
                     if (dependencySpec != null){
-                        if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                            installJar(dependencySpec);
+                        //See if it is installed already, before we try
+                        if (!dependencySpec.isInstalled(project)){
+
+                            //Install dependency
+                            if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                                installJar(dependencySpec);
+                            }
+                            else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                                installModule(dependencySpec);
+                            }
                         }
-                        else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                            installModule(dependencySpec);
-                        }
+
                     }
                 }
             }
         }
 
-
-        return true;
+        //Register spec
+        if (GearSpecRegistrar.registerGear(spec, project)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 

@@ -211,6 +211,9 @@ public class ManageAndroidGearsForm{
 
             }
         });
+
+        //Focus search bar
+        SearchTextField.requestFocus();
     }
 
     private void reloadList(){
@@ -306,7 +309,13 @@ public class ManageAndroidGearsForm{
         File specFile = new File(Utils.androidGearsDirectory().getAbsolutePath()+pathSeparator+specName+pathSeparator+version+pathSeparator+specName+".gearspec");
 
         if(specFile.exists()){
-            String specString = Utils.stringFromFile(specFile);
+            String specString = null;
+            try {
+                specString = FileUtils.readFileToString(specFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new GearSpec();
+            }
 
             //Get spec
             GearSpec spec = new Gson().fromJson(specString, GearSpec.class);

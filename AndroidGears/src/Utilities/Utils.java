@@ -3,6 +3,7 @@ package Utilities;
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
+import org.apache.commons.io.FileUtils;
 
 import javax.rmi.CORBA.Util;
 import java.io.*;
@@ -13,57 +14,6 @@ import java.net.URL;
  * Created by matthewyork on 4/1/14.
  */
 public class Utils {
-
-    public static String stringFromFile(File file){
-        if (file != null){
-            if (file.exists()){
-                if (file.isFile()){
-                    //Get extension
-                    String extension = "";
-                    String fileName = file.getAbsolutePath();
-                    int i = fileName.lastIndexOf(".");
-                    if (i > 0){
-                        extension = fileName.substring(i+1);
-                    }
-
-                    //Check extension
-                    if (extension.equals("gearspec")){
-                        //Open file
-                        BufferedReader br = null;
-                        try {
-                            br = new BufferedReader(new FileReader(file.getAbsolutePath()));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Build string from file
-                        StringBuilder sb = new StringBuilder();
-                        try {
-                            String line = br.readLine();
-
-                            while (line != null) {
-                                sb.append(line);
-                                line = br.readLine();
-                            }
-                            String everything = sb.toString();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
-                            try {
-                                br.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        return sb.toString();
-                    }
-                }
-            }
-        }
-
-        return "";
-    }
 
     public static String wrappedStringForString(String inputString, int wrapWidth){
         return String.format("<html><div style=\"width:%dpx;\">%s</div><html>", wrapWidth, inputString);
@@ -112,8 +62,13 @@ public class Utils {
         if (specFile != null){
             if(specFile.exists()) {
                 //Get string data
-                String specString = Utils.stringFromFile(specFile);
-
+                String specString = null;
+                try {
+                    specString = FileUtils.readFileToString(specFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
                 //Get spec
                 spec = new Gson().fromJson(specString, GearSpec.class);
             }

@@ -1,5 +1,7 @@
 package Models.GearSpec;
 
+import Models.GearSpecRegister.GearSpecRegister;
+import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
 import com.intellij.openapi.project.Project;
 
@@ -136,20 +138,16 @@ public class GearSpec {
     ///////////////////////
 
     public Boolean isInstalled(Project project){
-        if (this.getType().equals(SPEC_TYPE_JAR)){
-            File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "GearsJars"+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(this.getSource()));
-            if (libsDirectory.exists()){
-                return true;
+        GearSpecRegister register = GearSpecRegistrar.getRegister(project);
+        if (register != null){
+            if (register.installedGears != null){
+                for(GearSpec spec : register.installedGears){
+                    if (this.getName().equals(spec.getName()) && this.getVersion().equals(spec.getVersion())){
+                        return true;
+                    }
+                }
             }
         }
-        else if(this.getType().equals(SPEC_TYPE_MODULE)){
-            File specDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+this.getName());
-
-            if (specDirectory.exists()){
-                return true;
-            }
-        }
-
 
         return false;
     }
