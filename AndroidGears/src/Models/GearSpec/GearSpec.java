@@ -138,7 +138,10 @@ public class GearSpec {
     ///////////////////////
 
     public Boolean isInstalled(Project project){
+        //Get register
         GearSpecRegister register = GearSpecRegistrar.getRegister(project);
+
+        //Iterate over register
         if (register != null){
             if (register.installedGears != null){
                 for(GearSpec spec : register.installedGears){
@@ -150,5 +153,36 @@ public class GearSpec {
         }
 
         return false;
+    }
+
+    public ArrayList<GearSpec> dependentGears(Project project){
+        //Get register
+        GearSpecRegister register = GearSpecRegistrar.getRegister(project);
+
+        //Setup dependents array
+        ArrayList<GearSpec> dependents = new ArrayList<GearSpec>();
+
+        //Iterate over register dependencies for potential dependents
+        if (register != null) {
+            if (register.installedGears != null) {
+                for (GearSpec spec : register.installedGears) {
+                    if (this.getName().equals(spec.getName()) && this.getVersion().equals(spec.getVersion())){
+                        continue;
+                    }
+                    else { //For all not the calling spec
+                        if (spec.getDependencies() != null){
+                            for (GearSpecDependency dependency : spec.getDependencies()){
+                                //If a dependency matches the calling spec, add it as a dependent gear
+                                if (dependency.getName().equals(this.getName()) && dependency.getVersion().equals(this.getVersion())){
+                                    dependents.add(spec);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return dependents;
     }
 }

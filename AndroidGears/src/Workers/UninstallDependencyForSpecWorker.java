@@ -3,34 +3,38 @@ package Workers;
 import Models.GearSpec.GearSpec;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * Created by matthewyork on 4/4/14.
  */
 public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
-    private GearSpec selectedSpec;
+    private ArrayList<GearSpec> selectedSpecs;
     public boolean successful;
 
-    public UninstallDependencyForSpecWorker(GearSpec spec) {
-        this.selectedSpec = spec;
+    public UninstallDependencyForSpecWorker(ArrayList<GearSpec> selectedSpecs) {
+        this.selectedSpecs = selectedSpecs;
     }
 
     @Override
     protected Void doInBackground() throws Exception {
 
-        if (this.selectedSpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-            if (uninstallJar(this.selectedSpec)){
-                successful = true;
-                return null;
+        for (GearSpec selectedSpec : this.selectedSpecs){
+            if (selectedSpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                if (uninstallJar(selectedSpec)){
+                    successful = true;
+                    return null;
+                }
+            }
+            else if (selectedSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                if (uninstallModule(selectedSpec)){
+                    successful = true;
+                    return null;
+                }
             }
         }
-        else if (this.selectedSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-            if (uninstallModule(this.selectedSpec)){
-                successful = true;
-                return null;
-            }
-        }
+
 
         successful = false;
         return null;
