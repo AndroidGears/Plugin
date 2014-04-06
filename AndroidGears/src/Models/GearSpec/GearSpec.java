@@ -175,6 +175,8 @@ public class GearSpec {
                                 //If a dependency matches the calling spec, add it as a dependent gear
                                 if (dependency.getName().equals(this.getName()) && dependency.getVersion().equals(this.getVersion())){
                                     dependents.add(spec);
+                                    ArrayList<GearSpec> dependentSpecs = spec.dependentGears(project);
+                                    dependents.addAll(dependentSpecs);
                                 }
                             }
                         }

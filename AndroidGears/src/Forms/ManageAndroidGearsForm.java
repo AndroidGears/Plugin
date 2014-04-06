@@ -78,7 +78,7 @@ public class ManageAndroidGearsForm{
                 searchProjects = this.specs;
             }
         };
-        worker.run();
+        worker.execute();
 
 
         //Setup click listener
@@ -134,7 +134,7 @@ public class ManageAndroidGearsForm{
                         reloadList();
                     }
                 };
-                worker.run();
+                worker.execute();
 
             }
 
@@ -170,7 +170,7 @@ public class ManageAndroidGearsForm{
                         LoadingSpinnerLabel.setVisible(false);
                     }
                 };
-                worker.run();
+                worker.execute();
             }
         });
 
@@ -242,9 +242,11 @@ public class ManageAndroidGearsForm{
     ////////////////////////
 
     private void didSelectSearchSpecAtIndex(int index){
-        selectedSpec = searchProjects.get(index);
-        setDetailsForSpec(selectedSpec, searchProjects.get(index).getVersion());
-        getVersionDetailsForSepc();
+        if (index >= 0 && index < searchProjects.size()){
+            selectedSpec = searchProjects.get(index);
+            setDetailsForSpec(selectedSpec, searchProjects.get(index).getVersion());
+            getVersionDetailsForSepc();
+        }
     }
 
     private void didSelectInstalledSpecAtIndex(int index){
@@ -303,7 +305,7 @@ public class ManageAndroidGearsForm{
                 VersionsList.setVisibleRowCount(projectVersions.size());
             }
         };
-        worker.run();
+        worker.execute();
     }
 
     private GearSpec specForVersion(String specName, String version){
@@ -385,19 +387,35 @@ public class ManageAndroidGearsForm{
             }
         }
         else {
+            //Set UI in download state
+            StatusLabel.setText("Installing Gear and its dependencies: "+this.selectedSpec.getName());
+            LoadingSpinnerLabel.setVisible(true);
+            InstallUninstallButton.setEnabled(false);
+            SyncButton.setEnabled(false);
+
+
             InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
 
                 @Override
                 protected void done() {
                     super.done();
 
+                    //Hide loading spinner and renable buttons
+                    LoadingSpinnerLabel.setVisible(false);
+                    InstallUninstallButton.setEnabled(true);
+                    SyncButton.setEnabled(true);
+
                     //Flip button text
                     if (this.successful){
                         InstallUninstallButton.setText("Uninstall Gear");
+                        StatusLabel.setText("Successfully installed: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                    }
+                    else {
+                        StatusLabel.setText("Installation failed for: "+ManageAndroidGearsForm.this.selectedSpec.getName());
                     }
                 }
             };
-            worker.run();;
+            worker.execute();
         }
     }
 
@@ -446,7 +464,7 @@ public class ManageAndroidGearsForm{
                 }
             }
         };
-        worker.run();
+        worker.execute();
     }
 }
 
