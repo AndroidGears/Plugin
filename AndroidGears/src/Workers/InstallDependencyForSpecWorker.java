@@ -58,7 +58,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private Boolean installModule(GearSpec spec){
         //Install dependency and sub-dependencies
-        File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + spec.getName());
+        File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + "Gears" + Utils.pathSeparator() + "Modules" + Utils.pathSeparator() + spec.getName());
 
         //Delete the directory. This is for other versions installed
         if (specDirectory.exists()) {
@@ -154,7 +154,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private Boolean installJar(GearSpec spec){
         //Create GearsJars directory if not already there
-        File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "GearsJars");
+        File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
         if (!libsDirectory.exists()){
             try {
                 FileUtils.forceMkdir(libsDirectory);

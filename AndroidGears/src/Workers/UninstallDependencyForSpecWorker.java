@@ -52,7 +52,7 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     private Boolean uninstallJar(GearSpec spec, Project project){
 
         //Get the gears jar directory. If it doesn't exist, then we will count that as a win
-        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "GearsJars");
+        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
         if (!libsDirectory.exists()){
             //Unregister just in case
             if (GearSpecRegistrar.unregisterGear(spec, project)){

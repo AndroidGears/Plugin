@@ -58,9 +58,12 @@
           <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Gear Spec"
                   description="Takes in a .gearspec file and lints it to make sure it is valid.">
           </action>
+            <separator/>
+          <action id="SettingsAction" class="Actions.SettingsAction" text="Android Gears Settings"
+                  description="Manage the settings for your Android Gears Plugin">
+
+          </action>
       </group>
-
-
 
   </actions>
 
