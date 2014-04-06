@@ -27,7 +27,7 @@ public class GitComponent implements ApplicationComponent {
 
             }
         };
-        worker.run();
+        worker.execute();
     }
 
     public void disposeComponent() {

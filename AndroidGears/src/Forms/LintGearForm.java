@@ -102,6 +102,6 @@ public class LintGearForm extends Component {
 
             }
         };
-        worker.run();
+        worker.execute();
     }
 }

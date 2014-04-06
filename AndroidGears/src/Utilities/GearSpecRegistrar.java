@@ -72,21 +72,26 @@ public class GearSpecRegistrar {
 
         if (register != null){
             if (register.installedGears != null){
-               if (register.installedGears.remove(spec)){
-                   //Create new Gson instance for use
-                   Gson gson = new Gson();
+                for (GearSpec installedGear : register.installedGears){
+                    if (installedGear.getName().equals(spec.getName()) && installedGear.getVersion().equals(spec.getVersion())){
+                        if (register.installedGears.remove(installedGear)){
+                            //Create new Gson instance for use
+                            Gson gson = new Gson();
 
-                   //Write register to file
-                   try {
-                       FileUtils.write(getRegisterPath(project), gson.toJson(register));
-                   } catch (IOException e) {
-                       e.printStackTrace();
-                       return false;
-                   }
+                            //Write register to file
+                            try {
+                                FileUtils.forceDelete(getRegisterPath(project));
+                                FileUtils.write(getRegisterPath(project), gson.toJson(register));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
 
+                            return true;
+                        }
+                    }
+                }
 
-                   return true;
-               }
             }
         }
 

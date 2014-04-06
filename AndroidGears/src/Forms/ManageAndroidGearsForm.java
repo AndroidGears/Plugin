@@ -6,6 +6,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+
+import Models.GearSpec.GearSpecDependency;
 import Panels.SpecDetailsPanel;
 import Renderers.GearSpecCellRenderer;
 import Renderers.ProjectCellRenderer;
@@ -250,13 +252,18 @@ public class ManageAndroidGearsForm{
     }
 
     private void didSelectInstalledSpecAtIndex(int index){
-        selectedSpec = installedProjects.get(index);
-        setDetailsForSpec(selectedSpec, installedProjects.get(index).getVersion()); //MAY NEED TO CHANGE
-        getVersionDetailsForSepc();
+        if (index >= 0 && index < installedProjects.size()){
+            selectedSpec = installedProjects.get(index);
+            setDetailsForSpec(selectedSpec, installedProjects.get(index).getVersion()); //MAY NEED TO CHANGE
+            getVersionDetailsForSepc();
+        }
+
     }
 
     private void didSelectSpecVersion(int index) {
-        setDetailsForSpec(selectedSpec, projectVersions.get(index));
+        if (index >= 0 && index < projectVersions.size()){
+            setDetailsForSpec(selectedSpec, projectVersions.get(index));
+        }
     }
 
 
@@ -376,15 +383,23 @@ public class ManageAndroidGearsForm{
         Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
         if (this.selectedSpec.isInstalled(targetProject)){
+            ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
+            gearsToUninstall.add(this.selectedSpec);
+
+            //Prompt to add dependents
             ArrayList<GearSpec> dependents = this.selectedSpec.dependentGears(targetProject);
             if (dependents.size() > 0){
-                warnOfDependents(dependents);
+                gearsToUninstall.addAll(warnOfDependents(dependents));
             }
-            else {
-                ArrayList<GearSpec> specsForUninstall = new ArrayList<GearSpec>();
-                specsForUninstall.add(this.selectedSpec);
-                uninstallDependencies(specsForUninstall);
+
+            //Prompt to add dependencies
+            if (this.selectedSpec.getDependencies() != null){
+                if (this.selectedSpec.getDependencies().size() > 0){
+                    gearsToUninstall.addAll(warnOfDependencies(this.selectedSpec));
+                }
             }
+
+            uninstallDependencies(gearsToUninstall, targetProjects[targetProjects.length-1]);
         }
         else {
             //Set UI in download state
@@ -419,7 +434,7 @@ public class ManageAndroidGearsForm{
         }
     }
 
-    private void warnOfDependents(ArrayList<GearSpec> dependents){
+    private ArrayList<GearSpec> warnOfDependents(ArrayList<GearSpec> dependents){
         String dependentString = "";
         for(GearSpec dependentGear : dependents){
             dependentString= dependentString+dependentGear.getName()+ " - "+dependentGear.getVersion()+"\n";
@@ -441,26 +456,73 @@ public class ManageAndroidGearsForm{
 
         //Process answer
         if (answer == AGREE_TO_UNINSTALL_GEAR){
-            ArrayList<GearSpec> specsForUninstall = new ArrayList<GearSpec>();
-            specsForUninstall.add(this.selectedSpec);
-            uninstallDependencies(specsForUninstall);
+            return new ArrayList<GearSpec>();
         }
         else if (answer == AGREE_TO_UNINSTALL_GEAR_AND_DEPENDENTS){
-            dependents.add(this.selectedSpec);
-            uninstallDependencies(dependents);
+            return dependents;
+        }
+        else {
+            return new ArrayList<GearSpec>();
         }
     }
 
-    private void uninstallDependencies(ArrayList<GearSpec> specs){
-        UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(specs){
+    private ArrayList<GearSpec> warnOfDependencies(GearSpec spec){
+        if (spec.getDependencies() != null){
+            String dependentString = "";
+            ArrayList<GearSpec> dependencies = new ArrayList<GearSpec>();
+            for(GearSpecDependency dependency : spec.getDependencies()){
+                dependentString= dependentString+dependency.getName()+ " - "+dependency.getVersion()+"\n";
+                dependencies.add(Utils.specForInfo(dependency.getName(), dependency.getVersion()));
+            }
+
+            String dependencyMessageString = "The gear you wish to uninstall depends on other gears:\n"+dependentString
+                    +"\nWould you also like to uninstall these gears?.";
+
+            Object[] options = {"No",
+                    "Yes"};
+            int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(MasterPanel),
+                    dependencyMessageString,
+                    "Dependency check",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+
+            //Process answer
+            if (answer == AGREE_TO_UNINSTALL_GEAR){
+                return dependencies;
+            }
+        }
+
+        return new ArrayList<GearSpec>();
+    }
+
+    private void uninstallDependencies(ArrayList<GearSpec> specs, final Project project){
+        //Set UI in uninstall state
+        StatusLabel.setText("Uninstalling gears");
+        LoadingSpinnerLabel.setVisible(true);
+        InstallUninstallButton.setEnabled(false);
+        SyncButton.setEnabled(false);
+
+        UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(specs, project){
 
             @Override
             protected void done() {
                 super.done();
 
+                //Hide loading spinner and renable buttons
+                LoadingSpinnerLabel.setVisible(false);
+                InstallUninstallButton.setEnabled(true);
+                SyncButton.setEnabled(true);
+
                 //Flip button text
                 if (this.successful){
                     InstallUninstallButton.setText("Install Gear");
+                    StatusLabel.setText("Successfully uninstalled gear.");
+                }
+                else {
+                    StatusLabel.setText("There was a problem uninstalling the gear. Please try again.");
                 }
             }
         };
