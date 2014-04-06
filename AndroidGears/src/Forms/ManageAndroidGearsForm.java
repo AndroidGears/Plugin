@@ -58,6 +58,7 @@ public class ManageAndroidGearsForm{
     private JButton OpenInBrowserButton;
     private JLabel LoadingSpinnerLabel;
     private JComboBox TargetProjectComboBox;
+    private JLabel HeaderLogo;
 
     private void createUIComponents() {
 
@@ -220,6 +221,9 @@ public class ManageAndroidGearsForm{
         //Focus search bar
         SearchTextField.setVisible(true);
         SearchTextField.requestFocusInWindow();
+
+        //Set header logo background clear
+        HeaderLogo.setOpaque(false);
     }
 
     private void reloadList(){
@@ -403,7 +407,7 @@ public class ManageAndroidGearsForm{
         }
         else {
             //Set UI in download state
-            StatusLabel.setText("Installing Gear and its dependencies: "+this.selectedSpec.getName());
+            StatusLabel.setText("Installing Gear and its dependencies: " + this.selectedSpec.getName());
             LoadingSpinnerLabel.setVisible(true);
             InstallUninstallButton.setEnabled(false);
             SyncButton.setEnabled(false);

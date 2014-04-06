@@ -4,6 +4,7 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpecRegister.GearSpecRegister;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 
@@ -23,7 +24,7 @@ public class GearSpecRegistrar {
         File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+".specregister");
 
         //Create new Gson instance for use
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         //Create spec register
         GearSpecRegister register = null;
@@ -76,7 +77,7 @@ public class GearSpecRegistrar {
                     if (installedGear.getName().equals(spec.getName()) && installedGear.getVersion().equals(spec.getVersion())){
                         if (register.installedGears.remove(installedGear)){
                             //Create new Gson instance for use
-                            Gson gson = new Gson();
+                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
                             //Write register to file
                             try {
