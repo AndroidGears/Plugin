@@ -65,13 +65,13 @@ public class ManageAndroidGearsForm{
     }
 
     public ManageAndroidGearsForm() {
-        setupSearchTable();
+        setupMiscUI();
+        setupTables();
         setupSearchTextField();
         setupButtons();
-        setupMiscUI();
     }
 
-    private void setupSearchTable() {
+    private void setupTables() {
 
         //Add directories mode
         SearchProjectListWorker worker = new SearchProjectListWorker("", Utils.androidGearsDirectory()){
@@ -83,6 +83,8 @@ public class ManageAndroidGearsForm{
         };
         worker.execute();
 
+        //Get installed gears
+        refreshInstalledList();
 
         //Setup click listener
         SearchList.addListSelectionListener(new ListSelectionListener() {
@@ -134,7 +136,7 @@ public class ManageAndroidGearsForm{
                     protected void done() {
                         super.done();
                         searchProjects = this.specs;
-                        reloadList();
+                        reloadSearchList();
                     }
                 };
                 worker.execute();
@@ -226,11 +228,32 @@ public class ManageAndroidGearsForm{
         HeaderLogo.setOpaque(false);
     }
 
-    private void reloadList(){
+    private void reloadSearchList(){
         SearchList.setListData(searchProjects.toArray());
         SearchList.setCellRenderer(new GearSpecCellRenderer());
         SearchList.setVisibleRowCount(searchProjects.size());
 
+    }
+
+    private void reloadInstalledList(){
+        InstalledList.setListData(installedProjects.toArray());
+        InstalledList.setCellRenderer(new GearSpecCellRenderer());
+        InstalledList.setVisibleRowCount(installedProjects.size());
+
+    }
+
+    private void refreshInstalledList(){
+        GetInstalledProjectsWorker installedProjectsWorker = new GetInstalledProjectsWorker(targetProjects[targetProjects.length-1]){
+
+            @Override
+            protected void done() {
+                super.done();
+
+                installedProjects = this.specs;
+                reloadInstalledList();
+            }
+        };
+        installedProjectsWorker.execute();
     }
 
     private Boolean isValidCharacter(char c){
@@ -428,6 +451,8 @@ public class ManageAndroidGearsForm{
                     if (this.successful){
                         InstallUninstallButton.setText("Uninstall Gear");
                         StatusLabel.setText("Successfully installed: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                        refreshInstalledList();
+                        reloadSearchList();
                     }
                     else {
                         StatusLabel.setText("Installation failed for: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -524,6 +549,8 @@ public class ManageAndroidGearsForm{
                 if (this.successful){
                     InstallUninstallButton.setText("Install Gear");
                     StatusLabel.setText("Successfully uninstalled gear.");
+                    refreshInstalledList();
+                    reloadSearchList();
                 }
                 else {
                     StatusLabel.setText("There was a problem uninstalling the gear. Please try again.");
