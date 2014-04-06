@@ -6,6 +6,7 @@ import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -59,7 +60,7 @@ public class CreateGearForm {
 
 
     public CreateGearForm() {
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
         initAuthorTable();
         initDependenciesTable();
         initButtons();
