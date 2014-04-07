@@ -6,6 +6,7 @@ import Utilities.Utils;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,7 +41,12 @@ public class GetProjectVersionsWorker extends SwingWorker<Void, Void> {
     private ArrayList<String> versionsForProject(String project, String pathSeparator){
         File versionsDirectory = new File(Utils.androidGearsDirectory().getAbsolutePath()+pathSeparator+project);
 
-        ArrayList<String> versions = new ArrayList<String>(Arrays.asList(versionsDirectory.list()));
+        ArrayList<String> versions = new ArrayList<String>(Arrays.asList(versionsDirectory.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String s) {
+                return (s.equals(".DS_Store")) ? false: true;
+            }
+        })));
         Collections.reverse(versions);
         return versions;
     }
