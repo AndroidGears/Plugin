@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
 
     private Project project;
+    String searchString;
     public ArrayList<GearSpec> specs = new ArrayList<GearSpec>();
 
-    public GetInstalledProjectsWorker(Project project) {
+    public GetInstalledProjectsWorker(Project project, String searchString) {
         this.project = project;
+        this.searchString = searchString;
     }
 
     @Override

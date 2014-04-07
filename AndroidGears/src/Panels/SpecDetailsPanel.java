@@ -20,6 +20,7 @@ public class SpecDetailsPanel extends JPanel{
 
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 15));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setMaximumSize(new Dimension(ManageAndroidGearsForm.DETAILS_INNER_WIDTH, -1));
 
 
         //Add repo name
@@ -109,6 +110,7 @@ public class SpecDetailsPanel extends JPanel{
         }
 
         //Add homepage
+        /*
         if (selectedSpec.getHomepage() != null) {
             //Add header
             JLabel header = new JLabel(Utils.wrappedStringForString("<br/>Homepage", ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
@@ -116,12 +118,13 @@ public class SpecDetailsPanel extends JPanel{
             this.add(header);
 
             //Add homepage
-            JLabel homepageLabel = new JLabel(selectedSpec.getHomepage(), JLabel.LEFT);
+            JLabel homepageLabel = new JLabel(Utils.wrappedStringForString(selectedSpec.getHomepage(), ManageAndroidGearsForm.DETAILS_INNER_WIDTH), JLabel.LEFT);
+            homepageLabel.setMaximumSize(new Dimension(ManageAndroidGearsForm.DETAILS_INNER_WIDTH, 30));
             homepageLabel.setFont(new Font(homepageLabel.getFont().getName(), Font.PLAIN, 12));
             this.add(homepageLabel);
 
 
-        }
+        }*/
 
         //Add Tags
         if (selectedSpec.getTags() != null) {
@@ -144,6 +147,5 @@ public class SpecDetailsPanel extends JPanel{
             tagsLabel.setFont(new Font(tagsLabel.getFont().getName(), Font.PLAIN, 12));
             this.add(tagsLabel);
         }
-
     }
 }

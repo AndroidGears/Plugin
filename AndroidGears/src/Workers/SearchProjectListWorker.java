@@ -44,9 +44,6 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
         //Create gson instance for use in parsing specs
         final Gson gson = new Gson();
 
-        //Get path separator
-        final String pathSeparator = (OSValidator.isWindows()) ? "\\":"/";
-
         //If there is a searchstring, get matches!
         String directories[] =  androidGearsDirectory.list(new FilenameFilter() {
             @Override
@@ -54,7 +51,7 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 if(name.contains(".")){ //No hidden folders!
                     return  false;
                 }
-                else if (!(new File(file.getAbsolutePath()+pathSeparator+name).isDirectory())){
+                else if (!(new File(file.getAbsolutePath()+Utils.pathSeparator()+name).isDirectory())){
                     return false;
                 }
                 else if (name.toLowerCase().contains(searchString.toLowerCase())){ //Accept only those that match your search string
@@ -63,10 +60,10 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
 
 
                 //Get versions for spec
-                String[] versions = versionsForProject(name, pathSeparator);
+                String[] versions = versionsForProject(name, Utils.pathSeparator());
 
                 //Build spec location
-                File specFile = new File(Utils.androidGearsDirectory()+pathSeparator+name+pathSeparator+versions[versions.length-1]+pathSeparator+name+".gearspec");
+                File specFile = new File(Utils.androidGearsDirectory()+Utils.pathSeparator()+name+Utils.pathSeparator()+versions[versions.length-1]+Utils.pathSeparator()+name+".gearspec");
 
                 if(specFile.exists()) {
                     String specString = null;
@@ -113,10 +110,10 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
         ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
         for (String directory : directories){
             //Get versions for spec
-            String[] versions = versionsForProject(directory, pathSeparator);
+            String[] versions = versionsForProject(directory, Utils.pathSeparator());
 
             //Build spec location
-            File specFile = new File(androidGearsDirectory.getAbsolutePath()+pathSeparator+directory+pathSeparator+versions[versions.length-1]+pathSeparator+directory+".gearspec");
+            File specFile = new File(androidGearsDirectory.getAbsolutePath()+Utils.pathSeparator()+directory+Utils.pathSeparator()+versions[versions.length-1]+Utils.pathSeparator()+directory+".gearspec");
 
             //Read file
             if(specFile.exists()) {
