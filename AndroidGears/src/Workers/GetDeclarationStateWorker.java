@@ -23,9 +23,9 @@ public class GetDeclarationStateWorker extends SwingWorker<Void, Void> {
         GearSpecRegister register = GearSpecRegistrar.getRegister(this.project);
 
         if (register != null){
-            if (register.installedGears != null){
+            if (register.declaredGears != null){
                 //Iterate over declared specs to see if the selected spec is declared
-                for (GearSpec spec : register.installedGears){
+                for (GearSpec spec : register.declaredGears){
                     if (selectedSpec.getName().equals(spec.getName()) && selectedSpec.getVersion().equals(spec.getVersion())){
                         declared = true;
                         break;

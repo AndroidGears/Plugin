@@ -28,7 +28,7 @@ public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
         GearSpecRegister register = GearSpecRegistrar.getRegister(this.project);
 
         if (register != null){
-            this.specs = (register.installedGears != null) ? register.installedGears : new ArrayList<GearSpec>();
+            this.specs = (register.declaredGears != null) ? register.declaredGears : new ArrayList<GearSpec>();
             return null;
         }
 

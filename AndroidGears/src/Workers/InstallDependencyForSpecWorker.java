@@ -7,6 +7,7 @@ import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.util.FileTypeUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -24,11 +25,13 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private GearSpec selectedSpec;
     private Project project;
+    private Module module;
     public boolean successful;
 
-    public InstallDependencyForSpecWorker(GearSpec spec, Project project) {
+    public InstallDependencyForSpecWorker(GearSpec spec, Project project, Module module) {
         this.selectedSpec = spec;
         this.project = project;
+        this.module = module;
     }
 
     @Override
@@ -147,9 +150,42 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Download dependencies
-        //TODO:Download Dependencies for Modules
+        if (spec.getDependencies() != null){
+            if (spec.getDependencies().size() > 0){
+                for(GearSpecDependency dependency : spec.getDependencies()){
+                    //Get spec from dependency
+                    GearSpec dependencySpec = Utils.specForInfo(dependency.getName(), dependency.getVersion());
 
-        return true;
+                    //If we get a valid spec from the dependency, go ahead and download the dependency
+                    if (dependencySpec != null){
+                        //See if it is installed already, before we try
+                        if (!dependencySpec.isInstalled(project)){
+
+                            //Install dependency
+                            if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                                installJar(dependencySpec);
+                            }
+                            else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                                installModule(dependencySpec);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //Update project settings
+        if (!updateProjectSettingsForModule()){
+            return false;
+        }
+
+        //Register spec
+        if (GearSpecRegistrar.registerGear(spec, project)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private Boolean installJar(GearSpec spec){
@@ -212,5 +248,79 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
     }
 
+    private Boolean updateProjectSettingsForModule(){
 
+        //Install dependency and sub-dependencies
+        File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+
+        //Create comment string
+        String commentString = "\n/////////////////////\n" +
+                "// Gears Dependencies\n" +
+                "/////////////////////";
+
+        //Read settings file
+        try {
+            String settingsFileString = FileUtils.readFileToString(settingsFile);
+
+            if (!settingsFileString.contains("include ':Gears:Modules:"+this.selectedSpec.getName()+"'")){
+
+                //Make changes to settings.gradle
+                String newSettingString = "\n"+"include ':Gears:Modules:"+this.selectedSpec.getName()+"'";
+
+                int commentIndex = settingsFileString.lastIndexOf(commentString);
+
+                //If the comment exists...
+                if (commentIndex != -1){
+                    settingsFileString = settingsFileString.concat(newSettingString);
+                }
+                else {
+                    settingsFileString = settingsFileString.concat(commentString+"\n"+newSettingString);
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(settingsFile);
+                FileUtils.write(settingsFile, settingsFileString);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        //Read build file
+        try {
+            String buildFileString = FileUtils.readFileToString(buildFile);
+
+            //Create new addition
+            String newDependencyString = "dependencies{compile project (':Gears:Modules:"+this.selectedSpec.getName()+"')}";
+
+
+            if (!buildFileString.contains(newDependencyString)){
+                int commentIndex = buildFileString.lastIndexOf(commentString);
+
+                //If the comment exists...
+                if (commentIndex != -1){
+                    buildFileString = buildFileString.concat(newDependencyString);
+                }
+                else {
+                    buildFileString = buildFileString.concat(commentString+"\n"+newDependencyString);
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(buildFile);
+                FileUtils.write(buildFile, buildFileString);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    private Boolean updateProjectSettingsForJar(){
+        return false;
+    }
 }

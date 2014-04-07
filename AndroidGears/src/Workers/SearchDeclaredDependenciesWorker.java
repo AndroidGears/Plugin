@@ -33,14 +33,14 @@ public class SearchDeclaredDependenciesWorker extends SwingWorker<Void, Void> {
         if (register != null){
             //Check for empty search string
             if(searchString.equals("")){
-                this.specs = (register.installedGears != null) ? register.installedGears : new ArrayList<GearSpec>();
+                this.specs = (register.declaredGears != null) ? register.declaredGears : new ArrayList<GearSpec>();
                 return null;
             }
 
             //If not empty, search over all fields for matches
             String[] searchParameters = searchString.split(" ");
             ArrayList<GearSpec> gears = new ArrayList<GearSpec>();
-            for (GearSpec spec : register.installedGears){
+            for (GearSpec spec : register.declaredGears){
                 for (String searchParamter : searchParameters){
                     String filterString = spec.getName().toLowerCase() + " " + spec.getVersion().toLowerCase();
 

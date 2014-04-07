@@ -2,6 +2,7 @@ package Singletons;
 
 import Models.GearSpecRegister.GearSpecRegister;
 import Models.Settings.GearSpecSettings;
+import Models.Settings.ProjectSettings;
 import Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +23,9 @@ public class SettingsManager {
     private Project[] targetProjects;
     private static String IGNORE_STRING = "#Android Gears\nGears/";
 
+    //Project Settings
+    private ProjectSettings projectSettings = new ProjectSettings();
+
     private GearSpecSettings settings = new GearSpecSettings();
 
     protected SettingsManager() {
@@ -40,7 +44,7 @@ public class SettingsManager {
     // Loading / Saving
     ///////////////////////
 
-    private Boolean loadSettings(){
+    public Boolean loadSettings(){
         //Get settings file
         File settingsFile = new File(System.getProperty("user.home")+"/.androidgearssettings");
 
@@ -64,7 +68,7 @@ public class SettingsManager {
         return true;
     }
 
-    private Boolean saveSettings(){
+    public Boolean saveSettings(){
         //Get settings file
         File settingsFile = new File(System.getProperty("user.home")+"/.androidgearssettings");
 
@@ -79,6 +83,53 @@ public class SettingsManager {
 
             //Write settings to file
             FileUtils.write(settingsFile, gson.toJson(settings));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public Boolean loadProjectSettings(Project project){
+        //Get settings file
+        File settingsFile = new File(project.getBasePath()+"/.gearsproject");
+
+        if (settingsFile.exists()){
+            //Create new Gson instance for use
+            Gson gson = new Gson();
+
+            String settingsString = null;
+            try {
+                settingsString = FileUtils.readFileToString(settingsFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            //Load file into settings
+            this.projectSettings = new Gson().fromJson(settingsString, ProjectSettings.class);
+
+        }
+
+        return true;
+    }
+
+    public Boolean saveProjectSettings(Project project){
+        //Get settings file
+        File settingsFile = new File(project.getBasePath()+"/.gearsproject");
+
+        //Create new Gson instance for use
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try {
+            //Delete the settings, if they exist
+            if (settingsFile.exists()){
+                FileUtils.forceDelete(settingsFile);
+            }
+
+            //Write settings to file
+            FileUtils.write(settingsFile, gson.toJson(projectSettings));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -293,6 +344,29 @@ public class SettingsManager {
         }
 
         return true;
+    }
+
+    ///////////////////////
+    // Modules
+    ///////////////////////
+
+    public String getMainModule(){
+        if (projectSettings != null){
+            if (projectSettings.mainModule != null){
+                return projectSettings.mainModule;
+            }
+        }
+
+        return "";
+    }
+
+    public void setMainModule(String mainModule, Project project){
+        if (mainModule != null){
+            if (projectSettings != null){
+                projectSettings.mainModule = mainModule;
+            }
+            saveProjectSettings(project);
+        }
     }
 }
 

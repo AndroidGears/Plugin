@@ -19,6 +19,7 @@ public class SettingsForm {
     public JPanel MasterPanel;
     private JCheckBox GitIgnoreCheckBox;
     private JLabel IgnoreExplanationLabel;
+    private JButton DoneButton;
 
     public SettingsForm() {
         setupCheckBoxes();
@@ -40,6 +41,6 @@ public class SettingsForm {
 
     private void setupMiscUI() {
         //Setup ignore wrapping
-        IgnoreExplanationLabel.setText(Utils.wrappedStringForString(IgnoreExplanationLabel.getText(), SETTINGS_FRAME_WIDTH - 10));
+        IgnoreExplanationLabel.setText(Utils.wrappedStringForString(IgnoreExplanationLabel.getText(), SETTINGS_FRAME_WIDTH - 20));
     }
 }

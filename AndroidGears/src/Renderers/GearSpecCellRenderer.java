@@ -17,6 +17,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
     JPanel specInfoPanel;
     JLabel nameLabel;
     JLabel authorLabel;
+    JLabel imageLabel;
 
     public GearSpecCellRenderer() {
         setOpaque(true);
@@ -65,10 +66,14 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
                 authorLabel.setText(authors);
             }
 
+            //Set image
+            imageLabel = new JLabel(new ImageIcon(getClass().getResource("GearStateDeclared.png")));
+
             //Add components
             this.add(specInfoPanel);
             specInfoPanel.add(nameLabel);
             specInfoPanel.add(authorLabel);
+            this.add(imageLabel);
         }
         else {
             //Set name label
@@ -87,6 +92,8 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
                 authorLabel.setText(authors);
             }
 
+            //Set image
+            imageLabel.setIcon(new ImageIcon(getClass().getResource("GearStateDeclared.png")));
         }
 
         if(isSelected) {

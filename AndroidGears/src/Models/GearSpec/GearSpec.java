@@ -2,10 +2,8 @@ package Models.GearSpec;
 
 import Models.GearSpecRegister.GearSpecRegister;
 import Utilities.GearSpecRegistrar;
-import Utilities.Utils;
 import com.intellij.openapi.project.Project;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -143,8 +141,8 @@ public class GearSpec {
 
         //Iterate over register
         if (register != null){
-            if (register.installedGears != null){
-                for(GearSpec spec : register.installedGears){
+            if (register.declaredGears != null){
+                for(GearSpec spec : register.declaredGears){
                     if (this.getName().equals(spec.getName()) && this.getVersion().equals(spec.getVersion())){
                         return true;
                     }
@@ -164,8 +162,8 @@ public class GearSpec {
 
         //Iterate over register dependencies for potential dependents
         if (register != null) {
-            if (register.installedGears != null) {
-                for (GearSpec spec : register.installedGears) {
+            if (register.declaredGears != null) {
+                for (GearSpec spec : register.declaredGears) {
                     if (this.getName().equals(spec.getName()) && this.getVersion().equals(spec.getVersion())){
                         continue;
                     }

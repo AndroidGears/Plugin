@@ -4,6 +4,7 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecDependency;
 import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 
@@ -19,11 +20,13 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private ArrayList<GearSpec> selectedSpecs;
     private Project project;
+    private Module module;
     public boolean successful;
 
-    public UninstallDependencyForSpecWorker(ArrayList<GearSpec> selectedSpecs, Project project) {
+    public UninstallDependencyForSpecWorker(ArrayList<GearSpec> selectedSpecs, Project project, Module module) {
         this.selectedSpecs = selectedSpecs;
         this.project = project;
+        this.module = module;
     }
 
     @Override
@@ -87,8 +90,34 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private Boolean uninstallModule(GearSpec spec, Project project){
 
+        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Modules");
+        if (!libsDirectory.exists()){
+            //Unregister just in case
+            if (GearSpecRegistrar.unregisterGear(spec, project)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
 
-        //Remove dependencies, if nothing else depends on them
+        //Get the jar file
+        File moduleDirectory = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+spec.getName());
+
+        //Delete the jar
+        if (moduleDirectory.exists()){
+            try {
+                FileUtils.deleteDirectory(moduleDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        //Update settings files
+        if (!updateProjectSettingsForModule(spec)){
+            return false;
+        }
 
         //Finally, unregister gear
         if (GearSpecRegistrar.unregisterGear(spec, project)){
@@ -97,5 +126,100 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         else {
             return false;
         }
+    }
+
+    private Boolean updateProjectSettingsForModule(GearSpec spec){
+        //Install dependency and sub-dependencies
+        File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+        File modulesFile = new File(project.getBasePath() + Utils.pathSeparator() + ".idea"+Utils.pathSeparator()+"modules.xml");
+
+        //Modify settings file
+        if (settingsFile.exists()){
+            try {
+                //Read in settings file
+                String settingsFileString = FileUtils.readFileToString(settingsFile);
+
+                //Make comparator strings
+                String fullLineInclude = "include ':Gears:Modules:"+spec.getName()+"'";
+                String partialInclude = "':Gears:Modules:"+spec.getName()+"'";
+
+                //Look for full line inclusion
+                if (settingsFileString.contains(fullLineInclude)){
+                    settingsFileString = settingsFileString.replace(fullLineInclude, "");
+                }
+                //Look for partial line inclusions
+                else if (settingsFileString.contains(partialInclude+",")){ //Comma after
+                    settingsFileString = settingsFileString.replace(partialInclude+",", "");
+                }
+                else if (settingsFileString.contains(","+partialInclude)){ //Comma before
+                    settingsFileString = settingsFileString.replace(","+partialInclude, "");
+                }
+                else if (settingsFileString.contains(", "+partialInclude)){ //Comma before w/ space
+                    settingsFileString = settingsFileString.replace(", "+partialInclude, "");
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(settingsFile);
+                FileUtils.write(settingsFile, settingsFileString);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+
+        //Modify build file
+        if (buildFile.exists()){
+            try {
+                //Read the build file
+                String buildFileString = FileUtils.readFileToString(buildFile);
+
+                //Create new addition
+                String dependencyString = "dependencies{compile project (':Gears:Modules:"+spec.getName()+"')}";
+
+                if (buildFileString.contains(dependencyString)){
+                    buildFileString = buildFileString.replace(dependencyString, "");
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(buildFile);
+                FileUtils.write(buildFile, buildFileString);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+
+        //Remove entry from the modules.xml
+       String moduleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" />";
+        if (modulesFile.exists()){
+            //Read the build file
+            try {
+                String modulesFileString = FileUtils.readFileToString(modulesFile);
+
+                if (modulesFileString.contains(moduleEntry)){
+                    modulesFileString = modulesFileString.replace(moduleEntry, "");
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(modulesFile);
+                FileUtils.write(modulesFile, modulesFileString);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        return true;
     }
 }

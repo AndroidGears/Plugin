@@ -12,19 +12,33 @@ import java.io.*;
 import Models.GearSpec.GearSpecDependency;
 import Panels.SpecDetailsPanel;
 import Renderers.GearSpecCellRenderer;
+import Renderers.ModuleCellRenderer;
 import Renderers.ProjectCellRenderer;
+import Singletons.SettingsManager;
 import Utilities.OSValidator;
 import Utilities.Utils;
+
+import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 import Models.GearSpec.GearSpec;
 import Workers.*;
 import com.google.gson.Gson;
+import com.intellij.execution.RunManager;
+import com.intellij.execution.configurations.ModuleRunConfiguration;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.impl.ModuleRunConfigurationManager;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.roots.ui.configuration.ModulesCombobox;
+import com.intellij.util.graph.Graph;
 import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
@@ -43,6 +57,7 @@ public class ManageAndroidGearsForm{
     private ArrayList<GearSpec> installedProjects;
     private ArrayList<String> projectVersions;
     Project[] targetProjects;
+    Module[] targetModules;
 
     private JTextField SearchTextField;
     private JTabbedPane SearchTabbedPane;
@@ -64,12 +79,14 @@ public class ManageAndroidGearsForm{
     private JLabel HeaderLogo;
     private JList DeclaredList;
     private JButton DeclareUndeclareGearButton;
+    private JComboBox TargetModuleComboBox;
 
     private void createUIComponents() {
 
     }
 
     public ManageAndroidGearsForm() {
+        setupComboBoxes();
         setupMiscUI();
         setupTables();
         setupSearchTextField();
@@ -225,15 +242,18 @@ public class ManageAndroidGearsForm{
         });
     }
 
-    private void setupMiscUI() {
-        ChangeVersionsLabel.setFont(new Font(ChangeVersionsLabel.getFont().getName(), Font.PLAIN, 12));
-        StatusLabel.setText("");
-        LoadingSpinnerLabel.setVisible(false);
-
-        //Setup project list
+    private void setupComboBoxes(){
+        //Get all projects
         ProjectManager pm = ProjectManager.getInstance();
         targetProjects = pm.getOpenProjects();
+        Project p = targetProjects[0];
+        SettingsManager.getInstance().loadProjectSettings(p);
 
+        //Get all modules
+        ModuleManager mm = ModuleManager.getInstance(p);
+        targetModules = mm.getModules();
+
+        //Setup Project Combo Box
         TargetProjectComboBox.setModel(new ListComboBoxModel<Project>(Arrays.asList(targetProjects)));
         TargetProjectComboBox.setSelectedIndex(0);
         TargetProjectComboBox.setRenderer(new ProjectCellRenderer());
@@ -244,6 +264,42 @@ public class ManageAndroidGearsForm{
             }
         });
         TargetProjectComboBox.setFocusable(false);
+
+        //Setup Module Combo Box
+        TargetModuleComboBox.setModel(new ListComboBoxModel<Module>(Arrays.asList(targetModules)));
+        if (targetModules.length > 0) {
+            TargetModuleComboBox.setSelectedIndex(targetModules.length-1);
+        }
+        TargetModuleComboBox.setRenderer(new ModuleCellRenderer());
+        TargetModuleComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Module module = (Module)TargetModuleComboBox.getSelectedItem();
+                SettingsManager.getInstance().setMainModule(module.getName(), targetProjects[TargetProjectComboBox.getSelectedIndex()]);
+            }
+        });
+        TargetModuleComboBox.setFocusable(false);
+
+        //Get/Set selected module
+        String mainModule = SettingsManager.getInstance().getMainModule();
+        if (mainModule.equals("")){ //Save default
+            SettingsManager.getInstance().setMainModule(targetModules[targetModules.length-1].getName(), p);
+        }
+        else { //Pull back selected module
+            for (int ii = 0; ii < targetModules.length; ii++){
+                if (targetModules[ii].getName().equals(mainModule)){
+                    TargetModuleComboBox.setSelectedIndex(ii);
+                }
+            }
+        }
+
+
+    }
+
+    private void setupMiscUI() {
+        ChangeVersionsLabel.setFont(new Font(ChangeVersionsLabel.getFont().getName(), Font.PLAIN, 12));
+        StatusLabel.setText("");
+        LoadingSpinnerLabel.setVisible(false);
 
         //Focus search bar
         SearchTextField.setVisible(true);
@@ -538,7 +594,7 @@ public class ManageAndroidGearsForm{
                 }
             }
 
-            uninstallDependencies(gearsToUninstall, targetProjects[targetProjects.length-1]);
+            uninstallDependencies(gearsToUninstall, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]);
         }
         else {
             //Set UI in download state
@@ -548,7 +604,7 @@ public class ManageAndroidGearsForm{
             SyncButton.setEnabled(false);
 
 
-            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
+            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
 
                 @Override
                 protected void done() {
@@ -646,14 +702,14 @@ public class ManageAndroidGearsForm{
         return new ArrayList<GearSpec>();
     }
 
-    private void uninstallDependencies(ArrayList<GearSpec> specs, final Project project){
+    private void uninstallDependencies(ArrayList<GearSpec> specs, final Project project, Module module){
         //Set UI in uninstall state
         StatusLabel.setText("Uninstalling gears");
         LoadingSpinnerLabel.setVisible(true);
         InstallUninstallButton.setEnabled(false);
         SyncButton.setEnabled(false);
 
-        UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(specs, project){
+        UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(specs, project, module){
 
             @Override
             protected void done() {
