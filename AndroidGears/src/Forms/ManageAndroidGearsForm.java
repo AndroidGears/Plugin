@@ -18,27 +18,18 @@ import Singletons.SettingsManager;
 import Utilities.OSValidator;
 import Utilities.Utils;
 
-import java.lang.annotation.Target;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
-import java.util.List;
 
 import Models.GearSpec.GearSpec;
 import Workers.*;
 import com.google.gson.Gson;
-import com.intellij.execution.RunManager;
-import com.intellij.execution.configurations.ModuleRunConfiguration;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.impl.ModuleRunConfigurationManager;
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.roots.ui.configuration.ModulesCombobox;
-import com.intellij.util.graph.Graph;
 import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
@@ -96,7 +87,7 @@ public class ManageAndroidGearsForm{
     private void setupTables() {
 
         //Add directories mode
-        SearchProjectListWorker worker = new SearchProjectListWorker("", Utils.androidGearsDirectory()){
+        SearchProjectListWorker worker = new SearchProjectListWorker("", targetProjects[TargetProjectComboBox.getSelectedIndex()]){
             @Override
             protected void done() {
                 super.done();
@@ -352,7 +343,7 @@ public class ManageAndroidGearsForm{
 
     private void refreshAvailableGearsList(String searchString){
         //Get availableGears and reload
-        SearchProjectListWorker worker = new SearchProjectListWorker(searchString, Utils.androidGearsDirectory()){
+        SearchProjectListWorker worker = new SearchProjectListWorker(searchString, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
             @Override
             protected void done() {
                 super.done();
@@ -457,36 +448,36 @@ public class ManageAndroidGearsForm{
         DetailsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         //Set install/uninstall button
-        //CHECK HERE FOR INSTALLATION STATUS
-        Boolean isInstalled = selectedSpec.isInstalled(targetProjects[TargetProjectComboBox.getSelectedIndex()]);
-        String buttonText = (isInstalled) ? "Uninstall Gear" : "Install Gear";
-        InstallUninstallButton.setText(buttonText);
         InstallUninstallButton.setVisible(true);
 
         //Enable show homepage button again
         OpenInBrowserButton.setVisible(true);
 
         //Set declaration button based on install state
-        if (isInstalled){
-            DeclareUndeclareGearButton.setVisible(false);
-        }
-        else {
-            DeclareUndeclareGearButton.setVisible(true);
-            setDeclarationStatusForSpec(spec);
-        }
+        setDeclarationStatusForSpec(spec);
     }
 
-    private void setDeclarationStatusForSpec(GearSpec spec){
-        GetDeclarationStateWorker worker = new GetDeclarationStateWorker(){
+    private void setDeclarationStatusForSpec(final GearSpec spec){
+        GetGearStateWorker worker = new GetGearStateWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], spec){
             @Override
             protected void done() {
                 super.done();
 
-                if (this.declared){
-                    DeclareUndeclareGearButton.setText("Undeclare Gear");
-                }
-                else {
+
+                if (this.gearState == GearSpec.GearState.GearStateUninstalled){
                     DeclareUndeclareGearButton.setText("Declare Gear");
+                    InstallUninstallButton.setText("Install Gear");
+                    DeclareUndeclareGearButton.setVisible(true);
+
+                }
+                else if (this.gearState == GearSpec.GearState.GearStateDeclared){
+                    DeclareUndeclareGearButton.setText("Undeclare Gear");
+                    DeclareUndeclareGearButton.setVisible(true);
+                    InstallUninstallButton.setText("Install Gear");
+                }
+                else if (this.gearState == GearSpec.GearState.GearStateInstalled){
+                    DeclareUndeclareGearButton.setVisible(false);
+                    InstallUninstallButton.setText("Uninstall Gear");
                 }
             }
         };
@@ -577,7 +568,7 @@ public class ManageAndroidGearsForm{
     private void toggleDependency(){
         Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
-        if (this.selectedSpec.isInstalled(targetProject)){
+        if (this.selectedSpec.isRegistered(targetProject)){
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
             gearsToUninstall.add(this.selectedSpec);
 
@@ -623,7 +614,7 @@ public class ManageAndroidGearsForm{
                         StatusLabel.setText("Successfully installed: "+ManageAndroidGearsForm.this.selectedSpec.getName());
                         refreshDeclaredList(SearchTextField.getText());
                         refreshInstalledList(SearchTextField.getText());
-                        reloadSearchList();
+                        refreshAvailableGearsList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Installation failed for: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -635,7 +626,67 @@ public class ManageAndroidGearsForm{
     }
 
     private void toggleDependencyDeclaration(){
+        DeclareUndeclareGearButton.setEnabled(false);
+        InstallUninstallButton.setEnabled(false);
 
+        if (this.selectedSpec.gearState == GearSpec.GearState.GearStateDeclared){
+            UndeclareSpecWorker worker = new UndeclareSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
+                @Override
+                protected void done() {
+                    super.done();
+
+                    DeclareUndeclareGearButton.setEnabled(true);
+                    InstallUninstallButton.setEnabled(true);
+
+                    if (success){
+                        StatusLabel.setText("Successfully undeclared: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                        DeclareUndeclareGearButton.setText("Declare Gear");
+
+                        //Set new declaration state on local copy of selected spec
+                        ManageAndroidGearsForm.this.selectedSpec.gearState = GearSpec.GearState.GearStateUninstalled;
+                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
+
+                        //Reload all tables
+                        refreshAvailableGearsList(SearchTextField.getText());
+                        refreshDeclaredList(SearchTextField.getText());
+                        refreshInstalledList(SearchTextField.getText());
+                    }
+                    else {
+                        StatusLabel.setText("Failed to undeclare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                    }
+                }
+            };
+            worker.execute();
+        }
+        else {
+            DeclareSpecWorker worker = new DeclareSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
+                @Override
+                protected void done() {
+                    super.done();
+
+                    DeclareUndeclareGearButton.setEnabled(true);
+                    InstallUninstallButton.setEnabled(true);
+
+                    if (success){
+                        StatusLabel.setText("Successfully declared: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                        DeclareUndeclareGearButton.setText("Undeclare Gear");
+
+                        //Set new declaration state on local copy of selected spec
+                        ManageAndroidGearsForm.this.selectedSpec.gearState = GearSpec.GearState.GearStateDeclared;
+                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
+
+                        //Reload all tables
+                        refreshAvailableGearsList(SearchTextField.getText());
+                        refreshDeclaredList(SearchTextField.getText());
+                        refreshInstalledList(SearchTextField.getText());
+                    }
+                    else {
+                        StatusLabel.setText("Failed to declare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                    }
+                }
+            };
+            worker.execute();
+        }
     }
 
     private ArrayList<GearSpec> warnOfDependents(ArrayList<GearSpec> dependents){
@@ -728,7 +779,7 @@ public class ManageAndroidGearsForm{
                     StatusLabel.setText("Successfully uninstalled gear.");
                     refreshDeclaredList(SearchTextField.getText());
                     refreshInstalledList(SearchTextField.getText());
-                    reloadSearchList();
+                    refreshAvailableGearsList(SearchTextField.getText());
                 }
                 else {
                     StatusLabel.setText("There was a problem uninstalling the gear. Please try again.");

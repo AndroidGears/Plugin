@@ -4,6 +4,7 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpecRegister.GearSpecRegister;
 import Utilities.GearSpecRegistrar;
+import Utilities.Utils;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
@@ -31,12 +32,6 @@ public class SearchDeclaredDependenciesWorker extends SwingWorker<Void, Void> {
 
 
         if (register != null){
-            //Check for empty search string
-            if(searchString.equals("")){
-                this.specs = (register.declaredGears != null) ? register.declaredGears : new ArrayList<GearSpec>();
-                return null;
-            }
-
             //If not empty, search over all fields for matches
             String[] searchParameters = searchString.split(" ");
             ArrayList<GearSpec> gears = new ArrayList<GearSpec>();
@@ -56,6 +51,10 @@ public class SearchDeclaredDependenciesWorker extends SwingWorker<Void, Void> {
 
                     //Filter with the search string over spec metadata
                     if(filterString.contains(searchParamter.toLowerCase())){
+                        //Set spec state
+                        spec.gearState = Utils.specStateForSpec(spec, project);
+
+                        //Add gear
                         gears.add(spec);
                         break;
                     }
@@ -67,4 +66,6 @@ public class SearchDeclaredDependenciesWorker extends SwingWorker<Void, Void> {
 
         return null;
     }
+
+
 }

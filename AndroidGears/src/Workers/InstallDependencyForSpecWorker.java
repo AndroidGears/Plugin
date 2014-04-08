@@ -2,12 +2,10 @@ package Workers;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecDependency;
-import Models.GearSpec.GearSpecSource;
 import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.util.FileTypeUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -16,7 +14,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by matthewyork on 4/4/14.
@@ -159,7 +156,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                     //If we get a valid spec from the dependency, go ahead and download the dependency
                     if (dependencySpec != null){
                         //See if it is installed already, before we try
-                        if (!dependencySpec.isInstalled(project)){
+                        if (!dependencySpec.isRegistered(project)){
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
@@ -224,7 +221,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                     //If we get a valid spec from the dependency, go ahead and download the dependency
                     if (dependencySpec != null){
                         //See if it is installed already, before we try
-                        if (!dependencySpec.isInstalled(project)){
+                        if (!dependencySpec.isRegistered(project)){
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){

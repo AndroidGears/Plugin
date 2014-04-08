@@ -3,9 +3,9 @@ package Utilities;
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
+import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 
-import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -108,5 +108,31 @@ public class Utils {
         else {
             return source.getSource_files();
         }
+    }
+
+    public static GearSpec.GearState specStateForSpec(GearSpec spec, Project project){
+        if (spec.isRegistered(project)){
+            if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                if (new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Jars"+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource())).exists()){
+                    return GearSpec.GearState.GearStateInstalled;
+                }
+                else {
+                    return GearSpec.GearState.GearStateDeclared;
+                }
+            }
+            else if(spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                if(new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Modules"+Utils.pathSeparator()+spec.getName()).exists()){
+                    return GearSpec.GearState.GearStateInstalled;
+                }
+                else{
+                    return GearSpec.GearState.GearStateDeclared;
+                }
+            }
+            else {
+                return GearSpec.GearState.GearStateDeclared;
+            }
+        }
+
+        return GearSpec.GearState.GearStateUninstalled;
     }
 }

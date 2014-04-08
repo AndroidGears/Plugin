@@ -2,11 +2,10 @@ package Workers;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
-import Utilities.OSValidator;
 import Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.intellij.util.Url;
+import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
@@ -21,17 +20,17 @@ import java.util.ArrayList;
 public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
 
     private String searchString;
-    private File file;
+    private Project project;
     public ArrayList<GearSpec> specs = new ArrayList<GearSpec>();
 
-    public SearchProjectListWorker(String searchString, File file) {
+    public SearchProjectListWorker(String searchString,  Project project) {
         this.searchString = searchString;
-        this.file = file;
+        this.project = project;
     }
 
     @Override
     protected Void doInBackground() throws Exception {
-        specs = projectsList(file, searchString);
+        specs = projectsList(Utils.androidGearsDirectory(), searchString);
         return null;
     }
 
@@ -127,6 +126,9 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
 
                 //Get spec
                 GearSpec spec = gson.fromJson(specString, GearSpec.class);
+
+                //Set spec state
+                spec.gearState = Utils.specStateForSpec(spec, project);
 
                 //Create project and add to project list
                 projectList.add(spec);

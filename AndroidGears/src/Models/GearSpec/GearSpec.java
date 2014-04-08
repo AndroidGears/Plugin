@@ -10,8 +10,16 @@ import java.util.ArrayList;
  * Created by matthewyork on 3/31/14.
  */
 public class GearSpec {
+    public enum GearState {
+        GearStateUninstalled,
+        GearStateDeclared,
+        GearStateInstalled
+    };
+
     public static final String SPEC_TYPE_MODULE = "module";
     public static final String SPEC_TYPE_JAR = "jar";
+
+    public GearState gearState = GearState.GearStateUninstalled;
 
     private String name;
     private String summary;
@@ -135,7 +143,7 @@ public class GearSpec {
     // Helper Methods
     ///////////////////////
 
-    public Boolean isInstalled(Project project){
+    public Boolean isRegistered(Project project){
         //Get register
         GearSpecRegister register = GearSpecRegistrar.getRegister(project);
 

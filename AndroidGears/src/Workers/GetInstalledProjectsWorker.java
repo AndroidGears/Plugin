@@ -3,6 +3,7 @@ package Workers;
 import Models.GearSpec.GearSpec;
 import Models.GearSpecRegister.GearSpecRegister;
 import Utilities.GearSpecRegistrar;
+import Utilities.Utils;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
@@ -28,7 +29,15 @@ public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
         GearSpecRegister register = GearSpecRegistrar.getRegister(this.project);
 
         if (register != null){
-            this.specs = (register.declaredGears != null) ? register.declaredGears : new ArrayList<GearSpec>();
+            ArrayList<GearSpec> installedSpecs = new ArrayList<GearSpec>();
+            for (GearSpec declaredSpec : register.declaredGears){
+                if (Utils.specStateForSpec(declaredSpec, project) == GearSpec.GearState.GearStateInstalled){
+                    declaredSpec.gearState = Utils.specStateForSpec(declaredSpec, project);
+                    installedSpecs.add(declaredSpec);
+                }
+            }
+
+            this.specs = installedSpecs;
             return null;
         }
 

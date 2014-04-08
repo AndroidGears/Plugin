@@ -19,6 +19,8 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
     JLabel nameLabel;
     JLabel authorLabel;
     JLabel imageLabel;
+    ImageIcon declaredIcon = new ImageIcon(getClass().getResource("GearStateDeclared.png"));
+    ImageIcon installedIcon = new ImageIcon(getClass().getResource("GearStateInstalled.png"));
 
     public GearSpecCellRenderer() {
         setOpaque(true);
@@ -65,7 +67,16 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             }
 
             //Set image
-            imageLabel = new JLabel(new ImageIcon(getClass().getResource("GearStateDeclared.png")));
+            imageLabel = new JLabel();
+            //Set image
+            switch (spec.gearState.ordinal()){
+                case 0: imageLabel.setIcon(new ImageIcon());
+                    break;
+                case 1: imageLabel.setIcon(declaredIcon);
+                    break;
+                case 2: imageLabel.setIcon(installedIcon);
+                    break;
+            }
 
             //Add components
             this.add(specInfoPanel, BorderLayout.WEST);
@@ -91,7 +102,14 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             }
 
             //Set image
-            imageLabel.setIcon(new ImageIcon(getClass().getResource("GearStateDeclared.png")));
+            switch (spec.gearState.ordinal()){
+                case 0: imageLabel.setIcon(new ImageIcon());
+                    break;
+                case 1: imageLabel.setIcon(declaredIcon);
+                    break;
+                case 2: imageLabel.setIcon(installedIcon);
+                    break;
+            }
         }
 
         if(isSelected) {

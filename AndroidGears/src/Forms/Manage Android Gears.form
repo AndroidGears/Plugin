@@ -12,7 +12,7 @@
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
-            <preferred-size width="500" height="700"/>
+            <preferred-size width="500" height="600"/>
           </grid>
         </constraints>
         <properties/>
@@ -46,16 +46,25 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="41c9" class="javax.swing.JList" binding="AllGearsList">
+                  <scrollpane id="3fd57">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="50"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <minimum-size width="-1" height="400"/>
+                        <preferred-size width="500" height="500"/>
+                        <maximum-size width="-1" height="500"/>
                       </grid>
                     </constraints>
-                    <properties>
-                      <model/>
-                    </properties>
-                  </component>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="41c9" class="javax.swing.JList" binding="AllGearsList">
+                        <constraints/>
+                        <properties>
+                          <model/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
               <grid id="ee610" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -66,14 +75,23 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="486fc" class="javax.swing.JList" binding="DeclaredList">
+                  <scrollpane id="78dc8">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="50"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <minimum-size width="-1" height="400"/>
+                        <preferred-size width="500" height="500"/>
+                        <maximum-size width="-1" height="500"/>
                       </grid>
                     </constraints>
                     <properties/>
-                  </component>
+                    <border type="none"/>
+                    <children>
+                      <component id="486fc" class="javax.swing.JList" binding="DeclaredList">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
               <grid id="f588a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -87,7 +105,9 @@
                   <component id="875a8" class="javax.swing.JList" binding="InstalledList">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="50"/>
+                        <minimum-size width="-1" height="400"/>
+                        <preferred-size width="500" height="500"/>
+                        <maximum-size width="-1" height="500"/>
                       </grid>
                     </constraints>
                     <properties/>
@@ -164,7 +184,7 @@
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <minimum-size width="350" height="-1"/>
-            <preferred-size width="350" height="700"/>
+            <preferred-size width="350" height="600"/>
             <maximum-size width="350" height="-1"/>
           </grid>
         </constraints>
