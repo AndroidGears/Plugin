@@ -4,6 +4,7 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -36,14 +37,11 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
         //Check for first runthrough
         if(nameLabel == null){
             //Initialize name panel
-            this.setLayout(new FlowLayout());
+            this.setLayout(new BorderLayout());
+            this.setBorder(new EmptyBorder(10,10,10,10));
             specInfoPanel = new JPanel();
             specInfoPanel.setLayout(new BoxLayout(specInfoPanel, BoxLayout.Y_AXIS));
             specInfoPanel.setOpaque(false);
-
-
-            //Set layout
-            this.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             //Set name label
             nameLabel = new JLabel(spec.getName(), JLabel.LEFT);
@@ -70,10 +68,10 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             imageLabel = new JLabel(new ImageIcon(getClass().getResource("GearStateDeclared.png")));
 
             //Add components
-            this.add(specInfoPanel);
+            this.add(specInfoPanel, BorderLayout.WEST);
             specInfoPanel.add(nameLabel);
             specInfoPanel.add(authorLabel);
-            this.add(imageLabel);
+            this.add(imageLabel, BorderLayout.EAST);
         }
         else {
             //Set name label
