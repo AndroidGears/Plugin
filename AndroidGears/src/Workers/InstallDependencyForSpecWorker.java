@@ -280,7 +280,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                     settingsFileString = settingsFileString.concat(newSettingString);
                 }
                 else {
-                    settingsFileString = settingsFileString.concat(commentString+"\n"+newSettingString);
+                    settingsFileString = settingsFileString.concat(commentString+newSettingString);
                 }
 
                 //Write changes to settings.gradle
@@ -298,7 +298,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             String buildFileString = FileUtils.readFileToString(buildFile);
 
             //Create new addition
-            String newDependencyString = "dependencies{compile project (':Gears:Modules:"+this.selectedSpec.getName()+"')}";
+            String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+this.selectedSpec.getName()+"')}";
 
 
             if (!buildFileString.contains(newDependencyString)){
@@ -309,7 +309,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                     buildFileString = buildFileString.concat(newDependencyString);
                 }
                 else {
-                    buildFileString = buildFileString.concat(commentString+"\n"+newDependencyString);
+                    buildFileString = buildFileString.concat(commentString+newDependencyString);
                 }
 
                 //Write changes to settings.gradle
@@ -340,7 +340,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                 String buildFileString = FileUtils.readFileToString(buildFile);
 
                 //Create new addition
-                String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+                String dependencyString = "\ndependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
 
                 //If the build file doesn't contain the jar dependency, go ahead and add it
                 if (!buildFileString.contains(dependencyString)){
@@ -351,7 +351,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                         buildFileString = buildFileString.concat(dependencyString);
                     }
                     else {
-                        buildFileString = buildFileString.concat(commentString+"\n"+dependencyString);
+                        buildFileString = buildFileString.concat(commentString+dependencyString);
                     }
 
                     //Write changes to settings.gradle
