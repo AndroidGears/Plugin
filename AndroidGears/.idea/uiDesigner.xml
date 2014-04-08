@@ -32,16 +32,16 @@
           <property name="text" value="CheckBox" />
         </initial-values>
       </item>
+      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
       <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
         <initial-values>
           <property name="text" value="Label" />
         </initial-values>
-      </item>
-      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
-        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-          <preferred-size width="150" height="-1" />
-        </default-constraints>
       </item>
       <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
         <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">

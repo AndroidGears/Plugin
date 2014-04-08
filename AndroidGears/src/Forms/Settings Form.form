@@ -1,93 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Forms.SettingsForm">
-  <grid id="27dc6" binding="MasterPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="MasterPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="5" left="5" bottom="5" right="5"/>
     <constraints>
-      <xy x="20" y="20" width="1705" height="614"/>
+      <xy x="31" y="12" width="474" height="501"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="6cf83" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="5" left="5" bottom="5" right="5"/>
+      <grid id="a9349" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
-            <minimum-size width="600" height="-1"/>
-            <preferred-size width="600" height="-1"/>
-            <maximum-size width="600" height="-1"/>
-          </grid>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
-        <border type="etched" title="Git Ignore"/>
+        <border type="none" title="Resync Android Gears Repository"/>
         <children>
-          <component id="85956" class="javax.swing.JCheckBox" binding="GitIgnoreCheckBox">
+          <component id="7d808" class="javax.swing.JButton" binding="resynchronizeAndroidGearsButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Create .gitignore entry"/>
-              <verticalAlignment value="0"/>
-              <verticalTextPosition value="0"/>
+              <text value="Resynchronize Android Gears"/>
             </properties>
           </component>
-          <component id="aaf4d" class="javax.swing.JLabel" binding="IgnoreExplanationLabel">
+          <component id="df44" class="javax.swing.JTextPane" binding="normallyTheGearsPluginTextPane" default-binding="true">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="Allow Android Gears to automatically create an entry in your .gitignore file for ignoring downloaded dependencies. Ignoring downloaded dependencies can help to keep your repository small by declaring your dependencies instead of saving them in your repository."/>
+              <editable value="false"/>
+              <text value="Normally the gears plugin will fetch the newest gears for you automatically. If you are having trouble seeing the newest Android Gears. Click the button below to download a fresh copy of the Android Gears specs repository. "/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="7799f" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="3c281" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="500" height="-1"/>
+          </grid>
         </constraints>
         <properties/>
-        <border type="none"/>
+        <border type="etched" title=".gitignore Policy"/>
         <children>
-          <component id="d5c89" class="javax.swing.JButton" binding="DoneButton">
+          <component id="86140" class="javax.swing.JCheckBox" binding="createGitignoreEntryCheckBox" default-binding="true">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Done"/>
+              <text value="Create .gitignore entry"/>
             </properties>
           </component>
-          <hspacer id="e23fd">
+          <component id="96b4a" class="javax.swing.JTextPane" binding="allowAndroidGearsToTextPane" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="106"/>
+                <maximum-size width="-1" height="150"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <enabled value="true"/>
+              <text value="Allow Android Gears to automatically create an entry in your .gitignore file for ignoring downloaded dependencies. Ignoring downloaded dependencies can help to keep your repository small by declaring your dependencies instead of saving them in your repository. Reload Specs Library"/>
+            </properties>
+          </component>
+          <hspacer id="f1327">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
         </children>
       </grid>
-      <grid id="7b9a7" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="417e7" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
-        <border type="none"/>
+        <border type="etched" title="Project Dependency Auto-Sync"/>
         <children>
-          <component id="89df6" class="javax.swing.JLabel">
+          <component id="a4cf7" class="javax.swing.JCheckBox" binding="autoSyncGearsCheckBox" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <font style="1"/>
-              <text value="Reload Specs Library"/>
-              <verticalAlignment value="1"/>
+              <text value="Auto-Sync Gears"/>
             </properties>
           </component>
-          <component id="22998" class="javax.swing.JLabel">
+          <component id="4c439" class="javax.swing.JTextPane" binding="byCheckingYesAndroidTextPane" default-binding="true">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
             </constraints>
             <properties>
-              <text value="Label"/>
-              <verticalAlignment value="1"/>
+              <text value="By checking yes, Android Gears will automatically download any new dependencies that it finds for the specs that isn't installed. Great for when you are working in teams and someone adds a new gear."/>
             </properties>
           </component>
         </children>

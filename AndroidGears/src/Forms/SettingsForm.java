@@ -17,9 +17,12 @@ public class SettingsForm {
     private static int SETTINGS_FRAME_WIDTH = 500;
 
     public JPanel MasterPanel;
-    private JCheckBox GitIgnoreCheckBox;
-    private JLabel IgnoreExplanationLabel;
-    private JButton DoneButton;
+    private JButton resynchronizeAndroidGearsButton;
+    private JTextPane allowAndroidGearsToTextPane;
+    private JTextPane normallyTheGearsPluginTextPane;
+    private JCheckBox createGitignoreEntryCheckBox;
+    private JCheckBox autoSyncGearsCheckBox;
+    private JTextPane byCheckingYesAndroidTextPane;
 
     public SettingsForm() {
         setupCheckBoxes();
@@ -28,11 +31,22 @@ public class SettingsForm {
 
     private void setupCheckBoxes() {
         //Set ignore checkbox. Add check/uncheck listener
-        GitIgnoreCheckBox.setSelected(SettingsManager.getInstance().getAutoIgnore());
-        GitIgnoreCheckBox.addItemListener(new ItemListener() {
+        createGitignoreEntryCheckBox.setSelected(SettingsManager.getInstance().getAutoIgnore());
+        createGitignoreEntryCheckBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent itemEvent) {
-                if (GitIgnoreCheckBox.isSelected()){
+                if (createGitignoreEntryCheckBox.isSelected()){
+
+                }
+            }
+        });
+
+        //Set ignore checkbox. Add check/uncheck listener
+        autoSyncGearsCheckBox.setSelected(SettingsManager.getInstance().getAutoIgnore());
+        autoSyncGearsCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent itemEvent) {
+                if (autoSyncGearsCheckBox.isSelected()){
 
                 }
             }
@@ -40,7 +54,6 @@ public class SettingsForm {
     }
 
     private void setupMiscUI() {
-        //Setup ignore wrapping
-        IgnoreExplanationLabel.setText(Utils.wrappedStringForString(IgnoreExplanationLabel.getText(), SETTINGS_FRAME_WIDTH - 20));
+
     }
 }

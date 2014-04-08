@@ -37,6 +37,9 @@
 
   <project-components>
     <!-- Add your project components here -->
+      <component>
+          <implementation-class>ProjectSettingsComponent</implementation-class>
+      </component>
   </project-components>
 
   <actions>
