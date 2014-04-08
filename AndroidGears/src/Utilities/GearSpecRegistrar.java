@@ -43,8 +43,19 @@ public class GearSpecRegistrar {
                 register.declaredGears = new ArrayList<GearSpec>();
             }
 
+            //Check for matches already in the register (say, if you are installing an already declared spec)
+            boolean match = false;
+            for (GearSpec declaredGear : register.declaredGears){
+                if (declaredGear.getName().equals(spec.getName()) && declaredGear.getVersion().equals(spec.getVersion())){
+                    match = true;
+                }
+            }
+
             //Finally, add the installed gear
-            register.declaredGears.add(spec);
+            if (!match){
+                register.declaredGears.add(spec);
+            }
+
         }
         else {
             //Create register and
