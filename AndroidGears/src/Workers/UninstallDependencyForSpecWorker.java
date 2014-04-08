@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -79,6 +80,11 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             }
         }
 
+        //Update settings files
+        if (!updateProjectSettingsForJar()){
+            return false;
+        }
+
         //Finally, unregister gear
         if (GearSpecRegistrar.unregisterGear(spec, project)){
             return true;
@@ -126,6 +132,57 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         else {
             return false;
         }
+    }
+
+    private Boolean updateProjectSettingsForJar(){
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+
+        //Modify build file
+        if (buildFile.exists()){
+            try {
+                File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+
+                if(libsDirectory.exists()){
+                    //Check to see if all jars are gone. If so, remove the gears jar folder dependency
+                    File[] jars = libsDirectory.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File file, String fileName) {
+                            if(fileName.contains(".jar")){
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    });
+
+                    //No jars, so remove it!
+                    if (jars.length == 0){
+                        //Read the build file
+                        String buildFileString = FileUtils.readFileToString(buildFile);
+
+                        //Create new addition
+                        String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+
+                        if (buildFileString.contains(dependencyString)){
+                            buildFileString = buildFileString.replace(dependencyString, "");
+                        }
+
+                        //Write changes to settings.gradle
+                        FileUtils.forceDelete(buildFile);
+                        FileUtils.write(buildFile, buildFileString);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+
+        return true;
     }
 
     private Boolean updateProjectSettingsForModule(GearSpec spec){

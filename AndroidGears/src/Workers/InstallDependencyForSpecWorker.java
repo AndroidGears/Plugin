@@ -239,6 +239,11 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             }
         }
 
+        //Update project settings
+        if (!updateProjectSettingsForJar()){
+            return false;
+        }
+
         //Register spec
         if (GearSpecRegistrar.registerGear(spec, project)){
             return true;
@@ -321,6 +326,50 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
     private Boolean updateProjectSettingsForJar(){
-        return false;
+        //Get build file
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+
+        if (buildFile.exists()){
+            //Create comment string
+            String commentString = "\n/////////////////////\n" +
+                    "// Gears Dependencies\n" +
+                    "/////////////////////";
+
+            try {
+                //Read the build file
+                String buildFileString = FileUtils.readFileToString(buildFile);
+
+                //Create new addition
+                String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+
+                //If the build file doesn't contain the jar dependency, go ahead and add it
+                if (!buildFileString.contains(dependencyString)){
+                    int commentIndex = buildFileString.lastIndexOf(commentString);
+
+                    //If the comment exists...
+                    if (commentIndex != -1){
+                        buildFileString = buildFileString.concat(dependencyString);
+                    }
+                    else {
+                        buildFileString = buildFileString.concat(commentString+"\n"+dependencyString);
+                    }
+
+                    //Write changes to settings.gradle
+                    FileUtils.forceDelete(buildFile);
+                    FileUtils.write(buildFile, buildFileString);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+        else {
+            return false;
+        }
+
+
+
+        return true;
     }
 }
