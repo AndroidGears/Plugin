@@ -57,6 +57,7 @@ public class CreateGearForm {
     private JTextArea txtProjectSummary;
     private JComboBox cbLibraryType;
     private JComboBox cbMinSDK;
+    private JButton btnLoadGearSpec;
 
     private Gson gson;
     private ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
@@ -158,6 +159,13 @@ public class CreateGearForm {
                 dependencies.remove(dependencyTable.getSelectedRow());
             }
         });
+
+        btnLoadGearSpec.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GearSpec spec = loadGearSpec();
+            }
+        });
     }
 
     private void lintSpec(final GearSpec spec) {
@@ -189,7 +197,7 @@ public class CreateGearForm {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
         //Create dialog for choosing gearspec file
-        FileDialog fd = new FileDialog(topFrame, "Choose a .gearspec file", FileDialog.SAVE);
+        FileDialog fd = new FileDialog(topFrame, "Save .gearspec file", FileDialog.SAVE);
         fd.setDirectory(System.getProperty("user.home"));
         fd.setFile(".gearspec");
         fd.setVisible(true);
@@ -223,6 +231,35 @@ public class CreateGearForm {
         }
 
         return false;
+    }
+
+    private GearSpec loadGearSpec(){
+        //Get top level frame
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
+
+        //Create dialog for choosing gearspec file
+        FileDialog fd = new FileDialog(topFrame, "Choose a .gearspec file", FileDialog.LOAD);
+        fd.setDirectory(System.getProperty("user.home"));
+        fd.setFile("*.gearspec");
+        fd.setVisible(true);
+        //Get file
+        String filename = fd.getFile();
+        if (filename == null)
+            System.out.println("You cancelled the choice");
+        else {
+            System.out.println("You chose " + filename);
+
+            //Get spec file
+            File specFile = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
+
+            //If it exists, set it as the selected file path
+            if (specFile.exists()){
+                //Generate spec
+                return Utils.specForFile(specFile);
+            }
+        }
+
+        return null;
     }
 
     /**
