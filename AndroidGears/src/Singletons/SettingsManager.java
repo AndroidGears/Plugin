@@ -344,6 +344,20 @@ public class SettingsManager {
     }
 
     ///////////////////////
+    // Auto Sync
+    ///////////////////////
+
+    public Boolean getAutoSync(){
+        return this.settings.autosyncGears;
+    }
+
+    public Boolean setAutoSync(Boolean autoSync){
+        this.settings.autosyncGears = autoSync;
+
+        return saveSettings();
+    }
+
+    ///////////////////////
     // Modules
     ///////////////////////
 

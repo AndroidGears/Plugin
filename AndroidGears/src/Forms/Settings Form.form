@@ -3,30 +3,24 @@
   <grid id="27dc6" binding="MasterPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="5" left="5" bottom="5" right="5"/>
     <constraints>
-      <xy x="31" y="12" width="474" height="501"/>
+      <xy x="31" y="12" width="474" height="560"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="a9349" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="a9349" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="200"/>
+          </grid>
         </constraints>
         <properties/>
         <border type="none" title="Resync Android Gears Repository"/>
         <children>
-          <component id="7d808" class="javax.swing.JButton" binding="resynchronizeAndroidGearsButton" default-binding="true">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Resynchronize Android Gears"/>
-            </properties>
-          </component>
           <component id="df44" class="javax.swing.JTextPane" binding="normallyTheGearsPluginTextPane" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
               </grid>
             </constraints>
@@ -35,13 +29,43 @@
               <text value="Normally the gears plugin will fetch the newest gears for you automatically. If you are having trouble seeing the newest Android Gears. Click the button below to download a fresh copy of the Android Gears specs repository. "/>
             </properties>
           </component>
+          <grid id="9f3fd" binding="ResyncProgressPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="53503" class="javax.swing.JLabel" binding="LoadingSpinnerLabel">
+                <constraints/>
+                <properties>
+                  <icon value="Forms/loadinfo.net (1).gif"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="c9c44" class="javax.swing.JLabel" binding="ResyncStatusLabel">
+                <constraints/>
+                <properties>
+                  <text value="Resynchronizing Android Gears Repository..."/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="7d808" class="javax.swing.JButton" binding="resynchronizeAndroidGearsButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Resynchronize Android Gears"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="3c281" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="500" height="-1"/>
+            <preferred-size width="550" height="-1"/>
           </grid>
         </constraints>
         <properties/>

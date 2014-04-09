@@ -3,6 +3,7 @@ package Workers.Git;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import javax.swing.*;
@@ -13,7 +14,10 @@ import java.io.IOException;
  * Created by matthewyork on 4/2/14.
  */
 public class GitWorker extends SwingWorker<Void, Void> {
+    private static final int DEFAULT_TIMEOUT = 5000; //10s
     private  String REMOTE_SPECS_URL = "https://github.com/AndroidGears/Specs.git";
+
+    public boolean successful = false;
 
     @Override
     protected Void doInBackground() throws Exception {
@@ -27,31 +31,47 @@ public class GitWorker extends SwingWorker<Void, Void> {
 
         //Pull changes or clone repo
         if(androidGearsDirectory.exists()){
-            pullChanges(androidGearsDirectory);
+            successful = pullChanges(androidGearsDirectory);
         }
         else {
             androidGearsDirectory.mkdir();
-            cloneRepository(androidGearsDirectory);
+            successful = cloneRepository(androidGearsDirectory);
         }
     }
 
-    private void cloneRepository(File androidGearsDirectory){
+    private Boolean cloneRepository(File androidGearsDirectory){
         try {
-            Git.cloneRepository()
+           Git git = Git.cloneRepository()
                     .setURI(REMOTE_SPECS_URL)
                     .setBranch("master")
                     .setDirectory(androidGearsDirectory)
+                   .setTimeout(DEFAULT_TIMEOUT)
                     .call();
+
+            //Get repos directory
+           File reposDirectory = git.getRepository().getDirectory().getParentFile();
+
+            //Check that we cloned down correctly
+            if (reposDirectory != null){
+                if (reposDirectory.exists()){
+                    if (reposDirectory.list().length > 1){
+                        return true;
+                    }
+                }
+            }
         } catch (GitAPIException e) {
             e.printStackTrace();
 
         }
+
+        return false;
     }
 
-    private void pullChanges(File androidGearsDirectory){
+    private Boolean pullChanges(File androidGearsDirectory){
         try {
             Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+ Utils.pathSeparator()+".git"));
-            git.pull().call();
+            PullResult result = git.pull().setTimeout(DEFAULT_TIMEOUT).call();
+            return result.isSuccessful();
 
             /*
             PullCommand pullCmd = git.pull();
@@ -67,5 +87,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
         catch (GitAPIException exception){
             exception.printStackTrace();
         }
+
+        return false;
     }
 }
