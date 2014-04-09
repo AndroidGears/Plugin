@@ -21,6 +21,9 @@ public class LintGearForm extends Component {
     private JLabel LintExplanationLabel;
     private JButton FindURLButton;
     private JTextArea LintResultsTextArea;
+    private JPanel LintProgressPanel;
+    private JLabel LoadingSpinnerLabel;
+    private JLabel LintingStatusLabel;
 
     public LintGearForm() {
        setupButtons();
@@ -69,13 +72,23 @@ public class LintGearForm extends Component {
     private void setupMiscUI() {
         LintExplanationLabel.setText(Utils.wrappedStringForString(LintExplanationLabel.getText(), 500));
         SpecUrlTextField.setText(System.getProperty("user.home"));
+
+        //Hide linting spinner at the bottom
+        LintingStatusLabel.setVisible(false);
+        LoadingSpinnerLabel.setVisible(false);
     }
+
+
 
     /////////////////////
     // Spec Linting
     /////////////////////
 
     private void lintSpec() {
+        //Show linting spinner
+        LintingStatusLabel.setVisible(true);
+        LoadingSpinnerLabel.setVisible(true);
+
         //Get spec file from url text field
         File specFile = new File(SpecUrlTextField.getText());
 
@@ -100,8 +113,13 @@ public class LintGearForm extends Component {
                     LintResultsTextArea.setText("Linting Error. Please try again");
                 }
 
+                //Hide linting spinner at the bottom
+                LintingStatusLabel.setVisible(false);
+                LoadingSpinnerLabel.setVisible(false);
             }
         };
         worker.execute();
     }
+
+
 }

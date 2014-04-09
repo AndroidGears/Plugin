@@ -5,6 +5,7 @@ import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpecLinter.GearSpecLintResult;
 import Workers.Lint.LintGearSpecWorker;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,13 +39,6 @@ public class GearSpecLinter {
             }
             else {
                 successReasons.add("Spec has valid summary.");
-            }
-            //Check for release notes
-            if (!existsAndNotBlank(spec.getRelease_notes())){
-                failureReasons.add("Spec must have release notes.");
-            }
-            else {
-                successReasons.add("Spec has valid release notes.");
             }
             //Check for version
             if (!existsAndNotBlank(spec.getVersion())){
@@ -146,6 +140,7 @@ public class GearSpecLinter {
             if (!existsAndNotBlank(spec.getSource().getUrl())){
                 failureReasons.add("Spec source must have a url.");
             }
+
             //Do specific checks based on type
             if (spec.getType() != null){
                 //If a module
@@ -163,12 +158,40 @@ public class GearSpecLinter {
                 }
                 //If jar
                 else if (spec.getType().equals("jar")){
-                    if (!spec.getSource().getUrl().contains(".jar")){
-                        failureReasons.add("Spec of type jar must have a url leading to a .jar file.");
+
+                    //If the url is a .jar, parse other fields
+                    if (FilenameUtils.getExtension(spec.getSource().getUrl()).equals("jar")){
+                        if (spec.getSource().getTag() != null){
+                            failureReasons.add("Spec of type jar should have null \"tag\" field when pointing directly to a jar file.");
+                        }
+                        else if (spec.getSource().getSource_files() != null){
+                            failureReasons.add("Spec of type jar should have null \"source_files\" field when pointing directly to a jar file.");
+                        }
+                        else if (!Utils.ping(spec.getSource().getUrl(), 2000)){
+                            failureReasons.add("Spec source jar was not reachable. However, this could be due to your internet connection.");
+                        }
                         return;
                     }
+                    else if (FilenameUtils.getExtension(spec.getSource().getUrl()).equals("git")){
+                        if (spec.getSource().getTag() == null){
+                            failureReasons.add("Spec of type jar should have a \"tag\" field when pointing to a git repository.");
+                        }
+                        else if (spec.getSource().getSource_files() == null){
+                            failureReasons.add("Spec of type jar should have a \"source_files\" field when pointing to a git repository.");
+                        }
 
-                    successReasons.add("Spec has valid api level.");
+                        String jarUrl = spec.getSource().getUrl()+"/raw/"+spec.getSource().getTag()+"/"+spec.getSource().getSource_files();
+                        jarUrl = jarUrl.replace(".git", "");
+                        if (!Utils.ping(jarUrl, 2000)){
+                            failureReasons.add("Spec source jar was not reachable for tag "+spec.getSource().getTag()+".\n    However, this could be due to your internet connection.");
+                        }
+                        return;
+                    }
+                    //Else, check the url link for .jar extension
+                    else {
+                        failureReasons.add("Spec of type jar must point directly to a jar or a git repository (url ending in .git) which specifies a jar in the \"source_files\" field.");
+                        return;
+                    }
                 }
             }
         }
