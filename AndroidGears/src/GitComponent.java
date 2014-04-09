@@ -1,12 +1,7 @@
-import Utilities.OSValidator;
-import Workers.GitWorker;
+import Workers.Git.GitWorker;
+import Workers.Git.IgnoreCheckWorker;
 import com.intellij.openapi.components.ApplicationComponent;
-import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by matthewyork on 3/31/14.
@@ -20,6 +15,7 @@ public class GitComponent implements ApplicationComponent {
 
     public void initComponent() {
 
+        //Clones/Pulls on the specs repo
         GitWorker worker = new GitWorker(){
             @Override
             protected void done() {

@@ -1,4 +1,4 @@
-package Workers;
+package Workers.InstallUninstall;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecDependency;

@@ -1,4 +1,4 @@
-package Workers;
+package Workers.Git;
 
 import Utilities.OSValidator;
 import Utilities.Utils;
@@ -23,20 +23,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
 
     private void syncAndroidGears(){
         //Setup file
-        File androidGearsDirectory = null;
-
-        //Setup file
-        if (OSValidator.isWindows()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"); //C drive
-        } else if (OSValidator.isMac()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/.androidgears"); //Home folder
-        } else if (OSValidator.isUnix()) {
-            androidGearsDirectory = new File("~/.androidgears"); //Home folder
-        } else if (OSValidator.isSolaris()) {
-            androidGearsDirectory = new File("~/AndroidGears");//Home folder
-        } else {
-            androidGearsDirectory = new File("~/AndroidGears");//Home folder
-        }
+        File androidGearsDirectory = Utils.androidGearsDirectory();
 
         //Pull changes or clone repo
         if(androidGearsDirectory.exists()){

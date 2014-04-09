@@ -3,7 +3,7 @@ package Forms;
 import Models.GearSpec.GearSpec;
 import Models.GearSpecLinter.GearSpecLintResult;
 import Utilities.Utils;
-import Workers.LintGearSpecWorker;
+import Workers.Lint.LintGearSpecWorker;
 
 import javax.swing.*;
 import java.awt.*;

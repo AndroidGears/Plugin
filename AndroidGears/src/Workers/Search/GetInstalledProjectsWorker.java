@@ -1,4 +1,4 @@
-package Workers;
+package Workers.Search;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpecRegister.GearSpecRegister;

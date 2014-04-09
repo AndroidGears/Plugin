@@ -1,3 +1,5 @@
+import Singletons.SettingsManager;
+import Workers.Git.IgnoreCheckWorker;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +13,6 @@ public class ProjectSettingsComponent implements ProjectComponent {
 
     public void initComponent() {
 
-
     }
 
     public void disposeComponent() {
@@ -24,7 +25,11 @@ public class ProjectSettingsComponent implements ProjectComponent {
     }
 
     public void projectOpened() {
-        // called when project is opened
+        //Puts an entry in the ignore file, if you have such
+        IgnoreCheckWorker ignoreCheckWorker = new IgnoreCheckWorker(){
+
+        };
+        ignoreCheckWorker.execute();
     }
 
     public void projectClosed() {

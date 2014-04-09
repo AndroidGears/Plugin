@@ -1,4 +1,4 @@
-package Workers;
+package Workers.Lint;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpecLinter.GearSpecLintResult;

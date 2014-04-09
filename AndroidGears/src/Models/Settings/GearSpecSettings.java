@@ -7,4 +7,5 @@ public class GearSpecSettings {
 
     //Settings
     public boolean autoIgnore = true; //Defaults to true
+    public boolean autosyncGears = false; //Defaults to false
 }

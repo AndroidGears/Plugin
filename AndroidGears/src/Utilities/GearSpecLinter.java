@@ -4,7 +4,7 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpecLinter.GearSpecLintResult;
-import Workers.LintGearSpecWorker;
+import Workers.Lint.LintGearSpecWorker;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -23,9 +23,9 @@ public class Utils {
         File androidGearsDirectory = null;
         //Setup file
         if (OSValidator.isWindows()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"); //C drive
+            androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"+pathSeparator()+"repos"); //C drive
         } else if (OSValidator.isMac()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/.androidgears"); //Home folder
+            androidGearsDirectory = new File(System.getProperty("user.home")+"/.androidgears"+pathSeparator()+"repos"); //Home folder
         } else if (OSValidator.isUnix()) {
             androidGearsDirectory = new File("~/.androidgears"); //Home folder
         } else if (OSValidator.isSolaris()) {

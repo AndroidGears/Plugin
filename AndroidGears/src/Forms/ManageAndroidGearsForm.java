@@ -25,6 +25,14 @@ import java.util.*;
 
 import Models.GearSpec.GearSpec;
 import Workers.*;
+import Workers.Git.GitWorker;
+import Workers.InstallUninstall.DeclareSpecWorker;
+import Workers.InstallUninstall.InstallDependencyForSpecWorker;
+import Workers.InstallUninstall.UndeclareSpecWorker;
+import Workers.InstallUninstall.UninstallDependencyForSpecWorker;
+import Workers.Search.GetInstalledProjectsWorker;
+import Workers.Search.SearchDeclaredDependenciesWorker;
+import Workers.Search.SearchProjectListWorker;
 import com.google.gson.Gson;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;

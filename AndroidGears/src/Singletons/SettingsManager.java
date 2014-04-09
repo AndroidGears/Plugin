@@ -21,7 +21,9 @@ public class SettingsManager {
     //Singleton instance for settings
     private static SettingsManager settingsManager;
     private Project[] targetProjects;
-    private static String IGNORE_STRING = "#Android Gears\nGears/";
+    private static String IGNORE_STRING = "\n#Android Gears\nGears/";
+    private static String IGNORE_COMMENT_STRING = "#Android Gears";
+    private static String IGNORE_CONTENT_STRING = "Gears/";
 
     //Project Settings
     private ProjectSettings projectSettings = new ProjectSettings();
@@ -46,7 +48,7 @@ public class SettingsManager {
 
     public Boolean loadSettings(){
         //Get settings file
-        File settingsFile = new File(System.getProperty("user.home")+"/.androidgearssettings");
+        File settingsFile = new File(Utils.androidGearsDirectory().getParentFile().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
 
         if (settingsFile.exists()){
             //Create new Gson instance for use
@@ -64,13 +66,17 @@ public class SettingsManager {
             this.settings = new Gson().fromJson(settingsString, GearSpecSettings.class);
 
         }
+        else {
+            //Save a new default copy of the settings
+            saveSettings();
+        }
 
         return true;
     }
 
     public Boolean saveSettings(){
         //Get settings file
-        File settingsFile = new File(System.getProperty("user.home")+"/.androidgearssettings");
+        File settingsFile = new File(Utils.androidGearsDirectory().getParentFile().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
 
         //Create new Gson instance for use
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -146,13 +152,13 @@ public class SettingsManager {
         return settings.autoIgnore;
     }
 
-    public Boolean setAutoIgnore(boolean autoIgnore, JPanel panel){
-        //Set setting
-        settings.autoIgnore = autoIgnore;
+    public Boolean setCreateIgnore(boolean createIgnore){
 
+
+        /*
         if (autoIgnore == true){
             if (addIgnoreEntry()){
-                showAddedIgnoreDialog(panel);
+                //showAddedIgnoreDialog(panel);
             }
             else {
                 showFailedToAddIgnoreDialog(panel);
@@ -167,7 +173,25 @@ public class SettingsManager {
             }
         }
 
-        return true;
+        return true;*/
+
+        //Set setting
+        if (createIgnore){
+            if (addIgnoreEntry()){
+                settings.autoIgnore = createIgnore;
+                saveSettings();
+                return true;
+            }
+        }
+        else {
+            if (removeIgnoreEntry()){
+                settings.autoIgnore = createIgnore;
+                saveSettings();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Boolean ignoreExists(){
@@ -203,54 +227,6 @@ public class SettingsManager {
         return false;
     }
 
-    private void showAddedIgnoreDialog(JPanel panel) {
-        Object[] options = {"OK"};
-        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(panel),
-                "Android Gears successfully added an entry to your ignore file",
-                "Ignore File",
-                JOptionPane.OK_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-    }
-
-    private void showFailedToAddIgnoreDialog(JPanel panel) {
-        Object[] options = {"OK"};
-        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(panel),
-                "Android Gears failed to add an entry to your ignore file",
-                "Ignore File",
-                JOptionPane.OK_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-    }
-
-    private void showRemovedIgnoreDialog(JPanel panel) {
-        Object[] options = {"OK"};
-        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(panel),
-                "Android Gears successfully removed its entry in your ignore file",
-                "Ignore File",
-                JOptionPane.OK_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-    }
-
-    private void showFailedToRemoveIgnoreDialog(JPanel panel) {
-        Object[] options = {"OK"};
-        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(panel),
-                "Android Gears failed to remove its entry in your ignore file",
-                "Ignore File",
-                JOptionPane.OK_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]);
-    }
-
     private Boolean addIgnoreEntry(){
         ProjectManager pm = ProjectManager.getInstance();
         targetProjects = pm.getOpenProjects();
@@ -259,7 +235,17 @@ public class SettingsManager {
             Project project = targetProjects[0];
 
             //Get ignore file
-            File ignoreFile = new File(project.getBasePath()+ Utils.pathSeparator()+".gitignore");
+            File gitignore = new File(project.getBasePath()+ Utils.pathSeparator()+".gitignore");
+            File hgignoreFile = new File(project.getBasePath()+ Utils.pathSeparator()+".hgignore");
+            File ignoreFile =null;
+
+            //Find valid ignore file
+            if (gitignore.exists()){
+                ignoreFile = gitignore;
+            }
+            else if (hgignoreFile.exists()){
+                ignoreFile = hgignoreFile;
+            }
 
             if (ignoreFile.exists()){
                 try {
@@ -269,7 +255,7 @@ public class SettingsManager {
                     //Check if it exists already. If it does, we're good
                     if (!ignoreFileString.contains(IGNORE_STRING)){
                         //Add entry
-                        ignoreFileString = ignoreFileString+"\n"+IGNORE_STRING;
+                        ignoreFileString = ignoreFileString+IGNORE_STRING;
 
                         //Write back changes to gitignore
                         FileUtils.forceDelete(ignoreFile);
@@ -284,13 +270,13 @@ public class SettingsManager {
             }
             else {
                 //If no gitignore exists, create one!
-                if (createIgnore(ignoreFile)){
+                if (createIgnore(gitignore)){
                     return true;
                 }
             }
         }
 
-        return false;
+        return true;
     }
 
     private Boolean removeIgnoreEntry(){
@@ -301,15 +287,26 @@ public class SettingsManager {
             Project project = targetProjects[0];
 
             //Get ignore file
-            File ignoreFile = new File(project.getBasePath()+ Utils.pathSeparator()+".gitignore");
+            File gitignore = new File(project.getBasePath()+ Utils.pathSeparator()+".gitignore");
+            File hgignoreFile = new File(project.getBasePath()+ Utils.pathSeparator()+".hgignore");
+            File ignoreFile =null;
 
-            if (ignoreFile.exists()){
+            //Find valid ignore file
+            if (gitignore.exists()){
+                ignoreFile = gitignore;
+            }
+            else if (hgignoreFile.exists()){
+                ignoreFile = hgignoreFile;
+            }
+
+            if (ignoreFile != null){
                 try {
                     //Read back ignore file
                     String ignoreFileString = FileUtils.readFileToString(ignoreFile);
 
-                    //Add entry
-                    ignoreFileString = ignoreFileString.replace(IGNORE_STRING, "");
+                    //remove entry
+                    ignoreFileString = ignoreFileString.replace(IGNORE_COMMENT_STRING, "");
+                    ignoreFileString = ignoreFileString.replace(IGNORE_CONTENT_STRING, "");
 
                     //Write back changes to gitignore
                     FileUtils.forceDelete(ignoreFile);
@@ -326,7 +323,7 @@ public class SettingsManager {
             }
         }
 
-        return false;
+        return true;
     }
 
     private Boolean createIgnore(File ignoreFile){
