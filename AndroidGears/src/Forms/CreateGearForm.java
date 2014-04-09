@@ -4,13 +4,21 @@ import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpec.GearSpecSource;
+import Models.GearSpecLinter.GearSpecLintResult;
+import Utilities.Utils;
+import Workers.Lint.LintGearSpecWorker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -107,7 +115,7 @@ public class CreateGearForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 newSpec = CreateNewGearSpec();
-                System.out.print(gson.toJson(newSpec));
+                lintSpec(newSpec);
             }
         });
 
@@ -150,6 +158,71 @@ public class CreateGearForm {
                 dependencies.remove(dependencyTable.getSelectedRow());
             }
         });
+    }
+
+    private void lintSpec(final GearSpec spec) {
+        LintGearSpecWorker worker = new LintGearSpecWorker(spec){
+            @Override
+            protected void done() {
+                super.done();
+
+                if (result.getPassed()){
+                    if (saveSpec(spec)){
+                        JFrame frame  = (JFrame)SwingUtilities.getWindowAncestor(MasterPanel);
+                        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                    }
+                    else {
+                        showSaveErrorDialog();
+                    }
+                }
+                else {
+                    showLintErrorDialog(result);
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    private Boolean saveSpec(GearSpec spec){
+
+        //Get top level frame
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
+
+        //Create dialog for choosing gearspec file
+        FileDialog fd = new FileDialog(topFrame, "Choose a .gearspec file", FileDialog.SAVE);
+        fd.setDirectory(System.getProperty("user.home"));
+        fd.setFile(".gearspec");
+        fd.setVisible(true);
+        //Get file
+        String filename = fd.getFile();
+        if (filename == null)
+            System.out.println("You cancelled the choice");
+        else {
+            System.out.println("You chose " + filename);
+
+            //Get spec file
+            File specFile = new File(fd.getDirectory()+ Utils.pathSeparator()+filename);
+
+            //Serialize spec to string
+            String gearString = gson.toJson(spec);
+
+            try {
+                //If it exists, set it as the selected file path
+                if (specFile.exists()){
+                    FileUtils.forceDelete(specFile);
+                }
+
+                //Write new spec
+                FileUtils.write(specFile, gearString);
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -232,5 +305,33 @@ public class CreateGearForm {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    ///////////////////////
+    // Dialogs
+    ///////////////////////
+
+    private void showLintErrorDialog(GearSpecLintResult result) {
+        Object[] options = {"OK"};
+        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(MasterPanel),
+                result.getResponseMessage(),
+                "Lint Error",
+                JOptionPane.OK_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+    }
+
+    private void showSaveErrorDialog() {
+        Object[] options = {"OK"};
+        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(MasterPanel),
+                "There was a problem saving your Gear Spec. Please try again.",
+                "Lint Error",
+                JOptionPane.OK_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
     }
 }
