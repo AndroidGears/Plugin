@@ -14,13 +14,13 @@ import java.util.ArrayList;
 /**
  * Created by matthewyork on 4/9/14.
  */
-public class GetUpdatableProjectsWorker extends SwingWorker<Void, Void>{
+public class SearchUpdatableProjectsWorker extends SwingWorker<Void, Void>{
 
     private Project project;
     private String searchString;
     public ArrayList<GearSpecUpdate> specs = new ArrayList<GearSpecUpdate>();
 
-    public GetUpdatableProjectsWorker(Project project, String searchString) {
+    public SearchUpdatableProjectsWorker(Project project, String searchString) {
         this.project = project;
         this.searchString = searchString;
     }

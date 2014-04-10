@@ -16,28 +16,23 @@ import Renderers.GearSpecCellRenderer;
 import Renderers.ModuleCellRenderer;
 import Renderers.ProjectCellRenderer;
 import Singletons.SettingsManager;
-import Utilities.OSValidator;
 import Utilities.Utils;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.util.*;
 
 import Models.GearSpec.GearSpec;
 import Workers.*;
 import Workers.Git.GitWorker;
 import Workers.InstallUninstall.*;
-import Workers.Search.GetInstalledProjectsWorker;
-import Workers.Search.GetUpdatableProjectsWorker;
+import Workers.Search.SearchInstalledProjectsWorker;
+import Workers.Search.SearchUpdatableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
-import com.google.gson.Gson;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
 
 /**
@@ -424,7 +419,7 @@ public class ManageAndroidGearsForm{
     }
 
     private void refreshInstalledList(final String searchString){
-        GetInstalledProjectsWorker installedProjectsWorker = new GetInstalledProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
+        SearchInstalledProjectsWorker installedProjectsWorker = new SearchInstalledProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
 
             @Override
             protected void done() {
@@ -438,7 +433,7 @@ public class ManageAndroidGearsForm{
     }
 
     private void refreshUpdatedList(final String searchString){
-        GetUpdatableProjectsWorker installedProjectsWorker = new GetUpdatableProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
+        SearchUpdatableProjectsWorker installedProjectsWorker = new SearchUpdatableProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
 
             @Override
             protected void done() {

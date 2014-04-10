@@ -13,13 +13,13 @@ import java.util.ArrayList;
 /**
  * Created by matthewyork on 4/5/14.
  */
-public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
+public class SearchInstalledProjectsWorker extends SwingWorker<Void, Void>{
 
     private Project project;
     String searchString;
     public ArrayList<GearSpec> specs = new ArrayList<GearSpec>();
 
-    public GetInstalledProjectsWorker(Project project, String searchString) {
+    public SearchInstalledProjectsWorker(Project project, String searchString) {
         this.project = project;
         this.searchString = searchString;
     }
