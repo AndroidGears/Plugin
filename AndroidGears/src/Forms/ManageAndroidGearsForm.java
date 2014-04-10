@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.io.*;
 
 import Models.GearSpec.GearSpecDependency;
+import Models.GearSpec.GearSpecUpdate;
 import Panels.SpecDetailsPanel;
 import Renderers.GearSpecCellRenderer;
 import Renderers.ModuleCellRenderer;
@@ -26,11 +27,9 @@ import java.util.*;
 import Models.GearSpec.GearSpec;
 import Workers.*;
 import Workers.Git.GitWorker;
-import Workers.InstallUninstall.DeclareSpecWorker;
-import Workers.InstallUninstall.InstallDependencyForSpecWorker;
-import Workers.InstallUninstall.UndeclareSpecWorker;
-import Workers.InstallUninstall.UninstallDependencyForSpecWorker;
+import Workers.InstallUninstall.*;
 import Workers.Search.GetInstalledProjectsWorker;
+import Workers.Search.GetUpdateableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
 import com.google.gson.Gson;
@@ -54,6 +53,7 @@ public class ManageAndroidGearsForm{
     private ArrayList<GearSpec> availableGears;
     private ArrayList<GearSpec> declaredProjects;
     private ArrayList<GearSpec> installedProjects;
+    private ArrayList<GearSpecUpdate> updateableProjects;
     private ArrayList<String> projectVersions;
     Project[] targetProjects;
     Module[] targetModules;
@@ -79,6 +79,8 @@ public class ManageAndroidGearsForm{
     private JList DeclaredList;
     private JButton DeclareUndeclareGearButton;
     private JComboBox TargetModuleComboBox;
+    private JList UpdatesList;
+    private JPanel UpdatesTabPanel;
 
     private void createUIComponents() {
 
@@ -110,6 +112,9 @@ public class ManageAndroidGearsForm{
         //Get installed gears
         refreshInstalledList("");
 
+        //Get updateable gears
+        refreshUpdatedList("");
+
         //Setup click listener
         AllGearsList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -129,6 +134,13 @@ public class ManageAndroidGearsForm{
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
                 didSelectInstalledSpecAtIndex(InstalledList.getSelectedIndex());
+            }
+        });
+
+        UpdatesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                didSelectUpdatesSpecAtIndex(UpdatesList.getSelectedIndex());
             }
         });
 
@@ -349,6 +361,15 @@ public class ManageAndroidGearsForm{
         InstalledList.setVisibleRowCount(installedProjects.size());
     }
 
+    private void reloadUpdatesList(){
+        UpdatesList.setListData(updateableProjects.toArray());
+        UpdatesList.setCellRenderer(new GearSpecCellRenderer());
+        UpdatesList.setVisibleRowCount(updateableProjects.size());
+
+        //Set number of available updates in the updates tab
+        SearchTabbedPane.setTitleAt(3, "Updates ("+updateableProjects.size()+")");
+    }
+
     private void refreshAvailableGearsList(String searchString){
         //Get availableGears and reload
         SearchProjectListWorker worker = new SearchProjectListWorker(searchString, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
@@ -385,6 +406,20 @@ public class ManageAndroidGearsForm{
 
                 installedProjects = this.specs;
                 reloadInstalledList();
+            }
+        };
+        installedProjectsWorker.execute();
+    }
+
+    private void refreshUpdatedList(final String searchString){
+        GetUpdateableProjectsWorker installedProjectsWorker = new GetUpdateableProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
+
+            @Override
+            protected void done() {
+                super.done();
+
+                updateableProjects = this.specs;
+                reloadUpdatesList();
             }
         };
         installedProjectsWorker.execute();
@@ -430,12 +465,19 @@ public class ManageAndroidGearsForm{
 
     }
 
+    private void didSelectUpdatesSpecAtIndex(int index){
+        if (index >= 0 && index < updateableProjects.size()){
+            selectedSpec = updateableProjects.get(index);
+            setDetailsForSpec(selectedSpec, updateableProjects.get(index).getVersion()); //MAY NEED TO CHANGE
+            getVersionDetailsForSepc();
+        }
+    }
+
     private void didSelectSpecVersion(int index) {
         if (index >= 0 && index < projectVersions.size()){
             setDetailsForSpec(selectedSpec, projectVersions.get(index));
         }
     }
-
 
     ////////////////////////
     // Details Management
@@ -532,7 +574,6 @@ public class ManageAndroidGearsForm{
         return new GearSpec();
     }
 
-
     public static boolean ping(String url, int timeout) {
         //url = url.replaceFirst("https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
 
@@ -622,6 +663,7 @@ public class ManageAndroidGearsForm{
                         refreshDeclaredList(SearchTextField.getText());
                         refreshInstalledList(SearchTextField.getText());
                         refreshAvailableGearsList(SearchTextField.getText());
+                        refreshUpdatedList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Installation failed for: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -657,6 +699,7 @@ public class ManageAndroidGearsForm{
                         refreshAvailableGearsList(SearchTextField.getText());
                         refreshDeclaredList(SearchTextField.getText());
                         refreshInstalledList(SearchTextField.getText());
+                        refreshUpdatedList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Failed to undeclare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -686,6 +729,7 @@ public class ManageAndroidGearsForm{
                         refreshAvailableGearsList(SearchTextField.getText());
                         refreshDeclaredList(SearchTextField.getText());
                         refreshInstalledList(SearchTextField.getText());
+                        refreshUpdatedList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Failed to declare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -787,9 +831,38 @@ public class ManageAndroidGearsForm{
                     refreshDeclaredList(SearchTextField.getText());
                     refreshInstalledList(SearchTextField.getText());
                     refreshAvailableGearsList(SearchTextField.getText());
+                    refreshUpdatedList(SearchTextField.getText());
                 }
                 else {
                     StatusLabel.setText("There was a problem uninstalling the gear. Please try again.");
+                }
+            }
+        };
+        worker.execute();
+    }
+
+    private void updateGear(GearSpecUpdate spec){
+        //Set UI in uninstall state
+        StatusLabel.setText("Updating "+spec.getName()+" to version "+spec.getUpdateVersionNumber());
+        LoadingSpinnerLabel.setVisible(true);
+        InstallUninstallButton.setEnabled(false);
+        SyncButton.setEnabled(false);
+
+        //Update gear
+        UpdateGearWorker worker = new UpdateGearWorker(spec, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
+            @Override
+            protected void done() {
+                super.done();
+
+                if (successful){
+                    //Reload all tables
+                    refreshAvailableGearsList(SearchTextField.getText());
+                    refreshDeclaredList(SearchTextField.getText());
+                    refreshInstalledList(SearchTextField.getText());
+                    refreshUpdatedList(SearchTextField.getText());
+                }
+                else {
+                    StatusLabel.setText("There was a problem updating the gear. Please try again.");
                 }
             }
         };
