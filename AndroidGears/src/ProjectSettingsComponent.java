@@ -37,15 +37,11 @@ public class ProjectSettingsComponent implements ProjectComponent {
 
         //Auto-sync
         syncGears();
-
-
-
     }
 
     public void projectClosed() {
         // called when project is being closed
     }
-
 
     private void syncGears(){
         //Load settings

@@ -29,6 +29,7 @@ import Workers.Search.SearchInstalledProjectsWorker;
 import Workers.Search.SearchUpdatableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
+import Workers.Sync.SyncGears;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -84,6 +85,10 @@ public class ManageAndroidGearsForm{
     }
 
     public ManageAndroidGearsForm() {
+        //Go grab the newest specs
+        syncSpecsRepository();
+
+        //Setup UI
         setupComboBoxes();
         setupMiscUI();
         setupTables();
@@ -199,20 +204,7 @@ public class ManageAndroidGearsForm{
         SyncButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //Set synchronizing
-                StatusLabel.setText("Synchronizing available gears with server...");
-                LoadingSpinnerLabel.setVisible(true);
-
-                //Synchronize Specs
-                GitWorker worker = new GitWorker(){
-                    @Override
-                    protected void done() {
-                        super.done();
-                        StatusLabel.setText("Gears successfully synced with server");
-                        LoadingSpinnerLabel.setVisible(false);
-                    }
-                };
-                worker.execute();
+                synchronizeProjectGears();
             }
         });
 
@@ -499,6 +491,43 @@ public class ManageAndroidGearsForm{
             selectedSpec = Utils.specForInfo(selectedSpec.getName(), projectVersions.get(index));
             setDetailsForSpec(selectedSpec);
         }
+    }
+
+    ///////////////////////
+    // Synchronization
+    ////////////////////////
+
+    private void syncSpecsRepository(){
+        StatusLabel.setText("Synchronizing Android Gears search library...");
+        LoadingSpinnerLabel.setVisible(true);
+
+        //Synchronize Specs
+        GitWorker worker = new GitWorker(){
+            @Override
+            protected void done() {
+                super.done();
+                StatusLabel.setText("Gears successfully synced with server");
+                LoadingSpinnerLabel.setVisible(false);
+            }
+        };
+        worker.execute();
+    }
+
+    private void synchronizeProjectGears(){
+        //Set synchronizing
+        StatusLabel.setText("Synchronizing gears with spec register...");
+        LoadingSpinnerLabel.setVisible(true);
+
+        SyncGears syncWorker = new SyncGears(targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
+            @Override
+            protected void done() {
+                super.done();
+
+                StatusLabel.setText("Gear synchronization complete.");
+                LoadingSpinnerLabel.setVisible(false);
+            }
+        };
+        syncWorker.execute();
     }
 
     ////////////////////////

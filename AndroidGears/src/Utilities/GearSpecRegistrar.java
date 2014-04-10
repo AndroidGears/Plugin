@@ -18,7 +18,7 @@ public class GearSpecRegistrar {
     public static Boolean registerGear(GearSpec spec, Project project){
 
         //Get specregister file
-        File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+".specregister");
+        File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+"GearSpecRegister");
 
         //Create new Gson instance for use
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -110,7 +110,7 @@ public class GearSpecRegistrar {
 
     public static GearSpecRegister getRegister(Project project){
         //Get specregister file
-        File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+".specregister");
+        File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+"GearSpecRegister");
 
         //If registration file exists, go get it!
         if (registrationFile.exists()){
@@ -129,6 +129,6 @@ public class GearSpecRegistrar {
     }
 
     public static File getRegisterPath(Project project){
-        return new File(project.getBasePath()+Utils.pathSeparator()+".specregister");
+        return new File(project.getBasePath()+Utils.pathSeparator()+"GearSpecRegister");
     }
 }
