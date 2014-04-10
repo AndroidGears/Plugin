@@ -29,7 +29,7 @@ import Workers.*;
 import Workers.Git.GitWorker;
 import Workers.InstallUninstall.*;
 import Workers.Search.GetInstalledProjectsWorker;
-import Workers.Search.GetUpdateableProjectsWorker;
+import Workers.Search.GetUpdatableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
 import com.google.gson.Gson;
@@ -54,7 +54,7 @@ public class ManageAndroidGearsForm{
     private ArrayList<GearSpec> availableGears;
     private ArrayList<GearSpec> declaredProjects;
     private ArrayList<GearSpec> installedProjects;
-    private ArrayList<GearSpecUpdate> updateableProjects;
+    private ArrayList<GearSpecUpdate> updatableProjects;
     private ArrayList<String> projectVersions;
     Project[] targetProjects;
     Module[] targetModules;
@@ -114,7 +114,7 @@ public class ManageAndroidGearsForm{
         //Get installed gears
         refreshInstalledList("");
 
-        //Get updateable gears
+        //Get updatable gears
         refreshUpdatedList("");
 
         //Setup click listener
@@ -124,6 +124,7 @@ public class ManageAndroidGearsForm{
                 didSelectSearchSpecAtIndex(AllGearsList.getSelectedIndex());
             }
         });
+        AllGearsList.setFocusable(false);
 
         DeclaredList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -131,6 +132,7 @@ public class ManageAndroidGearsForm{
                 didSelectDeclaredSpecAtIndex(DeclaredList.getSelectedIndex());
             }
         });
+        DeclaredList.setFocusable(false);
 
         InstalledList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -138,6 +140,7 @@ public class ManageAndroidGearsForm{
                 didSelectInstalledSpecAtIndex(InstalledList.getSelectedIndex());
             }
         });
+        InstalledList.setFocusable(false);
 
         UpdatesList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -145,6 +148,7 @@ public class ManageAndroidGearsForm{
                 didSelectUpdatesSpecAtIndex(UpdatesList.getSelectedIndex());
             }
         });
+        UpdatesList.setFocusable(false);
 
         VersionsList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -152,6 +156,7 @@ public class ManageAndroidGearsForm{
                 didSelectSpecVersion(VersionsList.getSelectedIndex());
             }
         });
+        VersionsList.setFocusable(false);
     }
 
     private void setupSearchTextField() {
@@ -177,18 +182,7 @@ public class ManageAndroidGearsForm{
 
 
                 //Switch to desired tab
-                switch (SearchTabbedPane.getSelectedIndex()) {
-                    case 0:  refreshAvailableGearsList(searchString);
-                        break;
-                    case 1:  refreshDeclaredList(searchString);
-                        break;
-                    case 2:  refreshInstalledList(searchString);
-                        break;
-                    case 3:  refreshUpdatedList(searchString);
-                        break;
-                    default:
-                        break;
-                }
+                refreshSelectedTabList(searchString);
             }
 
             @Override
@@ -251,7 +245,13 @@ public class ManageAndroidGearsForm{
         InstallUninstallButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                toggleDependency();
+                if (SearchTabbedPane.getSelectedIndex() == 3){
+                    toggleDependency(selectedUpdateSpec);
+                }
+                else {
+                    toggleDependency(selectedSpec);
+                }
+
             }
         });
 
@@ -338,23 +338,30 @@ public class ManageAndroidGearsForm{
             public void stateChanged(ChangeEvent e) {
 
                 //Switch to desired tab
-                switch (SearchTabbedPane.getSelectedIndex()) {
-                    case 0:  refreshAvailableGearsList(SearchTextField.getText());
-                        break;
-                    case 1:  refreshDeclaredList(SearchTextField.getText());
-                        break;
-                    case 2:  refreshInstalledList(SearchTextField.getText());
-                        break;
-                    default:
-                        break;
-                }
+                SearchTextField.setText("");
+                refreshSelectedTabList(SearchTextField.getText());
+                clearDetailsUI();
             }
         });
+        SearchTabbedPane.setFocusable(false);
     }
 
     ///////////////////////
     // Table refresh/reload
     ////////////////////////
+
+    private void refreshSelectedTabList(String searchString){
+        switch (SearchTabbedPane.getSelectedIndex()){
+            case 0: refreshAvailableGearsList(searchString);
+                break;
+            case 1: refreshDeclaredList(searchString);
+                break;
+            case 2: refreshInstalledList(searchString);
+                break;
+            case 3: refreshUpdatedList(searchString);
+                break;
+        }
+    }
 
     private void reloadSearchList(){
         AllGearsList.setListData(availableGears.toArray());
@@ -366,7 +373,6 @@ public class ManageAndroidGearsForm{
         DeclaredList.setListData(declaredProjects.toArray());
         DeclaredList.setCellRenderer(new GearSpecCellRenderer());
         DeclaredList.setVisibleRowCount(declaredProjects.size());
-
     }
 
     private void reloadInstalledList(){
@@ -376,12 +382,18 @@ public class ManageAndroidGearsForm{
     }
 
     private void reloadUpdatesList(){
-        UpdatesList.setListData(updateableProjects.toArray());
+        UpdatesList.setListData(updatableProjects.toArray());
         UpdatesList.setCellRenderer(new GearSpecCellRenderer());
-        UpdatesList.setVisibleRowCount(updateableProjects.size());
+        UpdatesList.setVisibleRowCount(updatableProjects.size());
 
         //Set number of available updates in the updates tab
-        SearchTabbedPane.setTitleAt(3, "Updates ("+updateableProjects.size()+")");
+        SearchTabbedPane.setTitleAt(3, "Updates ("+ updatableProjects.size()+")");
+    }
+
+    private void reloadVersionList() {
+        VersionsList.setListData(projectVersions.toArray());
+        VersionsList.setCellRenderer(new DefaultListCellRenderer());
+        VersionsList.setVisibleRowCount(projectVersions.size());
     }
 
     private void refreshAvailableGearsList(String searchString){
@@ -426,13 +438,13 @@ public class ManageAndroidGearsForm{
     }
 
     private void refreshUpdatedList(final String searchString){
-        GetUpdateableProjectsWorker installedProjectsWorker = new GetUpdateableProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
+        GetUpdatableProjectsWorker installedProjectsWorker = new GetUpdatableProjectsWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], searchString){
 
             @Override
             protected void done() {
                 super.done();
 
-                updateableProjects = this.specs;
+                updatableProjects = this.specs;
                 reloadUpdatesList();
             }
         };
@@ -457,7 +469,7 @@ public class ManageAndroidGearsForm{
         if (index >= 0 && index < availableGears.size()){
             selectedSpec = availableGears.get(index);
             setDetailsForSpec(selectedSpec);
-            getVersionDetailsForSepc();
+            getVersionDetailsForSpec();
         }
     }
 
@@ -465,7 +477,7 @@ public class ManageAndroidGearsForm{
         if (index >= 0 && index < declaredProjects.size()){
             selectedSpec = declaredProjects.get(index);
             setDetailsForSpec(selectedSpec); //MAY NEED TO CHANGE
-            getVersionDetailsForSepc();
+            getVersionDetailsForSpec();
         }
 
     }
@@ -474,16 +486,16 @@ public class ManageAndroidGearsForm{
         if (index >= 0 && index < installedProjects.size()){
             selectedSpec = installedProjects.get(index);
             setDetailsForSpec(selectedSpec); //MAY NEED TO CHANGE
-            getVersionDetailsForSepc();
+            getVersionDetailsForSpec();
         }
 
     }
 
     private void didSelectUpdatesSpecAtIndex(int index){
-        if (index >= 0 && index < updateableProjects.size()){
-            selectedUpdateSpec = updateableProjects.get(index);
+        if (index >= 0 && index < updatableProjects.size()){
+            selectedUpdateSpec = updatableProjects.get(index);
             setDetailsForSpec(selectedUpdateSpec);
-            getVersionDetailsForSepc();
+            getVersionDetailsForSpec();
         }
     }
 
@@ -528,6 +540,27 @@ public class ManageAndroidGearsForm{
         }
     }
 
+    private void clearDetailsUI() {
+        //Clear information
+        SpecDetailsPanel specDetailsPanel = new SpecDetailsPanel(new GearSpec());
+
+        //Set panel in scrollpane
+        DetailsScrollPane.setViewportView(specDetailsPanel);
+        DetailsScrollPane.revalidate();
+        DetailsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        DetailsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        //Clear version list entry
+        projectVersions = new ArrayList<String>();
+        reloadVersionList();
+
+        //Hide buttons
+        InstallUninstallButton.setVisible(false);
+        UpdateGearButton.setVisible(false);
+        OpenInBrowserButton.setVisible(false);
+        DeclareUndeclareGearButton.setVisible(false);
+    }
+
     private void setDeclarationStatusForSpec(final GearSpec spec){
         GetGearStateWorker worker = new GetGearStateWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], spec){
             @Override
@@ -554,7 +587,7 @@ public class ManageAndroidGearsForm{
           worker.execute();
     }
 
-    private void getVersionDetailsForSepc(){
+    private void getVersionDetailsForSpec(){
         //Set versions
         GetProjectVersionsWorker worker = new GetProjectVersionsWorker(selectedSpec){
             @Override
@@ -563,51 +596,10 @@ public class ManageAndroidGearsForm{
 
                 projectVersions = this.versions;
 
-                VersionsList.setListData(projectVersions.toArray());
-                VersionsList.setCellRenderer(new DefaultListCellRenderer());
-                VersionsList.setVisibleRowCount(projectVersions.size());
+                reloadVersionList();
             }
         };
         worker.execute();
-    }
-
-    private GearSpec specForVersion(String specName, String version){
-        //Get path separator
-        String pathSeparator = (OSValidator.isWindows()) ? "\\":"/";
-
-        File specFile = new File(Utils.androidGearsDirectory().getAbsolutePath()+pathSeparator+specName+pathSeparator+version+pathSeparator+specName+".gearspec");
-
-        if(specFile.exists()){
-            String specString = null;
-            try {
-                specString = FileUtils.readFileToString(specFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new GearSpec();
-            }
-
-            //Get spec
-            GearSpec spec = new Gson().fromJson(specString, GearSpec.class);
-
-            return spec;
-        }
-
-        return new GearSpec();
-    }
-
-    public static boolean ping(String url, int timeout) {
-        //url = url.replaceFirst("https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.setConnectTimeout(timeout);
-            connection.setReadTimeout(timeout);
-            connection.setRequestMethod("HEAD");
-            int responseCode = connection.getResponseCode();
-            return (200 <= responseCode && responseCode <= 399);
-        } catch (IOException exception) {
-            return false;
-        }
     }
 
     ///////////////////////
@@ -633,27 +625,23 @@ public class ManageAndroidGearsForm{
     // Install / Uninstall
     ///////////////////////
 
-    private void toggleDependency(){
+    private void toggleDependency(final GearSpec spec){
         Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
-        if (selectedSpec == null){
-            selectedSpec = selectedUpdateSpec;
-        }
-
-        if (this.selectedSpec.getGearState() == GearSpec.GearState.GearStateInstalled){
+        if (spec.getGearState() == GearSpec.GearState.GearStateInstalled){
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
-            gearsToUninstall.add(this.selectedSpec);
+            gearsToUninstall.add(spec);
 
             //Prompt to add dependents
-            ArrayList<GearSpec> dependents = this.selectedSpec.dependentGears(targetProject);
+            ArrayList<GearSpec> dependents = spec.dependentGears(targetProject);
             if (dependents.size() > 0){
                 gearsToUninstall.addAll(warnOfDependents(dependents));
             }
 
             //Prompt to add dependencies
-            if (this.selectedSpec.getDependencies() != null){
-                if (this.selectedSpec.getDependencies().size() > 0){
-                    gearsToUninstall.addAll(warnOfDependencies(this.selectedSpec));
+            if (spec.getDependencies() != null){
+                if (spec.getDependencies().size() > 0){
+                    gearsToUninstall.addAll(warnOfDependencies(spec));
                 }
             }
 
@@ -661,13 +649,14 @@ public class ManageAndroidGearsForm{
         }
         else {
             //Set UI in download state
-            StatusLabel.setText("Installing Gear and its dependencies: " + this.selectedSpec.getName());
+            StatusLabel.setText("Installing Gear and its dependencies: " + spec.getName());
             LoadingSpinnerLabel.setVisible(true);
             InstallUninstallButton.setEnabled(false);
+            DeclareUndeclareGearButton.setEnabled(false);
             SyncButton.setEnabled(false);
 
 
-            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
+            InstallDependencyForSpecWorker worker = new InstallDependencyForSpecWorker(spec, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
 
                 @Override
                 protected void done() {
@@ -677,20 +666,20 @@ public class ManageAndroidGearsForm{
                     LoadingSpinnerLabel.setVisible(false);
                     InstallUninstallButton.setEnabled(true);
                     SyncButton.setEnabled(true);
-                    setDeclarationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
+                    DeclareUndeclareGearButton.setEnabled(true);
+                    setDeclarationStatusForSpec(spec);
 
                     //Flip button text
                     if (this.successful){
                         DeclareUndeclareGearButton.setVisible(false);
                         InstallUninstallButton.setText("Uninstall Gear");
-                        StatusLabel.setText("Successfully installed: "+ManageAndroidGearsForm.this.selectedSpec.getName());
-                        refreshDeclaredList(SearchTextField.getText());
-                        refreshInstalledList(SearchTextField.getText());
-                        refreshAvailableGearsList(SearchTextField.getText());
-                        refreshUpdatedList(SearchTextField.getText());
+                        StatusLabel.setText("Successfully installed: "+spec.getName());
+
+                        //Reload tables
+                        refreshSelectedTabList(SearchTextField.getText());
                     }
                     else {
-                        StatusLabel.setText("Installation failed for: "+ManageAndroidGearsForm.this.selectedSpec.getName());
+                        StatusLabel.setText("Installation failed for: " + spec.getName());
                     }
                 }
             };
@@ -719,11 +708,8 @@ public class ManageAndroidGearsForm{
                         ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateUninstalled);
                         setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
-                        //Reload all tables
-                        refreshAvailableGearsList(SearchTextField.getText());
-                        refreshDeclaredList(SearchTextField.getText());
-                        refreshInstalledList(SearchTextField.getText());
-                        refreshUpdatedList(SearchTextField.getText());
+                        //Reload tables
+                        refreshSelectedTabList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Failed to undeclare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -749,11 +735,8 @@ public class ManageAndroidGearsForm{
                         ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateDeclared);
                         setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
-                        //Reload all tables
-                        refreshAvailableGearsList(SearchTextField.getText());
-                        refreshDeclaredList(SearchTextField.getText());
-                        refreshInstalledList(SearchTextField.getText());
-                        refreshUpdatedList(SearchTextField.getText());
+                        //Reload tables
+                        refreshSelectedTabList(SearchTextField.getText());
                     }
                     else {
                         StatusLabel.setText("Failed to declare:: "+ManageAndroidGearsForm.this.selectedSpec.getName());
@@ -842,12 +825,11 @@ public class ManageAndroidGearsForm{
             protected void done() {
                 super.done();
 
-                //Hide loading spinner and renable buttons
+                //Hide loading spinner and re-enable buttons
                 LoadingSpinnerLabel.setVisible(false);
                 InstallUninstallButton.setEnabled(true);
                 SyncButton.setEnabled(true);
                 UpdateGearButton.setEnabled(true);
-                setDeclarationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
                 //Flip button text
                 if (this.successful){
@@ -855,10 +837,15 @@ public class ManageAndroidGearsForm{
                     InstallUninstallButton.setText("Install Gear");
                     StatusLabel.setText("Successfully uninstalled gear.");
                     UpdateGearButton.setVisible(false);
-                    refreshDeclaredList(SearchTextField.getText());
-                    refreshInstalledList(SearchTextField.getText());
-                    refreshAvailableGearsList(SearchTextField.getText());
-                    refreshUpdatedList(SearchTextField.getText());
+                    refreshSelectedTabList(SearchTextField.getText());
+
+                    //If on the updates page, hide everything
+                    if (SearchTabbedPane.getSelectedIndex() >= 1){
+                        clearDetailsUI();
+                    }
+                    else {
+                        setDeclarationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
+                    }
                 }
                 else {
                     StatusLabel.setText("There was a problem uninstalling the gear. Please try again.");
@@ -874,6 +861,7 @@ public class ManageAndroidGearsForm{
         LoadingSpinnerLabel.setVisible(true);
         InstallUninstallButton.setEnabled(false);
         SyncButton.setEnabled(false);
+        UpdateGearButton.setEnabled(false);
 
         //Update gear
         UpdateGearWorker worker = new UpdateGearWorker(spec, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]){
@@ -891,11 +879,8 @@ public class ManageAndroidGearsForm{
                     //Set status
                     StatusLabel.setText("Successfully updated gear.");
 
-                    //Reload all tables
-                    refreshAvailableGearsList(SearchTextField.getText());
-                    refreshDeclaredList(SearchTextField.getText());
-                    refreshInstalledList(SearchTextField.getText());
-                    refreshUpdatedList(SearchTextField.getText());
+                    //Reload tables
+                    refreshSelectedTabList(SearchTextField.getText());
                 }
                 else {
                     StatusLabel.setText("There was a problem updating the gear. Please try again.");

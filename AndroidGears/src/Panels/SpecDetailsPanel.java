@@ -24,14 +24,19 @@ public class SpecDetailsPanel extends JPanel{
 
 
         //Add repo name
-        JLabel nameLabel = new JLabel(selectedSpec.getName(), JLabel.LEFT);
-        nameLabel.setFont(new Font(nameLabel.getFont().getName(), Font.BOLD, 14));
-        this.add(nameLabel);
+        if (selectedSpec.getName() != null){
+            JLabel nameLabel = new JLabel(selectedSpec.getName(), JLabel.LEFT);
+            nameLabel.setFont(new Font(nameLabel.getFont().getName(), Font.BOLD, 14));
+            this.add(nameLabel);
+        }
+
 
         //Add version and type
-        JLabel versionLabel = new JLabel(selectedSpec.getVersion() + " - " + selectedSpec.getType(), JLabel.LEFT);
-        versionLabel.setFont(new Font(versionLabel.getFont().getName(), Font.BOLD, 12));
-        this.add(versionLabel);
+        if (selectedSpec.getVersion() != null){
+            JLabel versionLabel = new JLabel(selectedSpec.getVersion() + " - " + selectedSpec.getType(), JLabel.LEFT);
+            versionLabel.setFont(new Font(versionLabel.getFont().getName(), Font.BOLD, 12));
+            this.add(versionLabel);
+        }
 
         //Add summary
         if (selectedSpec.getSummary() != null) {

@@ -56,6 +56,7 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 else if (!(new File(file.getAbsolutePath()+Utils.pathSeparator()+name).isDirectory())){
                     return false;
                 }
+                //If it matches the filename, lets skip the metadata search and add it directly. Save the cycles!
                 else if (name.toLowerCase().contains(searchString.toLowerCase())){ //Accept only those that match your search string
                     //Get versions for spec
                     String[] versions = versionsForProject(name, Utils.pathSeparator());
