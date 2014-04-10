@@ -72,42 +72,48 @@ public class CreateGearForm {
         initDependenciesTable();
         initButtons();
     }
-
-    private void initAuthorTable() {
+    //Initialize the Table so that you are able to add authors to the table.
+    private void initAuthorTable() {//TODO add lint for the same author being added twice
         ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
+        //Create AuthorModel model for AddAllNewAuthors to use.. To add coloumns
         AuthorModel = (DefaultTableModel) authorsTable.getModel();
         AuthorModel.addColumn("Author's Name");
         AuthorModel.addColumn("Author's Email");
-        AddAllNewAuthors(authors, AuthorModel);
+        //Really not used yet but if you wanted to add authors by default we could save a file where you could read authors from.
+        AddAllNewAuthors(authors);
     }
 
     private void initDependenciesTable() {//TODO add lint for the same library being added twice
         ArrayList<GearSpecDependency> dependencies = new ArrayList<GearSpecDependency>();
+        //Create dependency Model for AddAllNewDependencies to use. To add coloumns
         DependencyModel = (DefaultTableModel) dependencyTable.getModel();
         DependencyModel.addColumn("Dependency's Name");
         DependencyModel.addColumn("Dependency's Version");
-        AddAllNewDependencies(dependencies, DependencyModel);
+        //Really not used yet but if you wanted to add dependencies by default we could save a file where you could read dependencies from.
+        AddAllNewDependencies(dependencies);
     }
 
-    private void AddAllNewAuthors(ArrayList<GearSpecAuthor> authors, DefaultTableModel model) {
+    //populate authors from dependency list if there ary any
+    private void AddAllNewAuthors(ArrayList<GearSpecAuthor> authors) {
         for (GearSpecAuthor author : authors) {
-            AddNewAuthor(author, model);
+            AddNewAuthor(author);
         }
     }
-
-    private void AddNewAuthor(GearSpecAuthor gearSpecAuthor, DefaultTableModel model) {
-        model.addRow(new Object[]{gearSpecAuthor.getName(), gearSpecAuthor.getEmail()});
+    //adds author row to AuthorModel
+    private void AddNewAuthor(GearSpecAuthor gearSpecAuthor) {
+        AuthorModel.addRow(new Object[]{gearSpecAuthor.getName(), gearSpecAuthor.getEmail()});
     }
 
 
-    private void AddAllNewDependencies(ArrayList<GearSpecDependency> dependencies, DefaultTableModel model) {
+    //populate dependencies from the authors list if there are any.
+    private void AddAllNewDependencies(ArrayList<GearSpecDependency> dependencies) {
         for (GearSpecDependency dependency : dependencies) {
-            AddNewDependency(dependency, model);
+            AddNewDependency(dependency);
         }
     }
-
-    private void AddNewDependency(GearSpecDependency gearSpecDependency, DefaultTableModel model) {
-        model.addRow(new Object[]{gearSpecDependency.getName(), gearSpecDependency.getVersion()});
+    //adds dependency to DependencyModel
+    private void AddNewDependency(GearSpecDependency gearSpecDependency) {
+        DependencyModel.addRow(new Object[]{gearSpecDependency.getName(), gearSpecDependency.getVersion()});
     }
 
 
@@ -124,11 +130,13 @@ public class CreateGearForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!txtAuthorName.getText().isEmpty() && !txtAuthorEmail.getText().isEmpty()) {
-                    AuthorModel.addRow(new Object[]{txtAuthorName.getText(), txtAuthorEmail.getText()});
+                    //add new author to table
+                    AddNewAuthor(new GearSpecAuthor(txtAuthorName.getText(),txtAuthorEmail.getText()));
+                    //add new author to arrayList
                     authors.add(new GearSpecAuthor(txtAuthorName.getText(), txtAuthorEmail.getText()));
+                    //clear out fields
                     txtAuthorName.setText("");
                     txtAuthorEmail.setText("");
-
                 }
             }
         });
@@ -137,8 +145,11 @@ public class CreateGearForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!txtDependencyName.getText().isEmpty() && !txtDependencyVersion.getText().isEmpty()) {
-                    DependencyModel.addRow(new Object[]{txtDependencyName.getText(), txtDependencyVersion.getText()});
+                    //add new dependency to table.
+                    AddNewDependency(new GearSpecDependency(txtDependencyName.getText(),txtDependencyVersion.getText()));
+                    //add new dependency to arraylist
                     dependencies.add(new GearSpecDependency(txtDependencyName.getText(), txtDependencyVersion.getText()));
+                    //clear out fields
                     txtDependencyName.setText("");
                     txtDependencyVersion.setText("");
                 }
@@ -147,7 +158,9 @@ public class CreateGearForm {
         btnRemoveAuthor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //remove author from table
                 AuthorModel.removeRow(authorsTable.getSelectedRow());
+                //remove author from arrayList
                 authors.remove(authorsTable.getSelectedRow());
             }
         });
@@ -155,7 +168,9 @@ public class CreateGearForm {
         btnRemoveDependency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //remove dependency from table
                 DependencyModel.removeRow(dependencyTable.getSelectedRow());
+                //remove dependency from arraylist
                 dependencies.remove(dependencyTable.getSelectedRow());
             }
         });
@@ -164,34 +179,69 @@ public class CreateGearForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GearSpec spec = loadGearSpec();
+                if (spec != null) {
+                    //load Spec from file chooser
+                    loadSpecIntoForm(spec);
+                }
             }
         });
     }
 
+    //loads the spec into the form.
+    private void loadSpecIntoForm(GearSpec spec) {
+        txtProjectName.setText(spec.getName());
+        txtProjectVersion.setText(spec.getVersion());
+        cbMinSDK.setSelectedIndex(spec.getMinimum_api());
+        cbLibraryType.setSelectedItem(spec.getType());
+        txtProjectTags.setText(GetTags(spec.getTags()));
+        txtLibraryTag.setText(spec.getSource().getTag());
+        txtSourceLibLocation.setText(spec.getSource().getSource_files());
+        txtSourceURL.setText(spec.getSource().getUrl());
+        txtProjectSummary.setText(spec.getSummary());
+        txtReleaseNotes.setText(spec.getRelease_notes());
+        txtCopyRight.setText(spec.getCopyright());
+        txtHomePage.setText(spec.getHomepage());
+        txtLicense.setText(spec.getLicense());
+        if(spec.getAuthors()!=null)
+            AddAllNewAuthors(spec.getAuthors());
+        if(spec.getDependencies()!=null)
+            AddAllNewDependencies(spec.getDependencies());
+    }
+
+
+
+    //loads the tags into a string to set the tags.
+    private String GetTags(ArrayList<String> tags) {
+        String temp="";
+        for(String tag:tags){
+            temp = temp.concat(tag)+" , ";
+        }
+        return temp.substring(0,temp.length()-3);
+    }
+
+    //Make sure that spec meets Android GearSpec Requirements.
     private void lintSpec(final GearSpec spec) {
-        LintGearSpecWorker worker = new LintGearSpecWorker(spec){
+        LintGearSpecWorker worker = new LintGearSpecWorker(spec) {
             @Override
             protected void done() {
                 super.done();
 
-                if (result.getPassed()){
-                    if (saveSpec(spec)){
-                        JFrame frame  = (JFrame)SwingUtilities.getWindowAncestor(MasterPanel);
+                if (result.getPassed()) {
+                    if (saveSpec(spec)) {
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
                         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-                    }
-                    else {
+                    } else {
                         showSaveErrorDialog();
                     }
-                }
-                else {
+                } else {
                     showLintErrorDialog(result);
                 }
             }
         };
         worker.execute();
     }
-
-    private Boolean saveSpec(GearSpec spec){
+    //Save Spec to file on computer.
+    private Boolean saveSpec(GearSpec spec) {
 
         //Get top level frame
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
@@ -209,14 +259,14 @@ public class CreateGearForm {
             System.out.println("You chose " + filename);
 
             //Get spec file
-            File specFile = new File(fd.getDirectory()+ Utils.pathSeparator()+filename);
+            File specFile = new File(fd.getDirectory() + Utils.pathSeparator() + filename);
 
             //Serialize spec to string
             String gearString = gson.toJson(spec);
 
             try {
                 //If it exists, set it as the selected file path
-                if (specFile.exists()){
+                if (specFile.exists()) {
                     FileUtils.forceDelete(specFile);
                 }
 
@@ -232,8 +282,8 @@ public class CreateGearForm {
 
         return false;
     }
-
-    private GearSpec loadGearSpec(){
+    //load gearspec from file on computer
+    private GearSpec loadGearSpec() {
         //Get top level frame
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
@@ -250,10 +300,10 @@ public class CreateGearForm {
             System.out.println("You chose " + filename);
 
             //Get spec file
-            File specFile = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
+            File specFile = new File(fd.getDirectory() + Utils.pathSeparator() + filename);
 
             //If it exists, set it as the selected file path
-            if (specFile.exists()){
+            if (specFile.exists()) {
                 //Generate spec
                 return Utils.specForFile(specFile);
             }
@@ -305,13 +355,6 @@ public class CreateGearForm {
         newSpec.setMinimum_api(Integer.parseInt(cbMinSDK.getSelectedItem().toString()));
 
         return newSpec;
-    }
-
-
-    private ArrayList<GearSpecAuthor> CreateAuthorsArray() {
-        ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
-        authors.add(new GearSpecAuthor(txtAuthorName.getText(), txtAuthorEmail.getText()));
-        return authors;
     }
 
     //TODO Create checks.
