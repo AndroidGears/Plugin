@@ -22,6 +22,18 @@ public class GearSpecManager {
     // Install
     ///////////////////////
 
+    public static Boolean installGear(GearSpec spec, Project project, Module module){
+        if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+            return GearSpecManager.installModule(spec, project, module);
+        }
+        else if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+            return GearSpecManager.installJar(spec, project, module);
+        }
+        else {
+            return false;
+        }
+    }
+
     public static Boolean installModule(GearSpec spec, Project project, Module module){
         //Install dependency and sub-dependencies
         File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + "Gears" + Utils.pathSeparator() + "Modules" + Utils.pathSeparator() + spec.getName());
