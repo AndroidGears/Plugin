@@ -19,21 +19,29 @@ public class GearSpec {
     public static final String SPEC_TYPE_MODULE = "module";
     public static final String SPEC_TYPE_JAR = "jar";
 
-    public GearState gearState = GearState.GearStateUninstalled;
+    protected GearState gearState = GearState.GearStateUninstalled;
 
-    private String name;
-    private String summary;
-    private String release_notes;
-    private String version;
-    private String type;
-    private String copyright;
-    private String homepage;
-    private String license;
-    private ArrayList<GearSpecAuthor> authors;
-    private int minimum_api;
-    private GearSpecSource source;
-    private ArrayList<GearSpecDependency> dependencies;
-    private ArrayList<String> tags;
+    protected String name;
+    protected String summary;
+    protected String release_notes;
+    protected String version;
+    protected String type;
+    protected String copyright;
+    protected String homepage;
+    protected String license;
+    protected ArrayList<GearSpecAuthor> authors;
+    protected int minimum_api;
+    protected GearSpecSource source;
+    protected ArrayList<GearSpecDependency> dependencies;
+    protected ArrayList<String> tags;
+
+    public GearState getGearState() {
+        return gearState;
+    }
+
+    public void setGearState(GearState gearState) {
+        this.gearState = gearState;
+    }
 
     public String getName() {
         return name;

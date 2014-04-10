@@ -27,17 +27,20 @@ public class GetUpdateableProjectsWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
 
+        //Get specs register
         GearSpecRegister register = GearSpecRegistrar.getRegister(this.project);
 
+        //Populate a list of installed gears
         if (register != null){
             ArrayList<GearSpec> installedSpecs = new ArrayList<GearSpec>();
             for (GearSpec declaredSpec : register.declaredGears){
                 if (Utils.specStateForSpec(declaredSpec, project) == GearSpec.GearState.GearStateInstalled){
-                    declaredSpec.gearState = Utils.specStateForSpec(declaredSpec, project);
+                    declaredSpec.setGearState(Utils.specStateForSpec(declaredSpec, project));
                     installedSpecs.add(declaredSpec);
                 }
             }
 
+            //Filter down to only those gears with updates
             filterInstalledGears(installedSpecs);
 
             return null;
@@ -57,7 +60,7 @@ public class GetUpdateableProjectsWorker extends SwingWorker<Void, Void>{
             if (versions.length > 0){
                 //If the version does not equal the last available version, then a
                 if (!versions[versions.length -1].equals(spec.getVersion())){
-                    GearSpecUpdate updateSpec = (GearSpecUpdate)spec;
+                    GearSpecUpdate updateSpec = new GearSpecUpdate(spec);
                     updateSpec.setUpdateVersionNumber(versions[versions.length -1]);
 
                     //Add spec

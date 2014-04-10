@@ -182,6 +182,8 @@ public class ManageAndroidGearsForm{
                         break;
                     case 2:  refreshInstalledList(searchString);
                         break;
+                    case 3:  refreshUpdatedList(searchString);
+                        break;
                     default:
                         break;
                 }
@@ -616,7 +618,7 @@ public class ManageAndroidGearsForm{
     private void toggleDependency(){
         Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
-        if (this.selectedSpec.gearState == GearSpec.GearState.GearStateInstalled){
+        if (this.selectedSpec.getGearState() == GearSpec.GearState.GearStateInstalled){
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
             gearsToUninstall.add(this.selectedSpec);
 
@@ -678,7 +680,7 @@ public class ManageAndroidGearsForm{
         DeclareUndeclareGearButton.setEnabled(false);
         InstallUninstallButton.setEnabled(false);
 
-        if (this.selectedSpec.gearState == GearSpec.GearState.GearStateDeclared){
+        if (this.selectedSpec.getGearState() == GearSpec.GearState.GearStateDeclared){
             UndeclareSpecWorker worker = new UndeclareSpecWorker(this.selectedSpec, targetProjects[TargetProjectComboBox.getSelectedIndex()]){
                 @Override
                 protected void done() {
@@ -692,7 +694,7 @@ public class ManageAndroidGearsForm{
                         DeclareUndeclareGearButton.setText("Declare Gear");
 
                         //Set new declaration state on local copy of selected spec
-                        ManageAndroidGearsForm.this.selectedSpec.gearState = GearSpec.GearState.GearStateUninstalled;
+                        ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateUninstalled);
                         setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
 
                         //Reload all tables
@@ -722,7 +724,7 @@ public class ManageAndroidGearsForm{
                         DeclareUndeclareGearButton.setText("Undeclare Gear");
 
                         //Set new declaration state on local copy of selected spec
-                        ManageAndroidGearsForm.this.selectedSpec.gearState = GearSpec.GearState.GearStateDeclared;
+                        ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateDeclared);
                         setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
 
                         //Reload all tables

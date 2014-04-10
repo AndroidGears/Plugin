@@ -32,7 +32,7 @@ public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
             ArrayList<GearSpec> installedSpecs = new ArrayList<GearSpec>();
             for (GearSpec declaredSpec : register.declaredGears){
                 if (Utils.specStateForSpec(declaredSpec, project) == GearSpec.GearState.GearStateInstalled){
-                    declaredSpec.gearState = Utils.specStateForSpec(declaredSpec, project);
+                    declaredSpec.setGearState(Utils.specStateForSpec(declaredSpec, project));
                     installedSpecs.add(declaredSpec);
                 }
             }

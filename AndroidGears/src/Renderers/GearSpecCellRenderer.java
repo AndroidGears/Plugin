@@ -69,7 +69,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             //Set image
             imageLabel = new JLabel();
             //Set image
-            switch (spec.gearState.ordinal()){
+            switch (spec.getGearState().ordinal()){
                 case 0: imageLabel.setIcon(new ImageIcon());
                     break;
                 case 1: imageLabel.setIcon(declaredIcon);
@@ -102,7 +102,7 @@ public class GearSpecCellRenderer extends JPanel implements ListCellRenderer {
             }
 
             //Set image
-            switch (spec.gearState.ordinal()){
+            switch (spec.getGearState().ordinal()){
                 case 0: imageLabel.setIcon(new ImageIcon());
                     break;
                 case 1: imageLabel.setIcon(declaredIcon);

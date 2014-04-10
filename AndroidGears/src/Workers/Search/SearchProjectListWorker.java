@@ -128,7 +128,7 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 GearSpec spec = gson.fromJson(specString, GearSpec.class);
 
                 //Set spec state
-                spec.gearState = Utils.specStateForSpec(spec, project);
+                spec.setGearState(Utils.specStateForSpec(spec, project));
 
                 //Create project and add to project list
                 projectList.add(spec);

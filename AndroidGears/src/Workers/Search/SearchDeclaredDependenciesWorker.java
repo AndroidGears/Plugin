@@ -52,7 +52,7 @@ public class SearchDeclaredDependenciesWorker extends SwingWorker<Void, Void> {
                     //Filter with the search string over spec metadata
                     if(filterString.contains(searchParamter.toLowerCase())){
                         //Set spec state
-                        spec.gearState = Utils.specStateForSpec(spec, project);
+                        spec.setGearState(Utils.specStateForSpec(spec, project));
 
                         //Add gear
                         gears.add(spec);
