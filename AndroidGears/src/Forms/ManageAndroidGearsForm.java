@@ -50,6 +50,7 @@ public class ManageAndroidGearsForm{
 
     File androidGearsDirectory;
     private GearSpec selectedSpec;
+    private GearSpecUpdate selectedUpdateSpec;
     private ArrayList<GearSpec> availableGears;
     private ArrayList<GearSpec> declaredProjects;
     private ArrayList<GearSpec> installedProjects;
@@ -81,6 +82,7 @@ public class ManageAndroidGearsForm{
     private JComboBox TargetModuleComboBox;
     private JList UpdatesList;
     private JPanel UpdatesTabPanel;
+    private JButton UpdateGearButton;
 
     private void createUIComponents() {
 
@@ -233,6 +235,16 @@ public class ManageAndroidGearsForm{
                 toggleDependencyDeclaration();
             }
         });
+
+        //Update button
+        UpdateGearButton.setVisible(false);
+        UpdateGearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                updateGear(selectedUpdateSpec);
+            }
+        });
+        UpdateGearButton.setVisible(false);
 
         //Install/Uninstall button
         InstallUninstallButton.setVisible(false);
@@ -444,7 +456,7 @@ public class ManageAndroidGearsForm{
     private void didSelectSearchSpecAtIndex(int index){
         if (index >= 0 && index < availableGears.size()){
             selectedSpec = availableGears.get(index);
-            setDetailsForSpec(selectedSpec, availableGears.get(index).getVersion());
+            setDetailsForSpec(selectedSpec);
             getVersionDetailsForSepc();
         }
     }
@@ -452,7 +464,7 @@ public class ManageAndroidGearsForm{
     private void didSelectDeclaredSpecAtIndex(int index){
         if (index >= 0 && index < declaredProjects.size()){
             selectedSpec = declaredProjects.get(index);
-            setDetailsForSpec(selectedSpec, declaredProjects.get(index).getVersion()); //MAY NEED TO CHANGE
+            setDetailsForSpec(selectedSpec); //MAY NEED TO CHANGE
             getVersionDetailsForSepc();
         }
 
@@ -461,7 +473,7 @@ public class ManageAndroidGearsForm{
     private void didSelectInstalledSpecAtIndex(int index){
         if (index >= 0 && index < installedProjects.size()){
             selectedSpec = installedProjects.get(index);
-            setDetailsForSpec(selectedSpec, installedProjects.get(index).getVersion()); //MAY NEED TO CHANGE
+            setDetailsForSpec(selectedSpec); //MAY NEED TO CHANGE
             getVersionDetailsForSepc();
         }
 
@@ -469,15 +481,16 @@ public class ManageAndroidGearsForm{
 
     private void didSelectUpdatesSpecAtIndex(int index){
         if (index >= 0 && index < updateableProjects.size()){
-            selectedSpec = updateableProjects.get(index);
-            setDetailsForSpec(selectedSpec, updateableProjects.get(index).getVersion()); //MAY NEED TO CHANGE
+            selectedUpdateSpec = updateableProjects.get(index);
+            setDetailsForSpec(selectedUpdateSpec);
             getVersionDetailsForSepc();
         }
     }
 
     private void didSelectSpecVersion(int index) {
         if (index >= 0 && index < projectVersions.size()){
-            setDetailsForSpec(selectedSpec, projectVersions.get(index));
+            selectedSpec = Utils.specForInfo(selectedSpec.getName(), projectVersions.get(index));
+            setDetailsForSpec(selectedSpec);
         }
     }
 
@@ -485,13 +498,10 @@ public class ManageAndroidGearsForm{
     // Details Management
     ///////////////////////
 
-    private void setDetailsForSpec(GearSpec spec, String version){
+    private void setDetailsForSpec(GearSpec spec){
         //If it is the same as you have selected, don't do anything, else, get the specified version
-        if (!(spec.getName().equals(selectedSpec.getName()) && spec.getVersion().equals(version))){
-            selectedSpec = specForVersion(spec.getName(), version);
-        }
 
-        SpecDetailsPanel specDetailsPanel = new SpecDetailsPanel(selectedSpec);
+        SpecDetailsPanel specDetailsPanel = new SpecDetailsPanel(spec);
 
         //Set panel in scrollpane
         DetailsScrollPane.setViewportView(specDetailsPanel);
@@ -507,6 +517,15 @@ public class ManageAndroidGearsForm{
 
         //Set declaration button based on install state
         setDeclarationStatusForSpec(spec);
+
+        //Set update button
+        if (spec instanceof GearSpecUpdate){
+            UpdateGearButton.setText("Update Gear to "+((GearSpecUpdate) spec).getUpdateVersionNumber());
+            UpdateGearButton.setVisible(true);
+        }
+        else {
+            UpdateGearButton.setVisible(false);
+        }
     }
 
     private void setDeclarationStatusForSpec(final GearSpec spec){
@@ -610,7 +629,6 @@ public class ManageAndroidGearsForm{
         }
     }
 
-
     ///////////////////////
     // Install / Uninstall
     ///////////////////////
@@ -695,7 +713,7 @@ public class ManageAndroidGearsForm{
 
                         //Set new declaration state on local copy of selected spec
                         ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateUninstalled);
-                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
+                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
                         //Reload all tables
                         refreshAvailableGearsList(SearchTextField.getText());
@@ -725,7 +743,7 @@ public class ManageAndroidGearsForm{
 
                         //Set new declaration state on local copy of selected spec
                         ManageAndroidGearsForm.this.selectedSpec.setGearState(GearSpec.GearState.GearStateDeclared);
-                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec, ManageAndroidGearsForm.this.selectedSpec.getVersion());
+                        setDetailsForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
                         //Reload all tables
                         refreshAvailableGearsList(SearchTextField.getText());
@@ -812,6 +830,7 @@ public class ManageAndroidGearsForm{
         LoadingSpinnerLabel.setVisible(true);
         InstallUninstallButton.setEnabled(false);
         SyncButton.setEnabled(false);
+        UpdateGearButton.setEnabled(false);
 
         UninstallDependencyForSpecWorker worker = new UninstallDependencyForSpecWorker(specs, project, module){
 
@@ -823,6 +842,7 @@ public class ManageAndroidGearsForm{
                 LoadingSpinnerLabel.setVisible(false);
                 InstallUninstallButton.setEnabled(true);
                 SyncButton.setEnabled(true);
+                UpdateGearButton.setEnabled(true);
                 setDeclarationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
 
                 //Flip button text
@@ -856,7 +876,16 @@ public class ManageAndroidGearsForm{
             protected void done() {
                 super.done();
 
+                //Re-enable UI elements
+                LoadingSpinnerLabel.setVisible(false);
+                InstallUninstallButton.setEnabled(true);
+                UpdateGearButton.setEnabled(true);
+                SyncButton.setEnabled(true);
+
                 if (successful){
+                    //Set status
+                    StatusLabel.setText("Successfully updated gear.");
+
                     //Reload all tables
                     refreshAvailableGearsList(SearchTextField.getText());
                     refreshDeclaredList(SearchTextField.getText());
