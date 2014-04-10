@@ -636,6 +636,10 @@ public class ManageAndroidGearsForm{
     private void toggleDependency(){
         Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
+        if (selectedSpec == null){
+            selectedSpec = selectedUpdateSpec;
+        }
+
         if (this.selectedSpec.getGearState() == GearSpec.GearState.GearStateInstalled){
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
             gearsToUninstall.add(this.selectedSpec);
@@ -850,6 +854,7 @@ public class ManageAndroidGearsForm{
                     DeclareUndeclareGearButton.setVisible(true);
                     InstallUninstallButton.setText("Install Gear");
                     StatusLabel.setText("Successfully uninstalled gear.");
+                    UpdateGearButton.setVisible(false);
                     refreshDeclaredList(SearchTextField.getText());
                     refreshInstalledList(SearchTextField.getText());
                     refreshAvailableGearsList(SearchTextField.getText());

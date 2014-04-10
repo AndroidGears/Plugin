@@ -43,6 +43,9 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
         //Create gson instance for use in parsing specs
         final Gson gson = new Gson();
 
+        //Create array for storing matched specs
+        final ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
+
         //If there is a searchstring, get matches!
         String directories[] =  androidGearsDirectory.list(new FilenameFilter() {
             @Override
@@ -54,7 +57,26 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                     return false;
                 }
                 else if (name.toLowerCase().contains(searchString.toLowerCase())){ //Accept only those that match your search string
-                    return true;
+                    //Get versions for spec
+                    String[] versions = versionsForProject(name, Utils.pathSeparator());
+
+                    //Build spec location
+                    File specFile = new File(Utils.androidGearsDirectory()+Utils.pathSeparator()+name+Utils.pathSeparator()+versions[versions.length-1]+Utils.pathSeparator()+name+".gearspec");
+
+                    if (specFile.exists()){
+                        String specString = null;
+                        try {
+                            specString = FileUtils.readFileToString(specFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+
+                        GearSpec spec = gson.fromJson(specString, GearSpec.class);
+                        spec.setGearState(Utils.specStateForSpec(spec, project));
+                        projectList.add(spec);
+                        return true;
+                    }
                 }
 
 
@@ -77,20 +99,27 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                     try {
                         GearSpec spec = gson.fromJson(specString, GearSpec.class);
 
-                        //Gather tags
-                        String filterString = "";
-                        for (String tag : spec.getTags()) {
-                            filterString = filterString+tag.toLowerCase()+" ";
-                        }
+                        String[] searchParameters = searchString.split(" ");
+                        for (String searchParamter : searchParameters){
+                            String filterString = spec.getName().toLowerCase() + " " + spec.getVersion().toLowerCase();
 
-                        //Gather authors
-                        for (GearSpecAuthor author : spec.getAuthors()) {
-                            filterString = filterString+author.getName().toLowerCase()+" ";
-                        }
+                            //Gather tags
+                            for (String tag : spec.getTags()) {
+                                filterString = filterString+tag.toLowerCase()+" ";
+                            }
 
-                        //Filter with the search string over spec metadata
-                        if(filterString.contains(searchString.toLowerCase())){
-                            return true;
+                            //Gather authors
+                            for (GearSpecAuthor author : spec.getAuthors()) {
+                                filterString = filterString+author.getName().toLowerCase()+" ";
+                            }
+
+                            //Filter with the search string over spec metadata
+                            if(filterString.contains(searchParamter.toLowerCase())){
+                                //Set spec state
+                                spec.setGearState(Utils.specStateForSpec(spec, project));
+                                projectList.add(spec);
+                                return true;
+                            }
                         }
                     }
                     catch (JsonParseException exception){
@@ -104,36 +133,6 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
                 return false;
             }
         });
-
-        //Create and populate searchProjects array
-        ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
-        for (String directory : directories){
-            //Get versions for spec
-            String[] versions = versionsForProject(directory, Utils.pathSeparator());
-
-            //Build spec location
-            File specFile = new File(androidGearsDirectory.getAbsolutePath()+Utils.pathSeparator()+directory+Utils.pathSeparator()+versions[versions.length-1]+Utils.pathSeparator()+directory+".gearspec");
-
-            //Read file
-            if(specFile.exists()) {
-                String specString = null;
-                try {
-                    specString = FileUtils.readFileToString(specFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    continue;
-                }
-
-                //Get spec
-                GearSpec spec = gson.fromJson(specString, GearSpec.class);
-
-                //Set spec state
-                spec.setGearState(Utils.specStateForSpec(spec, project));
-
-                //Create project and add to project list
-                projectList.add(spec);
-            }
-        }
 
         return projectList;
     }

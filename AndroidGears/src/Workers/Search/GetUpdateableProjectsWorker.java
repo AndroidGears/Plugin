@@ -1,6 +1,7 @@
 package Workers.Search;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecUpdate;
 import Models.GearSpecRegister.GearSpecRegister;
 import Utilities.GearSpecRegistrar;
@@ -63,8 +64,26 @@ public class GetUpdateableProjectsWorker extends SwingWorker<Void, Void>{
                     GearSpecUpdate updateSpec = new GearSpecUpdate(spec);
                     updateSpec.setUpdateVersionNumber(versions[versions.length -1]);
 
-                    //Add spec
-                    this.specs.add(updateSpec);
+                    String[] searchParameters = searchString.split(" ");
+                    for (String searchParamter : searchParameters){
+                        String filterString = spec.getName().toLowerCase() + " " + spec.getVersion().toLowerCase();
+
+                        //Gather tags
+                        for (String tag : spec.getTags()) {
+                            filterString = filterString+tag.toLowerCase()+" ";
+                        }
+
+                        //Gather authors
+                        for (GearSpecAuthor author : spec.getAuthors()) {
+                            filterString = filterString+author.getName().toLowerCase()+" ";
+                        }
+
+                        //Filter with the search string over spec metadata
+                        if(filterString.contains(searchParamter.toLowerCase())){
+                            //Add sepec
+                            this.specs.add(updateSpec);
+                        }
+                    }
                 }
             }
         }

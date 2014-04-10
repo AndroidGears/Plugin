@@ -1,6 +1,7 @@
 package Workers.Search;
 
 import Models.GearSpec.GearSpec;
+import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpecRegister.GearSpecRegister;
 import Utilities.GearSpecRegistrar;
 import Utilities.Utils;
@@ -33,7 +34,27 @@ public class GetInstalledProjectsWorker extends SwingWorker<Void, Void>{
             for (GearSpec declaredSpec : register.declaredGears){
                 if (Utils.specStateForSpec(declaredSpec, project) == GearSpec.GearState.GearStateInstalled){
                     declaredSpec.setGearState(Utils.specStateForSpec(declaredSpec, project));
-                    installedSpecs.add(declaredSpec);
+
+                    String[] searchParameters = searchString.split(" ");
+                    for (String searchParamter : searchParameters){
+                        String filterString = declaredSpec.getName().toLowerCase() + " " + declaredSpec.getVersion().toLowerCase();
+
+                        //Gather tags
+                        for (String tag : declaredSpec.getTags()) {
+                            filterString = filterString+tag.toLowerCase()+" ";
+                        }
+
+                        //Gather authors
+                        for (GearSpecAuthor author : declaredSpec.getAuthors()) {
+                            filterString = filterString+author.getName().toLowerCase()+" ";
+                        }
+
+                        //Filter with the search string over spec metadata
+                        if(filterString.contains(searchParamter.toLowerCase())){
+                            //Add sepec
+                            installedSpecs.add(declaredSpec);
+                        }
+                    }
                 }
             }
 
