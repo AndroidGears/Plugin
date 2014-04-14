@@ -41,12 +41,6 @@ Android Gears is a new <b>dependency management system</b> built on open source 
 - Now, open up your main app module's build.gradle file and select "Sync Now" in the top right of your screen. This will be in a yellow strip across the top of your screen. If it is not there, try adding some new lines to the file and it should pop up.
 - All done! You should now be able to use the code from the gears you selected.
 
-##Core Concepts
-
-####Gears
-
-####The Specs Repository
-
 ##Android Studio Plugin
 
 ####Managing Android Gears
@@ -59,7 +53,66 @@ Android Gears is a new <b>dependency management system</b> built on open source 
 
 ####Settings
 
+##Under the Hood
+
+Before getting started with Android Gears, you may find it helpful to gain a better understanding of how things work "under the hood". This section will detail some core terminology that helps make sense of the Gears system.
+
+####Gears
+
+A <b>Gear</b> is simply another name for an Android or Java library. Gears come in two well-known flavors, JARs and modules. Both are downloaded, installed and maintained in the same way by the Android Gears plugin. Gears will show up in the root of your project folder with JARs and Modules stored in separate folders for easy access. Both will be available to view in your project file immediately after installing them and synchronizing your project.
+
+####The Specs Repository
+
+<b>The Specs Repository</b> is a [**Github repository**](https://github.com/AndroidGears/Specs) owned by the Android Gears organization. It houses all the metadata on Gears that are available for download through the Android Gears plugin. The repository is laid out with the following rules:
+
+* The repository root contains only directories whose names are the individual libraries available through Android Gears
+* The library directory contains only directories representing available gear versions with simple dot notation (i.e. 1.0.0, 1.0.1, etc)
+* Each version folder contains a single file by the extension <code>.gearspec</code> with the name of the file being the library name (i.e. "Colours.gearspec")
+* Each .gearspec file contains a simple JSON packet of information with information about the library and its version.\
+
+####.gearspec Files
+
+A <code>.gearspec</code> file is a text file containing a JSON packet with information about the library and its version. These files are the fundamental unit of the repository and let the Android Gears plugin know about a specific version number. Information includes the library <b>name</b>, <b>version number</b>, <b>location for download</b>, <b>release notes for the specific version</b> and a host of other data. The contents of a sample .gearspec file can be found below:
+
+```json
+{
+  "name": "Colours",
+  "summary": "A beautiful set of predefined colors and a set of color methods to make your Android development life easier.",
+  "version": "1.0.0",
+  "type": "module",
+  "copyright": "Matthew York 2014",
+  "homepage": "https://github.com/MatthewYork/Colours",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Matthew York",
+      "email": "myork@cs.ua.edu"
+    }
+  ],
+  "minimum_api": 9,
+  "source": {
+    "url": "https://github.com/MatthewYork/Colours.git",
+    "tag": "v1.0.0",
+    "source_files": "ColoursLibrary"
+  },
+  "dependencies": null,
+  "tags": [
+    "color",
+    "colour",
+    "utility",
+    "hsb",
+    "rgb",
+    "scheme"
+  ]
+}
+
+```
+
+You can use your favorite text editor like Sublime Text or Atom to create a .gearspec, or you can use the GUI based [.gearspec creator](#creating-a-gear-spec) available as part of the Android Gears plugin.
+
 ##Adding Your Library to Android Gears
+
+So you've got your brand new Android library and you want to make it available to the world through Android Gears! Adding your library is 
 
 ####Packaging
 
