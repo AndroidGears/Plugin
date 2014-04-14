@@ -101,9 +101,11 @@ public class CreateGearForm {
     }
     //adds author row to AuthorModel
     private void AddNewAuthor(GearSpecAuthor gearSpecAuthor) {
+        //add new author to arrayList
+        authors.add(gearSpecAuthor);
+        //Update table
         AuthorModel.addRow(new Object[]{gearSpecAuthor.getName(), gearSpecAuthor.getEmail()});
     }
-
 
     //populate dependencies from the authors list if there are any.
     private void AddAllNewDependencies(ArrayList<GearSpecDependency> dependencies) {
@@ -113,6 +115,8 @@ public class CreateGearForm {
     }
     //adds dependency to DependencyModel
     private void AddNewDependency(GearSpecDependency gearSpecDependency) {
+        //add new dependency to arraylist
+        dependencies.add(gearSpecDependency);
         DependencyModel.addRow(new Object[]{gearSpecDependency.getName(), gearSpecDependency.getVersion()});
     }
 
@@ -131,9 +135,8 @@ public class CreateGearForm {
             public void actionPerformed(ActionEvent e) {
                 if (!txtAuthorName.getText().isEmpty() && !txtAuthorEmail.getText().isEmpty()) {
                     //add new author to table
-                    AddNewAuthor(new GearSpecAuthor(txtAuthorName.getText(),txtAuthorEmail.getText()));
-                    //add new author to arrayList
-                    authors.add(new GearSpecAuthor(txtAuthorName.getText(), txtAuthorEmail.getText()));
+                    AddNewAuthor(new GearSpecAuthor(txtAuthorName.getText(), txtAuthorEmail.getText()));
+
                     //clear out fields
                     txtAuthorName.setText("");
                     txtAuthorEmail.setText("");
@@ -146,9 +149,8 @@ public class CreateGearForm {
             public void actionPerformed(ActionEvent e) {
                 if (!txtDependencyName.getText().isEmpty() && !txtDependencyVersion.getText().isEmpty()) {
                     //add new dependency to table.
-                    AddNewDependency(new GearSpecDependency(txtDependencyName.getText(),txtDependencyVersion.getText()));
-                    //add new dependency to arraylist
-                    dependencies.add(new GearSpecDependency(txtDependencyName.getText(), txtDependencyVersion.getText()));
+                    AddNewDependency(new GearSpecDependency(txtDependencyName.getText(), txtDependencyVersion.getText()));
+
                     //clear out fields
                     txtDependencyName.setText("");
                     txtDependencyVersion.setText("");
@@ -213,10 +215,16 @@ public class CreateGearForm {
     //loads the tags into a string to set the tags.
     private String GetTags(ArrayList<String> tags) {
         String temp="";
-        for(String tag:tags){
-            temp = temp.concat(tag)+" , ";
+
+        //Iterate over all tags and concatenate them as comma separated strings
+        if (tags != null){
+            for(String tag:tags){
+                temp = temp.concat(tag)+" , ";
+            }
+            return temp.substring(0,temp.length()-3);
         }
-        return temp.substring(0,temp.length()-3);
+
+        return temp;
     }
 
     //Make sure that spec meets Android GearSpec Requirements.
@@ -230,8 +238,6 @@ public class CreateGearForm {
                     if (saveSpec(spec)) {
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
                         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-                    } else {
-                        showSaveErrorDialog();
                     }
                 } else {
                     showLintErrorDialog(result);
@@ -253,8 +259,10 @@ public class CreateGearForm {
         fd.setVisible(true);
         //Get file
         String filename = fd.getFile();
-        if (filename == null)
+        if (filename == null) {
             System.out.println("You cancelled the choice");
+            return false;
+        }
         else {
             System.out.println("You chose " + filename);
 
@@ -274,13 +282,12 @@ public class CreateGearForm {
                 FileUtils.write(specFile, gearString);
             } catch (IOException e) {
                 e.printStackTrace();
-
+                showSaveErrorDialog();
+                return false;
             }
 
             return true;
         }
-
-        return false;
     }
     //load gearspec from file on computer
     private GearSpec loadGearSpec() {
@@ -327,8 +334,12 @@ public class CreateGearForm {
         if (!txtProjectTags.getText().isEmpty())
             newSpec.setTags(ParseStringWithCommas(txtProjectTags.getText()));
 
-        if (!txtLibraryTag.getText().isEmpty() && !txtSourceLibLocation.getText().isEmpty() && !txtSourceURL.getText().isEmpty())//TODO check for all 3 urls and file paths source must end with .git
-            newSpec.setSource(new GearSpecSource(txtSourceLibLocation.getText(), txtSourceURL.getText(), txtLibraryTag.getText()));
+        if (!txtSourceURL.getText().isEmpty()){
+            String tagString = (txtLibraryTag.getText().equals("")) ? null : txtLibraryTag.getText();
+            String sourceString = (txtSourceLibLocation.getText().equals("")) ? null : txtSourceLibLocation.getText();
+
+            newSpec.setSource(new GearSpecSource(sourceString, txtSourceURL.getText(), tagString));
+        }
 
         if (!txtProjectSummary.getText().isEmpty())
             newSpec.setSummary(txtProjectSummary.getText());
