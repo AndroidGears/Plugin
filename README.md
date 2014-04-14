@@ -28,10 +28,19 @@ Android Gears is a new <b>dependency management system</b> built on open source 
 
 - Download and install Android Studio
 - Download a release and unzip to get the "Android Gears" plugin folder
-- With th IDE closed, got to Applications -> Android Studio, right click on the icon and select "Show Package Contents". You should see a plugin folder in the package contents
+
+**Mac**
+- With th IDE closed, go to Applications -> Android Studio, right click on the icon and select "Show Package Contents". You should see a plugin folder in the package contents
 - Drag the Android Gears folder into the the plugin folder to install Android Gears.
 - Open Android Studio
 
+**Windows**
+- With th IDE closed, navigate to <code>C:\Users\$USER$\.AndroidStudioPreview\config\Plugins</code>
+- Drag the Android Gears folder into the the plugin folder to install Android Gears.
+- Open Android Studio
+
+**Linux**
+- Coming soon!
 
 ##Basic Usage
 - To manage your Android Gears, click on Tools -> Android Gears -> Manage Android Gears
@@ -53,13 +62,19 @@ Android Gears is a new <b>dependency management system</b> built on open source 
 
 ####Settings
 
-##Under the Hood
+##Core Concepts
 
 Before getting started with Android Gears, you may find it helpful to gain a better understanding of how things work "under the hood". This section will detail some core terminology that helps make sense of the Gears system.
 
 ####Gears
 
-A <b>Gear</b> is simply another name for an Android or Java library. Gears come in two well-known flavors, JARs and modules. Both are downloaded, installed and maintained in the same way by the Android Gears plugin. Gears will show up in the root of your project folder with JARs and Modules stored in separate folders for easy access. Both will be available to view in your project file immediately after installing them and synchronizing your project.
+A <b>Gear</b> is simply another name for an Android or Java library. Gears come in two well-known flavors, JARs and modules. Both are downloaded, installed and maintained in the same way by the Android Gears plugin. Gears will show up in the root of your project folder with JARs and Modules stored in separate folders for easy access.
+
+![GearsDirectoryScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/GearsFolderScreenshotAnnotated.png)
+
+Both will be available to view in your project immediately after installing them and synchronizing your project.
+
+![GearsProjectDirectoryScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/GearsProjectFolderScreenshot.png)
 
 ####The Specs Repository
 
@@ -68,7 +83,11 @@ A <b>Gear</b> is simply another name for an Android or Java library. Gears come 
 * The repository root contains only directories whose names are the individual libraries available through Android Gears
 * The library directory contains only directories representing available gear versions with simple dot notation (i.e. 1.0.0, 1.0.1, etc)
 * Each version folder contains a single file by the extension <code>.gearspec</code> with the name of the file being the library name (i.e. "Colours.gearspec")
-* Each .gearspec file contains a simple JSON packet of information with information about the library and its version.\
+* Each .gearspec file contains a simple JSON packet of information with information about the library and its version.
+
+Below is an annotated screenshot of a cloned copy of the specs repository:
+
+![SpecsRepository](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/SpecsRepositoryScreenshot.png)
 
 ####.gearspec Files
 
@@ -78,6 +97,7 @@ A <code>.gearspec</code> file is a text file containing a JSON packet with infor
 {
   "name": "Colours",
   "summary": "A beautiful set of predefined colors and a set of color methods to make your Android development life easier.",
+  "realease_notes":"The initial release of Colours for Android",
   "version": "1.0.0",
   "type": "module",
   "copyright": "Matthew York 2014",
@@ -109,6 +129,10 @@ A <code>.gearspec</code> file is a text file containing a JSON packet with infor
 ```
 
 You can use your favorite text editor like Sublime Text or Atom to create a .gearspec, or you can use the GUI based [.gearspec creator](#creating-a-gear-spec) available as part of the Android Gears plugin.
+
+####Accessing the Specs Repository
+
+You may ask the question, <b>"How does the Android Gears plugin communicate with the Specs Repository?"</b> Whenever Android Gears opens for the first time, it clones down a copy of the Specs Repository (typically a very small download) to your user directory. Once the initial clone is complete, any updates to the specs repository on Github are automatically pulled down whenever you open your IDE giving you access to the latest available Gears.
 
 ##Adding Your Library to Android Gears
 
