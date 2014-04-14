@@ -78,6 +78,7 @@ A <code>.gearspec</code> file is a text file containing a JSON packet with infor
 {
   "name": "Colours",
   "summary": "A beautiful set of predefined colors and a set of color methods to make your Android development life easier.",
+  "realease_notes":"The initial release of Colours for Android",
   "version": "1.0.0",
   "type": "module",
   "copyright": "Matthew York 2014",
