@@ -9,6 +9,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by matthewyork on 4/3/14.
@@ -45,7 +47,12 @@ public class GearSpecLinter {
                 failureReasons.add("Spec must have a version.");
             }
             else {
-                successReasons.add("Spec has valid version number.");
+                if (checkVersionFormat(spec.getVersion())){
+                    successReasons.add("Spec has valid version number.");
+                }
+                else {
+                    failureReasons.add("Spec must conform to semantic versioning (i.e 1.1.0 or 42.23.19).");
+                }
             }
             //Check for type
             if (!existsAndNotBlank(spec.getType())){
@@ -111,6 +118,19 @@ public class GearSpecLinter {
         }
 
         return true;
+    }
+
+    private static Boolean checkVersionFormat(String string){
+        String re1="(\\d+)";	// Integer Number 1
+        String re2="(.)";	// Any Single Character 1
+        String re3="(\\d+)";	// Integer Number 2
+        String re4="(.)";	// Any Single Character 2
+        String re5="(\\d+)";	// Integer Number 3
+
+        Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher m = p.matcher(string);
+
+        return m.matches();
     }
 
     private static void checkAuthors(GearSpec spec, ArrayList<String> failureReasons, ArrayList<String> successReasons, LintGearSpecWorker worker){
