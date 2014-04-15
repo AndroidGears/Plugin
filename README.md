@@ -217,7 +217,21 @@ The final way of housing Gear is through a static JAR file. This choice is the o
 
 ####Pull Requests
 
+Pull requests to the Specs master repo will be reviewed and linted so as not to harm the integrity of the Specs repository. To avoid having your request denied, please use the linting and/or creation tools available in the plugin. We will review all requests as FIFO as possible and do our best to ensure the process is quick. If you would like to help become a reviewer, please contact gearshelp@gmail.com
+
 ##Credits
+
+[**Matthew York**](https://github.com/MatthewYork) - Creator of Android Gears, Senior iOS and Android Developer for the [Center for Advanced Public Safety](https://github.com/uacaps)
+
+[**Aaron Fleshner**](https://github.com/adfleshner) - Creator of Android Gears, Senior Android Developer for the [Center for Advanced Public Safety](https://github.com/uacaps)
+
+[**Ben Gordon**](https://github.com/bennyguitar) - Senior iOS Developer at [Intermark](https://github.com/Intermark) and creator of [androidgears.org](http://androidgears.org)
+
+[**CocoaPods.org**](http://cocoapods.org) - The iOS dependency manager which much of the structure for Android Gears is based on.
+
+[**JGit**](http://www.eclipse.org/jgit/) - The eclipse foundation project that handles git functionality in Android Gears
+
+I would also like to thank **God** through whom all things live and move and have their being. [Acts 17:28](Acts 17:16-34)
 
 ##License
 
