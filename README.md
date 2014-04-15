@@ -153,6 +153,31 @@ To manage the Android Gears for a given project, select Tools -> Android Gears -
 
 Gear Specs is a text file that holds information about an Android library listed in Android Gears. The Android Gears plugin for Android Studio comes with a GUI for creating a Gear Spec that may be pulled into the Specs Repository. Use this tool to create a listing for your library. For more information about the process, see [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears).
 
+When using GUI First go to Tools > Android Gears > Create GearSpec
+![CreateGearSpecMenu](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearMenu.png)
+
+Then fill out form as best you can and we will tell you if you have done it correctly. 
+
+![CreateGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearScreen.png)
+
+Things to take into consideration. 
+* All Fields must be filled out unless you are pointing your Url Source directly to a .jar file. Then Tag and Location are to be left blank.
+* Dependencies for your libraries must already be gearspecs in the Specs Repository.
+* A Gearspec can have more then one Author but you must have at least one author.
+* Each Author must have a name and email address.
+* A Libraries Version must be [semantic versioning](http://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning)
+* Use tags to create greater visibility for your library. 
+* When creating tag use commas to seprate out each tag.
+* When you are searching for your gear after it has been added to the Specs Repository it is a full text search so Author name and Project name are not required to be in the tags as well they are already part of the search algorithm.
+* Source must be a valid .git repository or .jar file. ( library does not have to be in github any git repo or .jar file is acceptable )
+* The Homepage is the face or your library. Link it to a site that looks good and/or has alot of detailed information about your library.
+* If you have already created a gearspec and would like to edit it and reupload it. Use the "Load Android Gear Spec" button in the bottom left corner for quick and easy filler and editing.
+* To remove Authors or Dependencies just click on the the listing in the table and then click on the - Remove Author or Dependency button below the selected table.
+* Dependency Addition requires both fields to be filled and each field needs to be a valid gearspec in the specs repo.
+* License is the Name of the License not the entire License and all of its wonderful mumbo jumbo.
+* Click Create Android Gear Spec in the bottom right corner to face the Android Gears Linter if you get past that you should be ready to create a pull request to the Android Gears Specs Repository to add your gearspec to our ever growing community. 
+* HAPPY CODING!
+
 ####Linting a Gear Spec
 
 The plugin also has a built-in linting tool for making sure your <code>.gearspec</code> file is valid before issuing a pull request to the Specs Repository. This tool will tell you if there is anything wrong. This same linting tool is used by the "Create Gear Spec" mechanism.
