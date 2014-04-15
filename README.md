@@ -137,7 +137,7 @@ You may ask the question, <b>"How does the Android Gears plugin communicate with
 
 [Recall](#gears) that all the libraries you download through Android Gears are housed in a special directory in your project folder called "Gears". **To keep the size of your repository as small as possible**, this folder is automatically ignored by creating an entry in your .gitignore file. To keep track of what gears are included in the project, another file <code>GearSpecRegister</code> is created that contains a list of all Gears associated with a given project. This helps those working in teams by **declaring** dependencies instead of including them in the repository. 
 
-A great example of this system's utility when is someone inherits a mature project using Android Gears. This person may checkout the repository and then sync (that is, download and install) the Gears declared in the <code>GearSpecRegister</code>. All of this is streamlined through the [Manage Android Gears](#managing-android-gears) portion of the plugin, and is a simple as clicking a button. 
+A great example of this system's utility is when someone inherits a mature project using Android Gears. This person may checkout the repository and then sync (that is, download and install) the Gears declared in the <code>GearSpecRegister</code>. All of this is streamlined through the [Manage Android Gears](#managing-android-gears) portion of the plugin, and is a simple as clicking a button. 
 
 *Note:** There is no need to actually open the <code>GearSpecRegister</code> file, but if you do, you will find a simple array of Gear Specs. If there is ever a conflict in this file due to more than one team member manipulating it, resolving the conflict is as easy as shuffling a few JSON objects around. 
 
