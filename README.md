@@ -23,7 +23,7 @@ An example of searching for, downloading and using an Android library in your pr
   * [Linting a Gear Spec](#linting-a-gear-spec)
   * [Settings](#settings) 
 * [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears)
-  * [Packaging](#packaging)
+  * [Packaging Your Library](#packaging-your-library)
   * [Pull Requests](pull-requests)
 * [**Credits**](#credits)
 * [**License**](#license)
@@ -88,7 +88,7 @@ Below is an annotated screenshot of a cloned copy of the specs repository:
 
 ![SpecsRepository](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/SpecsRepositoryScreenshot.png)
 
-####.gearspec Files
+####Gearspec Files
 
 A <code>.gearspec</code> file is a text file containing a JSON packet with information about a library and its version. These files are the fundamental unit of the repository and let the Android Gears plugin know about a specific version number. Information includes the library <b>name</b>, <b>version number</b>, <b>location for download</b>, <b>release notes for the specific version</b> and a host of other data. The contents of a sample .gearspec file can be found below:
 
@@ -163,9 +163,57 @@ The plugin also has a built-in linting tool for making sure your <code>.gearspec
 
 ##Adding Your Library to Android Gears
 
-So you've got your brand new Android library and you want to make it available to the world through Android Gears! Adding your library is 
+So you have created your shiny, new Android library and you want to make it available to all the world through Android Gears! Adding your library is as simple as initiating a properly formatted pull request to the [Specs Repository](https://github.com/AndroidGears/Specs). At the high level, the entire process is as follows:
 
-####Packaging
+* Create a Module or JAR (henceforth "Gear") you would like to share through Android Gears
+* House the Gear online in one or more ways covered in the [Packaging](#packaging-your-library) section below
+* Create a <code>.gearspec</code> file through the Plugin or elsewhere that contains the Gear's metadata. See [here](#gearspec-files) for format.
+* Fork the Android Gears [Specs Repository](https://github.com/AndroidGears/Specs)
+* Add your project and/or version to your forked repository
+* Initiate a pull-request to the Android Gears Specs master repository
+* Your new spec will be reviewed for integrity and, when approved, immediately allow your library to be accessed through the Android Gears plugin
+
+####Packaging Your Library
+
+Your code must be stored somewhere online to be available for download through Android Gears. A few options are available with small variations. It is recommended that you use the [Create Gear Spec](creating-a-gear-spec) portion of the Android Gears plugin, but, as this simply outputs a text file with JSON inside, you may also use your favorite text editor.
+
+**Method 1 - Module in Git**
+
+The first option is housing a module in a git repository on Github. If this is the method you have chosen, the source object of your <code>.gearspec</code> file might look something like the one from the [Colours Library](https://github.com/MatthewYork/Colours):
+
+```json
+"source": {
+    "url": "https://github.com/MatthewYork/Colours.git",
+    "tag": "v1.0.0",
+    "source_files": "ColoursLibrary"
+  }
+```
+
+Here, a url to the git repository is given as well as the tag associated with that specific release of Colours. Also, a directory "ColoursLibrary" is listed, meaning that the module is housed in a folder name "ColoursLibrary" at the root of the repository.
+
+**Method 2 - JAR in Git**
+
+The second way of housing a Gear is as a JAR file versioned through Git. Like method 1, you have a repository url and tag, but this time the <code>source_files</code> field contains the path to a JAR.
+
+```json
+"source": {
+    "url": "https://github.com/AndroidGears/JodaTime.git",
+    "tag": "v2.3.0",
+    "source_files": "joda-time-2.3.jar"
+  }
+```
+
+**Method 3 - Static JAR**
+
+The final way of housing Gear is through a static JAR file. This choice is the only one that allows disassociation from a parent git repository. An example of this source might look something like this.
+
+```json
+"source": {
+    "url": "http://mirrors.ibiblio.org/pub/mirrors/maven2/net/objectlab/kit/datecalc/datecalc-joda/1.0.1/datecalc-joda-1.0.1.jar",
+    "tag": null,
+    "source_files": null
+  }
+```
 
 ####Pull Requests
 
