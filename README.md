@@ -256,6 +256,8 @@ Pull requests to the Specs master repo will be reviewed and linted so as not to 
 
 [**JGit**](http://www.eclipse.org/jgit/) - The eclipse foundation project that handles git functionality in Android Gears
 
+[**Java Swing**](http://en.wikipedia.org/wiki/Swing_(Java)) - The Wonderful gui library that created all of the wonderful forms your are viewing in Android Gears.
+
 I would also like to thank **God** through whom all things live and move and have their being. [Acts 17:28](http://www.biblegateway.com/passage/?search=Acts+17%3A16-34&version=NIV)
 
 ##License
