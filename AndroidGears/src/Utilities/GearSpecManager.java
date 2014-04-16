@@ -352,6 +352,18 @@ public class GearSpecManager {
     // Uninstall
     ///////////////////////
 
+    public static Boolean uninstallGear(GearSpec spec, Project project, Module module){
+        if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+            return GearSpecManager.uninstallModule(spec, project, module);
+        }
+        else if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+            return GearSpecManager.uninstallJar(spec, project, module);
+        }
+        else {
+            return false;
+        }
+    }
+
     public static Boolean uninstallModule(GearSpec spec, Project project, Module module){
 
         File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Modules");

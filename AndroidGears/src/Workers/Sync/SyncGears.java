@@ -9,6 +9,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
+import java.io.File;
 
 /**
  * Created by matthewyork on 4/10/14.
@@ -30,6 +31,18 @@ public class SyncGears extends SwingWorker<Void, Void>{
         //Get gear spec register
         GearSpecRegister register = GearSpecRegistrar.getRegister(project);
 
+        //Handle any new gears that need to be installed
+        handleNewAdditions(register);
+
+        //Handle any gears that should be deleted (i.e. aren't in the specs register)
+        handleNewDeletions(register);
+
+        return null;
+    }
+
+    private void handleNewAdditions(GearSpecRegister register){
+
+
         if (register != null){
             for (GearSpec spec : register.declaredGears){
                 //Set gear state
@@ -42,8 +55,26 @@ public class SyncGears extends SwingWorker<Void, Void>{
                 }
             }
         }
+    }
 
+    private void handleNewDeletions(GearSpecRegister register) {
+        /*
+        //Get Gear Directories
+        File jarsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+        File modulesDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Modules");
 
-        return null;
+        //Remove any unnecessary JARS
+        if (jarsDirectory.exists()){
+
+            for (File jarFile : jarsDirectory.listFiles()){
+                Boolean match = false;
+
+                for (GearSpec spec : register.declaredGears){
+                    if (jarFile.getName().equals(Utils.jarFileNameForSpecSource(spec.getSource()))){
+                        return;
+                    }
+                }
+            }
+        }*/
     }
 }

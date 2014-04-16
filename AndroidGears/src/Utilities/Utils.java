@@ -113,6 +113,7 @@ public class Utils {
     public static GearSpec.GearState specStateForSpec(GearSpec spec, Project project){
         if (spec.isRegistered(project)){
             if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                //TODO: Only checks for name, not version...
                 if (new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Jars"+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource())).exists()){
                     return GearSpec.GearState.GearStateInstalled;
                 }
@@ -121,6 +122,7 @@ public class Utils {
                 }
             }
             else if(spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                //TODO: Only checks for name, not version...
                 if(new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Modules"+Utils.pathSeparator()+spec.getName()).exists()){
                     return GearSpec.GearState.GearStateInstalled;
                 }
