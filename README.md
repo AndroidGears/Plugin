@@ -4,7 +4,7 @@
 
 Android Gears is a new <b>dependency management system</b> built on open source technology through Github. Gears is fully integrated with the Gradle build processes of Android Studio and IntelliJ. In addition to providing a robust search interface for library discovery, Gears greatly reduces the effort it takes to share your library with others. Listing your library with Android Gears is just a pull request away.
 
-An example of searching for, downloading and using an Android library in your project in **under 20 seconds**.
+An example of searching for, downloading and using an Android library in your project in **under 15 seconds**.
 
 ![ColoursInstallDemo](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/ColoursInstallDemo.gif)
 
