@@ -1,10 +1,7 @@
 package Forms;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -30,6 +27,7 @@ import Workers.Search.SearchUpdatableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
 import Workers.Sync.SyncGears;
+import com.intellij.ide.actions.SynchronizeAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -331,7 +329,36 @@ public class ManageAndroidGearsForm{
             }
         });
         SearchTabbedPane.setFocusable(false);
+
+        MasterPanel.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent ancestorEvent) {
+                //Add window close listener to resync project after gear work is done
+                JFrame masterFrame = (JFrame)SwingUtilities.getRoot(MasterPanel);
+                masterFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent we) {
+                        //Reload project to trigger autosync
+                        ProjectManager pm = ProjectManager.getInstance();
+                        pm.reloadProject(targetProjects[TargetProjectComboBox.getSelectedIndex()]);
+                    }
+                });
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent ancestorEvent) {
+
+            }
+
+            @Override
+            public void ancestorMoved(AncestorEvent ancestorEvent) {
+
+            }
+        });
+
+
     }
+
 
     ///////////////////////
     // Table refresh/reload
@@ -650,7 +677,7 @@ public class ManageAndroidGearsForm{
     ///////////////////////
 
     private void toggleDependency(final GearSpec spec){
-        Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
+        final Project targetProject = targetProjects[TargetProjectComboBox.getSelectedIndex()];
 
         if (spec.getGearState() == GearSpec.GearState.GearStateInstalled){
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
