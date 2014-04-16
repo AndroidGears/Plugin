@@ -53,13 +53,10 @@ Finally, to access the Android Gears menu, navigate to Tools -> Android Gears
 
 ![ToolsMenuScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/MenuScreenshot.png)
 
-
 ##Basic Usage
 - To manage your Android Gears, click on Tools -> Android Gears -> Manage Android Gears
 - Search for and install a library.
 - Once you have installed all the gears, click "Done"
-- Now, right click on your project in the project navigator and select "Synchronize <Project Name>"
-- Now, open up your main app module's build.gradle file and select "Sync Now" in the top right of your screen. This will be in a yellow strip across the top of your screen. If it is not there, try adding some new lines to the file and it should pop up.
 - All done! You should now be able to use the code from the gears you selected.
 
 ##Core Concepts
