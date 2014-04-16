@@ -25,6 +25,7 @@ An example of searching for, downloading and using an Android library in your pr
 * [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears)
   * [Packaging Your Library](#packaging-your-library)
   * [Pull Requests](pull-requests)
+* [**Future Enchancements**](#future-enhancements)
 * [**Credits**](#credits)
 * [**License**](#license)
 
@@ -161,21 +162,21 @@ Then fill out form as best you can and we will tell you if you have done it corr
 ![CreateGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearScreen.png)
 
 Things to take into consideration. 
-* All Fields must be filled out unless you are pointing your Url Source directly to a .jar file. Then Tag and Location are to be left blank.
+* All fields must be filled out unless you are pointing your Url Source directly to a .jar file. Then "Tag" and "Location" are to be left blank.
 * Dependencies for your libraries must already be gearspecs in the Specs Repository.
 * A Gearspec can have more then one Author but you must have at least one author.
 * Each Author must have a name and email address.
-* A Libraries Version must be [semantic versioning](http://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning)
+* A library's version must be [semantic versioning](http://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning)
 * Use tags to create greater visibility for your library. 
 * When creating tag use commas to seprate out each tag.
-* When you are searching for your gear after it has been added to the Specs Repository it is a full text search so Author name and Project name are not required to be in the tags as well they are already part of the search algorithm.
-* Source must be a valid .git repository or .jar file. ( library does not have to be in github any git repo or .jar file is acceptable )
-* The Homepage is the face or your library. Link it to a site that looks good and/or has alot of detailed information about your library.
+* When you are searching for your Gear after it has been added to the Specs Repository it is a full text search so Author name and project name are not required to be in the tags as well they are already part of the search algorithm.
+* Source must be a valid .git repository or .jar file. See the [Packaging](#packaging) section for a complete list of your options.
+* The homepage is the face or your library. Link it to a site that looks good and/or has alot of detailed information about your library. The library's Github page is a wonderful place to start.
 * If you have already created a gearspec and would like to edit it and reupload it. Use the "Load Android Gear Spec" button in the bottom left corner for quick and easy filler and editing.
-* To remove Authors or Dependencies just click on the the listing in the table and then click on the - Remove Author or Dependency button below the selected table.
-* Dependency Addition requires both fields to be filled and each field needs to be a valid gearspec in the specs repo.
-* License is the Name of the License not the entire License and all of its wonderful mumbo jumbo.
-* Click Create Android Gear Spec in the bottom right corner to face the Android Gears Linter if you get past that you should be ready to create a pull request to the Android Gears Specs Repository to add your gearspec to our ever growing community. 
+* To remove authors or dependencies just click on the the listing in the table and then click on the - Remove Author or Dependency button below the selected table.
+* Dependency addition requires both fields to be filled. These need to be the name and version of a valid gearspec in the specs repo.
+* License is the **name** of the License not the entire license text.
+* Click "Create Android Gear Spec" in the bottom right corner. This will summon the Android Gear Spec Linter. If your spec makes it past the linter you are ready to create a pull request to the Android Gears Specs Repository and add your library to our ever growing community. 
 * HAPPY CODING!
 
 ####Linting a Gear Spec
@@ -243,6 +244,14 @@ The final way of housing Gear is through a static JAR file. This choice is the o
 ####Pull Requests
 
 Pull requests to the Specs master repo will be reviewed and linted so as not to harm the integrity of the Specs repository. To avoid having your request denied, please use the linting and/or creation tools available in the plugin. We will review all requests as FIFO as possible and do our best to ensure the process is quick. If you would like to help become a reviewer, please contact gearshelp@gmail.com
+
+##Future Enhancements
+
+We envision Android Gears to be a complete solution for managing dependencies in Android apps. As such, there are many enhancements that we would like to see in the future. **We hope for much community involvement in the Android Gears project. Your pull requests and feature suggestions are welcome.** Here are just a few things we have in mind.
+
+* Creating **separate Gear areas** for debug, release and test run configurations (Better lifecycle management).
+* **Better dependency resolution** for projects involving many dependencies of potentially conflicting version numbers. Right now, only basic management is done. For instance, if two libs are dependent on the same lib of different versions, how does this get handled effectively? That is an open question we would like to discuss.
+* **Icons** for the menu items. Right now there is a "gears.png" icon that we cannot get recognized in the plugin.xml. Any help here would be great.
 
 ##Credits
 
