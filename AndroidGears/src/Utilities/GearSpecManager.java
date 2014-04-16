@@ -36,7 +36,7 @@ public class GearSpecManager {
 
     public static Boolean installModule(GearSpec spec, Project project, Module module){
         //Install dependency and sub-dependencies
-        File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + "Gears" + Utils.pathSeparator() + "Modules" + Utils.pathSeparator() + spec.getName());
+        File specDirectory = Utils.fileInstallPathForSpec(spec, project);
 
         //Delete the directory. This is for other versions installed
         if (specDirectory.exists()) {
@@ -138,10 +138,10 @@ public class GearSpecManager {
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                                GearSpecManager.installJar(dependencySpec, project, module);
+                                installJar(dependencySpec, project, module);
                             }
                             else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                                GearSpecManager.installModule(dependencySpec, project, module);
+                                installModule(dependencySpec, project, module);
                             }
                         }
                     }
@@ -164,8 +164,11 @@ public class GearSpecManager {
     }
 
     public static Boolean installJar(GearSpec spec, Project project, Module module){
+        //Create local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Create GearsJars directory if not already there
-        File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+        File libsDirectory = new File(project.getBasePath()+pathSeparator+ "Gears"+ pathSeparator + "Jars"+ pathSeparator + spec.getName() + pathSeparator + spec.getVersion());
         if (!libsDirectory.exists()){
             try {
                 FileUtils.forceMkdir(libsDirectory);
@@ -203,10 +206,10 @@ public class GearSpecManager {
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                                GearSpecManager.installJar(dependencySpec, project, module);
+                                installJar(dependencySpec, project, module);
                             }
                             else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                                GearSpecManager.installModule(dependencySpec, project, module);
+                                installModule(dependencySpec, project, module);
                             }
                         }
                     }
@@ -215,7 +218,7 @@ public class GearSpecManager {
         }
 
         //Update project settings
-        if (!GearSpecManager.updateInstallProjectSettingsForJar(module)){
+        if (!updateInstallProjectSettingsForJar(spec, module)){
             return false;
         }
 
@@ -229,7 +232,6 @@ public class GearSpecManager {
     }
 
     private static Boolean updateInstallProjectSettingsForModule(GearSpec spec, Project project, Module module){
-
         //Install dependency and sub-dependencies
         File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
         File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
@@ -243,10 +245,10 @@ public class GearSpecManager {
         try {
             String settingsFileString = FileUtils.readFileToString(settingsFile);
 
-            if (!settingsFileString.contains("include ':Gears:Modules:"+spec.getName()+"'")){
+            if (!settingsFileString.contains("include ':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'")){
 
                 //Make changes to settings.gradle
-                String newSettingString = "\n"+"include ':Gears:Modules:"+spec.getName()+"'";
+                String newSettingString = "\n"+"include ':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'";
 
                 int commentIndex = settingsFileString.lastIndexOf(commentString);
 
@@ -273,7 +275,7 @@ public class GearSpecManager {
             String buildFileString = FileUtils.readFileToString(buildFile);
 
             //Create new addition
-            String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+spec.getName()+"')}";
+            String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"')}";
 
 
             if (!buildFileString.contains(newDependencyString)){
@@ -300,7 +302,7 @@ public class GearSpecManager {
         return true;
     }
 
-    private static Boolean updateInstallProjectSettingsForJar(Module module){
+    private static Boolean updateInstallProjectSettingsForJar(GearSpec selectedSpec, Module module){
         //Get build file
         File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
 
@@ -315,7 +317,7 @@ public class GearSpecManager {
                 String buildFileString = FileUtils.readFileToString(buildFile);
 
                 //Create new addition
-                String dependencyString = "\ndependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+                String dependencyString = "\ndependencies{compile fileTree(dir: '../Gears/Jars/"+selectedSpec.getName()+"/"+selectedSpec.getVersion()+"', include: ['*.jar'])}";
 
                 //If the build file doesn't contain the jar dependency, go ahead and add it
                 if (!buildFileString.contains(dependencyString)){
@@ -366,7 +368,16 @@ public class GearSpecManager {
 
     public static Boolean uninstallModule(GearSpec spec, Project project, Module module){
 
-        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Modules");
+        //Update settings files
+        //This MUST be run before removing the physical module on disk. Otherwise, the directory structure for the module may be retained after syncing
+        if (!updateProjectSettingsForModule(spec, project, module)){
+            return false;
+        }
+
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
+        File libsDirectory = new File(project.getBasePath()+ pathSeparator+ "Gears"+ pathSeparator + "Modules"+pathSeparator+spec.getName());
         if (!libsDirectory.exists()){
             //Unregister just in case
             if (GearSpecRegistrar.unregisterGear(spec, project)){
@@ -378,21 +389,16 @@ public class GearSpecManager {
         }
 
         //Get the jar file
-        File moduleDirectory = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+spec.getName());
+        File moduleDirectory = new File(libsDirectory.getAbsolutePath()+pathSeparator+spec.getVersion());
 
         //Delete the jar
         if (moduleDirectory.exists()){
             try {
-                FileUtils.deleteDirectory(moduleDirectory);
+                FileUtils.forceDelete(libsDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
-        }
-
-        //Update settings files
-        if (!updateProjectSettingsForModule(spec, project, module)){
-            return false;
         }
 
         //Finally, unregister gear
@@ -406,8 +412,11 @@ public class GearSpecManager {
 
     public static Boolean uninstallJar(GearSpec spec, Project project, Module module){
 
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Get the gears jar directory. If it doesn't exist, then we will count that as a win
-        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+        File libsDirectory = new File(project.getBasePath()+ pathSeparator + "Gears"+ pathSeparator + "Jars"+ pathSeparator + spec.getName());
         if (!libsDirectory.exists()){
             //Unregister just in case
             if (GearSpecRegistrar.unregisterGear(spec, project)){
@@ -419,12 +428,12 @@ public class GearSpecManager {
         }
 
         //Get the jar file
-        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource()));
+        File jarFile = new File(libsDirectory.getAbsolutePath()+pathSeparator+spec.getVersion()+pathSeparator+Utils.jarFileNameForSpecSource(spec.getSource()));
 
         //Delete the jar
         if (jarFile.exists()){
             try {
-                FileUtils.forceDelete(jarFile);
+                FileUtils.forceDelete(libsDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -432,7 +441,7 @@ public class GearSpecManager {
         }
 
         //Update settings files
-        if (!updateProjectSettingsForJar(project, module)){
+        if (!updateProjectSettingsForJar(spec, project, module)){
             return false;
         }
 
@@ -446,10 +455,41 @@ public class GearSpecManager {
     }
 
     private static Boolean updateProjectSettingsForModule(GearSpec spec, Project project, Module module){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Install dependency and sub-dependencies
-        File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
-        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
-        File modulesFile = new File(project.getBasePath() + Utils.pathSeparator() + ".idea"+Utils.pathSeparator()+"modules.xml");
+        File modulesFile = new File(project.getBasePath() + pathSeparator + ".idea"+ pathSeparator +"modules.xml");
+        File settingsFile = new File(project.getBasePath() + pathSeparator + "settings.gradle");
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() +pathSeparator + "build.gradle");
+
+        //Recreate version entry from the modules.xml
+        String versionModuleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getVersion()+"/"+spec.getVersion()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getVersion()+"/"+spec.getVersion()+".iml\" />";
+        //Recreate gear entry from modles.xml
+        String parentModuleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" />";
+
+        if (modulesFile.exists()){
+            //Read the build file
+            try {
+                String modulesFileString = FileUtils.readFileToString(modulesFile);
+
+                if (modulesFileString.contains(versionModuleEntry)){
+                    modulesFileString = modulesFileString.replace(versionModuleEntry, "");
+                }
+                if (modulesFileString.contains(parentModuleEntry)){
+                    modulesFileString = modulesFileString.replace(parentModuleEntry, "");
+                }
+
+                //Write changes to settings.gradle
+                FileUtils.forceDelete(modulesFile);
+                FileUtils.write(modulesFile, modulesFileString);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        }
 
         //Modify settings file
         if (settingsFile.exists()){
@@ -458,8 +498,8 @@ public class GearSpecManager {
                 String settingsFileString = FileUtils.readFileToString(settingsFile);
 
                 //Make comparator strings
-                String fullLineInclude = "include ':Gears:Modules:"+spec.getName()+"'";
-                String partialInclude = "':Gears:Modules:"+spec.getName()+"'";
+                String fullLineInclude = "include ':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'";
+                String partialInclude = "':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'";
 
                 //Look for full line inclusion
                 if (settingsFileString.contains(fullLineInclude)){
@@ -496,7 +536,7 @@ public class GearSpecManager {
                 String buildFileString = FileUtils.readFileToString(buildFile);
 
                 //Create new addition
-                String dependencyString = "dependencies{compile project (':Gears:Modules:"+spec.getName()+"')}";
+                String dependencyString = "dependencies{compile project (':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"')}";
 
                 if (buildFileString.contains(dependencyString)){
                     buildFileString = buildFileString.replace(dependencyString, "");
@@ -515,38 +555,19 @@ public class GearSpecManager {
             return false;
         }
 
-        //Remove entry from the modules.xml
-        String moduleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" />";
-        if (modulesFile.exists()){
-            //Read the build file
-            try {
-                String modulesFileString = FileUtils.readFileToString(modulesFile);
-
-                if (modulesFileString.contains(moduleEntry)){
-                    modulesFileString = modulesFileString.replace(moduleEntry, "");
-                }
-
-                //Write changes to settings.gradle
-                FileUtils.forceDelete(modulesFile);
-                FileUtils.write(modulesFile, modulesFileString);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-        }
-
         return true;
     }
 
-    private static Boolean updateProjectSettingsForJar(Project project, Module module){
-        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+    private static Boolean updateProjectSettingsForJar(GearSpec spec, Project project, Module module){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + pathSeparator + "build.gradle");
 
         //Modify build file
         if (buildFile.exists()){
             try {
-                File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+                File libsDirectory = new File(project.getBasePath() + pathSeparator + "Gears"+ pathSeparator + "Jars");
 
                 if(libsDirectory.exists()){
                     //Check to see if all jars are gone. If so, remove the gears jar folder dependency
@@ -568,7 +589,7 @@ public class GearSpecManager {
                         String buildFileString = FileUtils.readFileToString(buildFile);
 
                         //Create new addition
-                        String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+                        String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars/"+spec.getName()+"/"+spec.getVersion()+"', include: ['*.jar'])}";
 
                         if (buildFileString.contains(dependencyString)){
                             buildFileString = buildFileString.replace(dependencyString, "");

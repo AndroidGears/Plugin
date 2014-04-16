@@ -552,6 +552,9 @@ public class ManageAndroidGearsForm{
 
                 StatusLabel.setText("Gear synchronization complete.");
                 LoadingSpinnerLabel.setVisible(false);
+
+                //Reload table now that gears are synced
+                refreshSelectedTabList(SearchTextField.getText());
             }
         };
         syncWorker.execute();
