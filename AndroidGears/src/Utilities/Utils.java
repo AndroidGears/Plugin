@@ -137,4 +137,20 @@ public class Utils {
 
         return GearSpec.GearState.GearStateUninstalled;
     }
+
+    public static File fileInstallPathForSpec(GearSpec spec, Project project){
+        if (spec != null & project != null){
+            //Make local separator for speed
+            String pathSeparator = Utils.pathSeparator();
+
+            if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                return new File(project.getBasePath()+pathSeparator+"Gears"+pathSeparator+"Jars"+pathSeparator+spec.getName()+pathSeparator+spec.getVersion());
+            }
+            else if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                return new File(project.getBasePath()+pathSeparator+"Gears"+pathSeparator+"Modules"+pathSeparator+spec.getName()+pathSeparator+spec.getVersion());
+            }
+        }
+
+        return null;
+    }
 }
