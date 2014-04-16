@@ -112,9 +112,12 @@ public class Utils {
 
     public static GearSpec.GearState specStateForSpec(GearSpec spec, Project project){
         if (spec.isRegistered(project)){
+            //Make local separator for speed
+            String pathSeparator = Utils.pathSeparator();
+
             if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
                 //TODO: Only checks for name, not version...
-                if (new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Jars"+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource())).exists()){
+                if (new File(project.getBasePath()+pathSeparator+"Gears"+pathSeparator+"Jars"+pathSeparator+spec.getName()+pathSeparator+spec.getVersion()+pathSeparator+Utils.jarFileNameForSpecSource(spec.getSource())).exists()){
                     return GearSpec.GearState.GearStateInstalled;
                 }
                 else {
@@ -123,7 +126,7 @@ public class Utils {
             }
             else if(spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
                 //TODO: Only checks for name, not version...
-                if(new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+Utils.pathSeparator()+"Modules"+Utils.pathSeparator()+spec.getName()).exists()){
+                if(new File(project.getBasePath()+Utils.pathSeparator()+"Gears"+pathSeparator+"Modules"+pathSeparator+spec.getName()+pathSeparator+spec.getVersion()).exists()){
                     return GearSpec.GearState.GearStateInstalled;
                 }
                 else{

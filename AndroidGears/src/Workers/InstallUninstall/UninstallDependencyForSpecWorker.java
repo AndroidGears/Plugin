@@ -54,9 +54,11 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
     private Boolean uninstallJar(GearSpec spec, Project project){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
 
         //Get the gears jar directory. If it doesn't exist, then we will count that as a win
-        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+        File libsDirectory = new File(project.getBasePath()+ pathSeparator + "Gears"+ pathSeparator + "Jars"+ pathSeparator + spec.getName());
         if (!libsDirectory.exists()){
             //Unregister just in case
             if (GearSpecRegistrar.unregisterGear(spec, project)){
@@ -68,12 +70,12 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Get the jar file
-        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource()));
+        File jarFile = new File(libsDirectory.getAbsolutePath()+pathSeparator+spec.getVersion()+pathSeparator+Utils.jarFileNameForSpecSource(spec.getSource()));
 
         //Delete the jar
         if (jarFile.exists()){
             try {
-                FileUtils.forceDelete(jarFile);
+                FileUtils.forceDelete(libsDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -81,7 +83,7 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Update settings files
-        if (!updateProjectSettingsForJar()){
+        if (!updateProjectSettingsForJar(spec)){
             return false;
         }
 
@@ -95,8 +97,10 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
     private Boolean uninstallModule(GearSpec spec, Project project){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
 
-        File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Modules");
+        File libsDirectory = new File(project.getBasePath()+ pathSeparator+ "Gears"+ pathSeparator + "Modules");
         if (!libsDirectory.exists()){
             //Unregister just in case
             if (GearSpecRegistrar.unregisterGear(spec, project)){
@@ -108,7 +112,7 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
 
         //Get the jar file
-        File moduleDirectory = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+spec.getName());
+        File moduleDirectory = new File(libsDirectory.getAbsolutePath()+pathSeparator+spec.getName());
 
         //Delete the jar
         if (moduleDirectory.exists()){
@@ -134,13 +138,16 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         }
     }
 
-    private Boolean updateProjectSettingsForJar(){
-        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+    private Boolean updateProjectSettingsForJar(GearSpec spec){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + pathSeparator + "build.gradle");
 
         //Modify build file
         if (buildFile.exists()){
             try {
-                File libsDirectory = new File(project.getBasePath()+ Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+                File libsDirectory = new File(project.getBasePath() + pathSeparator + "Gears"+ pathSeparator + "Jars");
 
                 if(libsDirectory.exists()){
                     //Check to see if all jars are gone. If so, remove the gears jar folder dependency
@@ -162,7 +169,7 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                         String buildFileString = FileUtils.readFileToString(buildFile);
 
                         //Create new addition
-                        String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+                        String dependencyString = "dependencies{compile fileTree(dir: '../Gears/Jars/"+spec.getName()+"/"+spec.getVersion()+"', include: ['*.jar'])}";
 
                         if (buildFileString.contains(dependencyString)){
                             buildFileString = buildFileString.replace(dependencyString, "");
@@ -186,10 +193,13 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
     private Boolean updateProjectSettingsForModule(GearSpec spec){
+        //Make local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Install dependency and sub-dependencies
-        File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
-        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
-        File modulesFile = new File(project.getBasePath() + Utils.pathSeparator() + ".idea"+Utils.pathSeparator()+"modules.xml");
+        File settingsFile = new File(project.getBasePath() + pathSeparator + "settings.gradle");
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() +pathSeparator + "build.gradle");
+        File modulesFile = new File(project.getBasePath() + pathSeparator + ".idea"+ pathSeparator +"modules.xml");
 
         //Modify settings file
         if (settingsFile.exists()){
@@ -198,8 +208,8 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                 String settingsFileString = FileUtils.readFileToString(settingsFile);
 
                 //Make comparator strings
-                String fullLineInclude = "include ':Gears:Modules:"+spec.getName()+"'";
-                String partialInclude = "':Gears:Modules:"+spec.getName()+"'";
+                String fullLineInclude = "include ':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'";
+                String partialInclude = "':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"'";
 
                 //Look for full line inclusion
                 if (settingsFileString.contains(fullLineInclude)){
@@ -236,7 +246,7 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                 String buildFileString = FileUtils.readFileToString(buildFile);
 
                 //Create new addition
-                String dependencyString = "dependencies{compile project (':Gears:Modules:"+spec.getName()+"')}";
+                String dependencyString = "dependencies{compile project (':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"')}";
 
                 if (buildFileString.contains(dependencyString)){
                     buildFileString = buildFileString.replace(dependencyString, "");
@@ -255,15 +265,21 @@ public class UninstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             return false;
         }
 
-        //Remove entry from the modules.xml
-       String moduleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" />";
+        //Recreate version entry from the modules.xml
+       String versionModuleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getVersion()+"/"+spec.getVersion()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getVersion()+"/"+spec.getVersion()+".iml\" />";
+        //Recreate gear entry from modles.xml
+        String parentModuleEntry = "<module fileurl=\"file://$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" filepath=\"$PROJECT_DIR$/Gears/Modules/"+spec.getName()+"/"+spec.getName()+".iml\" />";
+
         if (modulesFile.exists()){
             //Read the build file
             try {
                 String modulesFileString = FileUtils.readFileToString(modulesFile);
 
-                if (modulesFileString.contains(moduleEntry)){
-                    modulesFileString = modulesFileString.replace(moduleEntry, "");
+                if (modulesFileString.contains(versionModuleEntry)){
+                    modulesFileString = modulesFileString.replace(versionModuleEntry, "");
+                }
+                if (modulesFileString.contains(parentModuleEntry)){
+                    modulesFileString = modulesFileString.replace(parentModuleEntry, "");
                 }
 
                 //Write changes to settings.gradle

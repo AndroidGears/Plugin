@@ -58,7 +58,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
 
     private Boolean installModule(GearSpec spec){
         //Install dependency and sub-dependencies
-        File specDirectory = new File(project.getBasePath() + Utils.pathSeparator() + "Gears" + Utils.pathSeparator() + "Modules" + Utils.pathSeparator() + spec.getName());
+        File specDirectory = Utils.fileInstallPathForSpec(spec, project);
 
         //Delete the directory. This is for other versions installed
         if (specDirectory.exists()) {
@@ -186,8 +186,11 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
     }
 
     private Boolean installJar(GearSpec spec){
+        //Create local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Create GearsJars directory if not already there
-        File libsDirectory = new File(project.getBasePath()+Utils.pathSeparator()+ "Gears"+ Utils.pathSeparator() + "Jars");
+        File libsDirectory = new File(project.getBasePath()+pathSeparator+ "Gears"+ pathSeparator + "Jars"+ pathSeparator + spec.getName() + pathSeparator + spec.getVersion());
         if (!libsDirectory.exists()){
             try {
                 FileUtils.forceMkdir(libsDirectory);
@@ -265,10 +268,10 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
         try {
             String settingsFileString = FileUtils.readFileToString(settingsFile);
 
-            if (!settingsFileString.contains("include ':Gears:Modules:"+this.selectedSpec.getName()+"'")){
+            if (!settingsFileString.contains("include ':Gears:Modules:"+this.selectedSpec.getName()+":"+this.selectedSpec.getVersion()+"'")){
 
                 //Make changes to settings.gradle
-                String newSettingString = "\n"+"include ':Gears:Modules:"+this.selectedSpec.getName()+"'";
+                String newSettingString = "\n"+"include ':Gears:Modules:"+this.selectedSpec.getName()+":"+this.selectedSpec.getVersion()+"'";
 
                 int commentIndex = settingsFileString.lastIndexOf(commentString);
 
@@ -295,7 +298,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
             String buildFileString = FileUtils.readFileToString(buildFile);
 
             //Create new addition
-            String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+this.selectedSpec.getName()+"')}";
+            String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+this.selectedSpec.getName()+":"+this.selectedSpec.getVersion()+"')}";
 
 
             if (!buildFileString.contains(newDependencyString)){
@@ -337,7 +340,7 @@ public class InstallDependencyForSpecWorker extends SwingWorker<Void, Void> {
                 String buildFileString = FileUtils.readFileToString(buildFile);
 
                 //Create new addition
-                String dependencyString = "\ndependencies{compile fileTree(dir: '../Gears/Jars', include: ['*.jar'])}";
+                String dependencyString = "\ndependencies{compile fileTree(dir: '../Gears/Jars/"+selectedSpec.getName()+"/"+selectedSpec.getVersion()+"', include: ['*.jar'])}";
 
                 //If the build file doesn't contain the jar dependency, go ahead and add it
                 if (!buildFileString.contains(dependencyString)){
