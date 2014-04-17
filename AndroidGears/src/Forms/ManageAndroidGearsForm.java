@@ -122,7 +122,7 @@ public class ManageAndroidGearsForm{
                 didSelectSearchSpecAtIndex(AllGearsList.getSelectedIndex());
             }
         });
-        AllGearsList.setFocusable(false);
+        //AllGearsList.setFocusable(false);
 
         DeclaredList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -130,7 +130,7 @@ public class ManageAndroidGearsForm{
                 didSelectDeclaredSpecAtIndex(DeclaredList.getSelectedIndex());
             }
         });
-        DeclaredList.setFocusable(false);
+        //DeclaredList.setFocusable(false);
 
         InstalledList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -138,7 +138,7 @@ public class ManageAndroidGearsForm{
                 didSelectInstalledSpecAtIndex(InstalledList.getSelectedIndex());
             }
         });
-        InstalledList.setFocusable(false);
+        //InstalledList.setFocusable(false);
 
         UpdatesList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -146,7 +146,7 @@ public class ManageAndroidGearsForm{
                 didSelectUpdatesSpecAtIndex(UpdatesList.getSelectedIndex());
             }
         });
-        UpdatesList.setFocusable(false);
+        //UpdatesList.setFocusable(false);
 
         VersionsList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -154,7 +154,7 @@ public class ManageAndroidGearsForm{
                 didSelectSpecVersion(VersionsList.getSelectedIndex());
             }
         });
-        VersionsList.setFocusable(false);
+        //VersionsList.setFocusable(false);
     }
 
     private void setupSearchTextField() {
@@ -237,6 +237,22 @@ public class ManageAndroidGearsForm{
                     toggleDependency(selectedSpec);
                 }
 
+            }
+        });
+        InstallUninstallButton.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    toggleDependency(selectedSpec);
+                }
             }
         });
 
