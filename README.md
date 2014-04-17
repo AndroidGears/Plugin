@@ -41,7 +41,7 @@ An example of searching for, downloading and using an Android library in your pr
 - Open Android Studio
 
 **Windows**
-- With th IDE closed, navigate to <code>C:\Users\$USER$\.AndroidStudioPreview\config\Plugins</code>
+- With th IDE closed, navigate to <code>C:\Users\$USER$\\.AndroidStudioPreview\config\Plugins</code>
 - Drag the Android Gears folder into the the plugin folder to install Android Gears.
 - Open Android Studio
 
