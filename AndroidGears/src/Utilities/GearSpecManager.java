@@ -178,11 +178,18 @@ public class GearSpecManager {
         }
 
         //Build jar file
-        File jarFile = new File(libsDirectory.getAbsolutePath()+Utils.pathSeparator()+Utils.jarFileNameForSpecSource(spec.getSource()));
+        File jarFile = new File(libsDirectory.getAbsolutePath() + pathSeparator + Utils.jarFileNameForSpecSource(spec.getSource()));
 
         //Build url for gear
-        String jarUrl = spec.getSource().getUrl()+"/raw/"+spec.getSource().getTag()+"/"+spec.getSource().getSource_files();
-        jarUrl = jarUrl.replace(".git", "");
+        String jarUrl;
+
+        if(spec.getSource().getUrl().toLowerCase().contains(".jar")){
+            jarUrl = spec.getSource().getUrl();
+        }
+        else {
+            jarUrl = spec.getSource().getUrl()+"/raw/"+spec.getSource().getTag()+"/"+spec.getSource().getSource_files();
+            jarUrl = jarUrl.replace(".git", "");
+        }
 
         //Download file
         try {

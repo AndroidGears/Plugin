@@ -99,9 +99,20 @@ public class Utils {
     }
 
     public static String jarFileNameForSpecSource(GearSpecSource source){
-        if (source.getSource_files().contains("/")){
-            int lastPathSeparatorIndex = source.getSource_files().lastIndexOf("/");
-            String fileName = source.getSource_files().substring(lastPathSeparatorIndex+1);
+
+        //Get element with jar name in it
+        String sourceString;
+        if(source.getUrl().toLowerCase().contains(".jar")){
+            sourceString = source.getUrl();
+        }
+        else {
+            sourceString = source.getSource_files();
+        }
+
+        //Parse out jar name
+        if (sourceString.contains("/")){
+            int lastPathSeparatorIndex = sourceString.lastIndexOf("/");
+            String fileName = sourceString.substring(lastPathSeparatorIndex+1);
 
             return fileName;
         }
