@@ -27,7 +27,6 @@ import Workers.Search.SearchUpdatableProjectsWorker;
 import Workers.Search.SearchDeclaredDependenciesWorker;
 import Workers.Search.SearchProjectListWorker;
 import Workers.Sync.SyncGears;
-import com.intellij.ide.actions.SynchronizeAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
@@ -695,7 +694,7 @@ public class ManageAndroidGearsForm{
         OpenInBrowserButton.setVisible(true);
 
         //Set declaration button based on install state
-        setDeclarationStatusForSpec(spec);
+        setInstallationStatusForSpec(spec);
 
         //Set update button
         if (spec instanceof GearSpecUpdate){
@@ -728,24 +727,28 @@ public class ManageAndroidGearsForm{
         DeclareUndeclareGearButton.setVisible(false);
     }
 
-    private void setDeclarationStatusForSpec(final GearSpec spec){
+    private void setInstallationStatusForSpec(final GearSpec spec){
         GetGearStateWorker worker = new GetGearStateWorker(targetProjects[TargetProjectComboBox.getSelectedIndex()], spec){
             @Override
             protected void done() {
                 super.done();
 
                 if (this.gearState == GearSpec.GearState.GearStateUninstalled){
-                    DeclareUndeclareGearButton.setText("Declare Gear");
+                    //DeclareUndeclareGearButton.setText("Declare Gear");
                     InstallUninstallButton.setText("Install Gear");
-                    DeclareUndeclareGearButton.setVisible(true);
+                    //DeclareUndeclareGearButton.setVisible(true);
 
+                    DeclareUndeclareGearButton.setVisible(false);
                 }
                 else if (this.gearState == GearSpec.GearState.GearStateDeclared){
                     DeclareUndeclareGearButton.setText("Undeclare Gear");
                     DeclareUndeclareGearButton.setVisible(true);
+                    //DeclareUndeclareGearButton.setText("Undeclare Gear");
+                    //DeclareUndeclareGearButton.setVisible(true);
                     InstallUninstallButton.setText("Install Gear");
                 }
                 else if (this.gearState == GearSpec.GearState.GearStateInstalled){
+                   // DeclareUndeclareGearButton.setText("Undeclare Gear");
                     DeclareUndeclareGearButton.setVisible(false);
                     InstallUninstallButton.setText("Uninstall Gear");
                 }
@@ -834,7 +837,7 @@ public class ManageAndroidGearsForm{
                     InstallUninstallButton.setEnabled(true);
                     SyncButton.setEnabled(true);
                     DeclareUndeclareGearButton.setEnabled(true);
-                    setDeclarationStatusForSpec(spec);
+                    setInstallationStatusForSpec(spec);
 
                     //Flip button text
                     if (this.successful){
@@ -1011,7 +1014,7 @@ public class ManageAndroidGearsForm{
                         clearDetailsUI();
                     }
                     else {
-                        setDeclarationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
+                        setInstallationStatusForSpec(ManageAndroidGearsForm.this.selectedSpec);
                     }
                 }
                 else {
