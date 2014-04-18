@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by matthewyork on 4/5/14.
  */
 public class GearSpecRegistrar {
-    public static Boolean registerGear(GearSpec spec, Project project){
+    public static Boolean registerGear(GearSpec spec, Project project, GearSpec.GearState gearState){
 
         //Get specregister file
         File registrationFile = new File(project.getBasePath()+Utils.pathSeparator()+"GearSpecRegister");
@@ -25,6 +25,9 @@ public class GearSpecRegistrar {
 
         //Create spec register
         GearSpecRegister register = null;
+
+        //Set gear spec state
+        spec.setGearState(gearState);
 
         //If the file exists, pull it back and add the dependency to it
         if (registrationFile.exists()){

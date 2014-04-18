@@ -166,7 +166,7 @@ public class GearSpecManager {
         }
 
         //Register spec
-        if (GearSpecRegistrar.registerGear(spec, project)){
+        if (GearSpecRegistrar.registerGear(spec, project, GearSpec.GearState.GearStateInstalled)){
             return true;
         }
         else {
@@ -241,7 +241,7 @@ public class GearSpecManager {
         }
 
         //Register spec
-        if (GearSpecRegistrar.registerGear(spec, project)){
+        if (GearSpecRegistrar.registerGear(spec, project, GearSpec.GearState.GearStateInstalled)){
             return true;
         }
         else {

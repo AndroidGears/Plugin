@@ -22,7 +22,7 @@ public class DeclareSpecWorker extends SwingWorker<Void, Void> {
     @Override
     protected Void doInBackground() throws Exception {
 
-        success = GearSpecRegistrar.registerGear(spec, project);
+        success = GearSpecRegistrar.registerGear(spec, project, GearSpec.GearState.GearStateDeclared);
 
         return null;
     }
