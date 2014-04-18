@@ -154,7 +154,7 @@ public class ManageAndroidGearsForm{
                 didSelectSpecVersion(VersionsList.getSelectedIndex());
             }
         });
-        //VersionsList.setFocusable(false);
+        VersionsList.setFocusable(true);
     }
 
     private void setupSearchTextField() {
@@ -191,6 +191,7 @@ public class ManageAndroidGearsForm{
     }
 
     private void setupButtons(){
+        //Register done button events
         doneButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -198,7 +199,42 @@ public class ManageAndroidGearsForm{
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });
+        doneButton.addKeyListener(new KeyListener() {
 
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    JFrame frame  = (JFrame)SwingUtilities.getWindowAncestor(MasterPanel);
+                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                }
+            }
+        });
+
+
+        //Register "sync project gears" events
+        SyncButton.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    synchronizeProjectGears();
+                }
+            }
+        });
         SyncButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -206,8 +242,27 @@ public class ManageAndroidGearsForm{
             }
         });
 
+
         //Declare/Undeclare button
         DeclareUndeclareGearButton.setVisible(false);
+
+        //Add declare events
+        DeclareUndeclareGearButton.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    toggleDependencyDeclaration();
+                }
+            }
+        });
         DeclareUndeclareGearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -215,30 +270,39 @@ public class ManageAndroidGearsForm{
             }
         });
 
-        //Update button
+
+        //Hide Update button
         UpdateGearButton.setVisible(false);
+
+        //Register update events
+        UpdateGearButton.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    updateGear(selectedUpdateSpec);
+                }
+            }
+        });
         UpdateGearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 updateGear(selectedUpdateSpec);
             }
         });
-        UpdateGearButton.setVisible(false);
 
-        //Install/Uninstall button
+
+        //Hide Install/Uninstall button
         InstallUninstallButton.setVisible(false);
-        InstallUninstallButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (SearchTabbedPane.getSelectedIndex() == 3){
-                    toggleDependency(selectedUpdateSpec);
-                }
-                else {
-                    toggleDependency(selectedSpec);
-                }
 
-            }
-        });
+        //Register install/uninstall events
         InstallUninstallButton.addKeyListener(new KeyListener() {
 
             @Override
@@ -251,15 +315,48 @@ public class ManageAndroidGearsForm{
             public void keyPressed(KeyEvent e) {
                 //If return key is pressed
                 if (e.getKeyChar() == 10){
+                    if (SearchTabbedPane.getSelectedIndex() == 3){
+                        toggleDependency(selectedUpdateSpec);
+                    }
+                    else {
+                        toggleDependency(selectedSpec);
+                    }
+                }
+            }
+        });
+        InstallUninstallButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (SearchTabbedPane.getSelectedIndex() == 3){
+                    toggleDependency(selectedUpdateSpec);
+                }
+                else {
                     toggleDependency(selectedSpec);
                 }
             }
         });
 
+
         //Show homepage button
         OpenInBrowserButton.setVisible(false);
 
-        //Show in browser
+        //Register show in browser events
+        OpenInBrowserButton.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //If return key is pressed
+                if (e.getKeyChar() == 10){
+                    openSpecHomePageInBrowser();
+                }
+            }
+        });
         OpenInBrowserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -344,8 +441,9 @@ public class ManageAndroidGearsForm{
                 clearDetailsUI();
             }
         });
-        SearchTabbedPane.setFocusable(false);
+        SearchTabbedPane.setFocusable(true);
 
+        //Set up the "on-close then rebuild event"
         MasterPanel.addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent ancestorEvent) {
@@ -371,7 +469,6 @@ public class ManageAndroidGearsForm{
 
             }
         });
-
 
     }
 

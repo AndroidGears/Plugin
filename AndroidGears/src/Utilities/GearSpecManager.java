@@ -41,7 +41,7 @@ public class GearSpecManager {
         //Delete the directory. This is for other versions installed
         if (specDirectory.exists()) {
             try {
-                FileUtils.deleteDirectory(specDirectory);
+                FileUtils.forceDelete(specDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -57,6 +57,17 @@ public class GearSpecManager {
                     .call();
         } catch (GitAPIException e) {
             e.printStackTrace();
+
+            //Clean up a possible bad clone (i.e. no internet)
+            if (specDirectory.getParentFile().exists()){
+                try {
+                    FileUtils.forceDelete(specDirectory.getParentFile());
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                    return false;
+                }
+            }
+
             return false;
         }
 

@@ -45,9 +45,26 @@ public class GearSpecRegistrar {
 
             //Check for matches already in the register (say, if you are installing an already declared spec)
             boolean match = false;
-            for (GearSpec declaredGear : register.declaredGears){
+            int matchIndex = -1;
+            for(int ii = 0; ii < register.declaredGears.size(); ii++){
+                GearSpec declaredGear = register.declaredGears.get(ii);
+                //Check for exact match
                 if (declaredGear.getName().equals(spec.getName()) && declaredGear.getVersion().equals(spec.getVersion())){
+                    //Flag a match
                     match = true;
+
+                    //Make sure that the match reflect the most up to date spec state
+                    declaredGear.setGearState(Utils.specStateForSpec(declaredGear, project));
+
+                    break;
+                }
+                //Check for a possible new version coming in.
+                else if (declaredGear.getName().equals(spec.getName())){
+                    //Flag a match
+                    match = true;
+
+                    //Set match index so you know which value to replace with updated spec
+                    matchIndex = ii;
                 }
             }
 
@@ -55,7 +72,12 @@ public class GearSpecRegistrar {
             if (!match){
                 register.declaredGears.add(spec);
             }
-
+            else{
+                //Set the gear with the new version
+                if (matchIndex > -1){
+                    register.declaredGears.set(matchIndex, spec);
+                }
+            }
         }
         else {
             //Create register and
