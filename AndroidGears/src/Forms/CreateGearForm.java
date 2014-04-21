@@ -255,7 +255,8 @@ public class CreateGearForm {
         //Create dialog for choosing gearspec file
         FileDialog fd = new FileDialog(topFrame, "Save .gearspec file", FileDialog.SAVE);
         fd.setDirectory(System.getProperty("user.home"));
-        fd.setFile(".gearspec");
+        // Gets the name that is specified for the spec in the beginning
+        fd.setFile(spec.getName()+".gearspec");
         fd.setVisible(true);
         //Get file
         String filename = fd.getFile();
