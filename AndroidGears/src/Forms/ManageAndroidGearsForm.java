@@ -40,6 +40,7 @@ public class ManageAndroidGearsForm{
     public static final int DETAILS_INNER_WIDTH = 230;
     private static final int AGREE_TO_UNINSTALL_GEAR = 1;
     private static final int AGREE_TO_UNINSTALL_GEAR_AND_DEPENDENTS = 2;
+    private Boolean dirty = false; //If set true, then we need to rebuild project
 
     File androidGearsDirectory;
     private GearSpec selectedSpec;
@@ -96,14 +97,7 @@ public class ManageAndroidGearsForm{
     private void setupTables() {
 
         //Add directories mode
-        SearchProjectListWorker worker = new SearchProjectListWorker("", targetProjects[TargetProjectComboBox.getSelectedIndex()]){
-            @Override
-            protected void done() {
-                super.done();
-                availableGears = this.specs;
-            }
-        };
-        worker.execute();
+        refreshAvailableGearsList("");
 
         //Get declared gears
         refreshDeclaredList("");
@@ -451,9 +445,13 @@ public class ManageAndroidGearsForm{
                 masterFrame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent we) {
-                        //Reload project to trigger autosync
-                        ProjectManager pm = ProjectManager.getInstance();
-                        pm.reloadProject(targetProjects[TargetProjectComboBox.getSelectedIndex()]);
+                        //If any changes were made, reload and sync project
+                        if (dirty){
+                            //Reload project to trigger autosync
+                            ProjectManager pm = ProjectManager.getInstance();
+                            pm.reloadProject(targetProjects[TargetProjectComboBox.getSelectedIndex()]);
+                        }
+
                     }
                 });
             }
@@ -832,6 +830,9 @@ public class ManageAndroidGearsForm{
                 protected void done() {
                     super.done();
 
+                    //Mark project reload and sync as necessary
+                    dirty = true;
+
                     //Hide loading spinner and renable buttons
                     LoadingSpinnerLabel.setVisible(false);
                     InstallUninstallButton.setEnabled(true);
@@ -866,6 +867,9 @@ public class ManageAndroidGearsForm{
                 @Override
                 protected void done() {
                     super.done();
+
+                    //Mark project reload and sync as necessary
+                    dirty = true;
 
                     DeclareUndeclareGearButton.setEnabled(true);
                     InstallUninstallButton.setEnabled(true);
@@ -994,6 +998,8 @@ public class ManageAndroidGearsForm{
             @Override
             protected void done() {
                 super.done();
+                //Mark a refresh to be triggered
+                dirty = true;
 
                 //Hide loading spinner and re-enable buttons
                 LoadingSpinnerLabel.setVisible(false);
@@ -1038,6 +1044,9 @@ public class ManageAndroidGearsForm{
             @Override
             protected void done() {
                 super.done();
+
+                //Mark project reload and sync as necessary
+                dirty = true;
 
                 //Re-enable UI elements
                 LoadingSpinnerLabel.setVisible(false);

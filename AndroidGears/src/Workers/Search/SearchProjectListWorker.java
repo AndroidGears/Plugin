@@ -35,10 +35,11 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
     }
 
     private ArrayList<GearSpec> projectsList(File androidGearsDirectory, final String searchString){
+        /*
         //Check for empty search string
         if(searchString.equals("")){
             return new ArrayList<GearSpec>();
-        }
+        }*/
 
         //Create gson instance for use in parsing specs
         final Gson gson = new Gson();
