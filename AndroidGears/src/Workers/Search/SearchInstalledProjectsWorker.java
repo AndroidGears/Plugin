@@ -40,8 +40,10 @@ public class SearchInstalledProjectsWorker extends SwingWorker<Void, Void>{
                         String filterString = declaredSpec.getName().toLowerCase() + " " + declaredSpec.getVersion().toLowerCase();
 
                         //Gather tags
-                        for (String tag : declaredSpec.getTags()) {
-                            filterString = filterString+tag.toLowerCase()+" ";
+                        if (declaredSpec.getTags() != null){
+                            for (String tag : declaredSpec.getTags()) {
+                                filterString = filterString+tag.toLowerCase()+" ";
+                            }
                         }
 
                         //Gather authors

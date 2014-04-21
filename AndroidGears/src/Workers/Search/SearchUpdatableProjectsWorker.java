@@ -69,8 +69,10 @@ public class SearchUpdatableProjectsWorker extends SwingWorker<Void, Void>{
                         String filterString = spec.getName().toLowerCase() + " " + spec.getVersion().toLowerCase();
 
                         //Gather tags
-                        for (String tag : spec.getTags()) {
-                            filterString = filterString+tag.toLowerCase()+" ";
+                        if (spec.getTags() != null){
+                            for (String tag : spec.getTags()) {
+                                filterString = filterString+tag.toLowerCase()+" ";
+                            }
                         }
 
                         //Gather authors
