@@ -31,7 +31,6 @@ public class CreateGearForm {
     private JTextField txtHomePage;
     private JTextField txtLicense;
     private JTextField txtCopyRight;
-    private JTextField txtProjectMinSDK;
     private JTextField txtProjectVersion;
     private JTextField txtSourceURL;
     private JTextField txtSourceLibLocation;

@@ -1,73 +1,76 @@
 <idea-plugin version="2">
-  <id>com.github.androidgears.plugin5</id>
-  <name>Android Gears</name>
-  <version>0.4.0</version>
-  <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
+    <id>com.github.androidgears.plugin5</id>
+    <name>Android Gears</name>
+    <version>0.4.0</version>
+    <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Android Gears is a new dependency management system built on open source technology through Github. Gears is fully integrated with the Gradle build processes of Android Studio and IntelliJ. In addition to providing a robust search interface for library discovery, Gears greatly reduces the effort it takes to share your library with others. Listing your library with Android Gears is just a pull request away.
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       Add change notes here.<br>
       <em>most HTML tags may be used</em>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
-  <idea-version since-build="131"/>
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
 
-  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.github.androidgears">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.github.androidgears">
+        <!-- Add your extensions here -->
+    </extensions>
 
-  <application-components>
-    <!-- Add your application components here -->
+    <application-components>
+        <!-- Add your application components here -->
 
-      <component>
-          <implementation-class>GitComponent</implementation-class>
-      </component>
-  </application-components>
+        <component>
+            <implementation-class>GitComponent</implementation-class>
+        </component>
+    </application-components>
 
-  <project-components>
-    <!-- Add your project components here -->
-      <component>
-          <implementation-class>ProjectSettingsComponent</implementation-class>
-      </component>
-  </project-components>
+    <project-components>
+        <!-- Add your project components here -->
+        <component>
+            <implementation-class>ProjectSettingsComponent</implementation-class>
+        </component>
+    </project-components>
 
-  <actions>
-    <!-- Add your actions here -->
+    <actions>
+        <!-- Add your actions here -->
 
-      <group id="AndroidGears.Menu" text="Android Gears" description="AndroidGears" popup="true">
-          <separator/>
-          <add-to-group group-id="ToolsMenu" anchor="after"
-                        relative-to-action="org.jetbrains.plugins.terminal.OpenLocalTerminalAction"/>
-
-          <action id="AndroidGears.ManageAction" class="Actions.ManageGearsAction" text="Manage _Android Gears"
-                  description="Add, edit and remove android gear dependencies" >
-          </action>
-
-          <action id="AndroidGears.CreateGearAction" class="Actions.CreateGearAction" text="Create Gear Spec"
-                  description="Form for creating an Android Gear">
-          </action>
-
-          <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Gear Spec"
-                  description="Takes in a .gearspec file and lints it to make sure it is valid.">
-          </action>
+        <group id="AndroidGears.Menu" text="Android Gears" description="AndroidGears" popup="true" icon="/icons/gears.png">
             <separator/>
-          <action id="SettingsAction" class="Actions.SettingsAction" text="Android Gears Settings"
-                  description="Manage the settings for your Android Gears Plugin">
+            <add-to-group group-id="ToolsMenu" anchor="after"
+                          relative-to-action="org.jetbrains.plugins.terminal.OpenLocalTerminalAction"/>
 
-          </action>
-      </group>
+            <action id="AndroidGears.ManageAction"
 
-  </actions>
+                    class="Actions.ManageGearsAction"
+                    text="Manage _Android Gears"
+                    description="Add, edit and remove android gear dependencies">
+            </action>
+
+            <action id="AndroidGears.CreateGearAction" class="Actions.CreateGearAction" text="Create Gear Spec"
+                    description="Form for creating an Android Gear">
+            </action>
+
+            <action id="AndroidGears.LintAction" class="Actions.LintGearAction" text="Lint Gear Spec"
+                    description="Takes in a .gearspec file and lints it to make sure it is valid.">
+            </action>
+            <separator/>
+            <action id="SettingsAction" class="Actions.SettingsAction" text="Android Gears Settings"
+                    description="Manage the settings for your Android Gears Plugin">
+
+            </action>
+        </group>
+
+    </actions>
 
 </idea-plugin>
