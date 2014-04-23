@@ -1,8 +1,8 @@
 <idea-plugin version="2">
-    <id>com.github.androidgears.plugin5</id>
-    <name>Android Gears</name>
-    <version>0.4.0</version>
-    <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
+  <id>com.github.androidgears.plugin5</id>
+  <name>Android Gears</name>
+  <version>0.4.1</version>
+  <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
 
     <description><![CDATA[
       Android Gears is a new dependency management system built on open source technology through Github. Gears is fully integrated with the Gradle build processes of Android Studio and IntelliJ. In addition to providing a robust search interface for library discovery, Gears greatly reduces the effort it takes to share your library with others. Listing your library with Android Gears is just a pull request away.
