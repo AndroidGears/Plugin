@@ -75,6 +75,7 @@ public class GearSpecManager {
         }
 
         //Check out appropriate branch
+        /*
         File gitDirectory = new File(specDirectory.getAbsolutePath() + pathSeparator + ".git");
         try {
             Git git = Git.open(gitDirectory);
@@ -82,7 +83,7 @@ public class GearSpecManager {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
+        }*/
 
         //Move specified folder to root, if paremeter exists
         if (spec.getSource().getSource_files() != null){
@@ -99,7 +100,7 @@ public class GearSpecManager {
                     if (!file.getAbsolutePath().equals(moduleDirectory.getAbsolutePath())){
                         try {
                             if (file.isDirectory()){
-                                FileUtils.deleteDirectory(file);
+                                FileUtils.deleteQuietly(file);
                             }
                             else {
                                 FileUtils.forceDelete(file);
