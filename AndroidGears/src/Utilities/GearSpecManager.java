@@ -35,6 +35,9 @@ public class GearSpecManager {
     }
 
     public static Boolean installModule(GearSpec spec, Project project, Module module){
+        //Create local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+
         //Install dependency and sub-dependencies
         File specDirectory = Utils.fileInstallPathForSpec(spec, project);
 
@@ -72,7 +75,7 @@ public class GearSpecManager {
         }
 
         //Check out appropriate branch
-        File gitDirectory = new File(specDirectory.getAbsolutePath() + Utils.pathSeparator() + ".git");
+        File gitDirectory = new File(specDirectory.getAbsolutePath() + pathSeparator + ".git");
         try {
             Git git = Git.open(gitDirectory);
 
@@ -85,10 +88,10 @@ public class GearSpecManager {
         if (spec.getSource().getSource_files() != null){
             if (!spec.getSource().getSource_files().equals("")){
                 //Replaces path seperators with system dependent ones (windows, mac, etc.)
-                String systemSpecificInnerPath = spec.getSource().getSource_files().replace("/", Utils.pathSeparator());
+                String systemSpecificInnerPath = spec.getSource().getSource_files().replace("/", pathSeparator);
 
                 //Get module directory
-                File moduleDirectory = new File(specDirectory.getAbsolutePath()+Utils.pathSeparator()+systemSpecificInnerPath);
+                File moduleDirectory = new File(specDirectory.getAbsolutePath()+ pathSeparator +systemSpecificInnerPath);
 
                 //Delete other folders, including source control
                 for(File file : specDirectory.listFiles()){
@@ -250,9 +253,12 @@ public class GearSpecManager {
     }
 
     private static Boolean updateInstallProjectSettingsForModule(GearSpec spec, Project project, Module module){
+        //Create local path separator for speed
+        String pathSeparator = Utils.pathSeparator();
+        
         //Install dependency and sub-dependencies
-        File settingsFile = new File(project.getBasePath() + Utils.pathSeparator() + "settings.gradle");
-        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + Utils.pathSeparator() + "build.gradle");
+        File settingsFile = new File(project.getBasePath() + pathSeparator + "settings.gradle");
+        File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + pathSeparator + "build.gradle");
 
         //Create comment string
         String commentString = "\n/////////////////////\n" +
