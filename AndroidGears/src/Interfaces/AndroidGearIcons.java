@@ -8,6 +8,5 @@ import javax.swing.*;
  * Created by aaronfleshner on 4/22/14.
  */
 public interface AndroidGearIcons {
-
-    Icon ANDROID_GEAR_ICON = IconLoader.getIcon("/gears.png");
+    public Icon ANDROID_GEAR_ICON = IconLoader.getIcon("/gears.png");
 }
