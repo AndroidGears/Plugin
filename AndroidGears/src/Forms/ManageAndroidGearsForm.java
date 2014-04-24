@@ -659,6 +659,7 @@ public class ManageAndroidGearsForm{
             @Override
             protected void done() {
                 super.done();
+                dirty = true;
 
                 StatusLabel.setText("Gear synchronization complete.");
                 LoadingSpinnerLabel.setVisible(false);
