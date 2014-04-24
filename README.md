@@ -214,6 +214,8 @@ The first option is housing a module in a git repository on Github. If this is t
 
 Here, a url to the git repository is given as well as the tag associated with that specific release of Colours. Also, a directory "ColoursLibrary" is listed, meaning that the module is housed in a folder name "ColoursLibrary" at the root of the repository.
 
+<b>*Note</b>  When using modules, please ensure that all build variables in <code>build.gradle</code> are local in scope to the specified library path listed in <code>source_files</code>. If they are defined in the directory above in, say, the <code>gradle.properties</code> file, then they will be undefined when your library is retreived through Android Gears. This is because Android Gears <b>only uses the directory specified</b> in the <code>source_files</code> portion of the source object.
+
 **Method 2 - JAR in Git**
 
 The second way of housing a Gear is as a JAR file versioned through Git. Like method 1, you have a repository url and tag, but this time the <code>source_files</code> field contains the path to a JAR.
