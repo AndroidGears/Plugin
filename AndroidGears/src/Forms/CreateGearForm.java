@@ -184,6 +184,9 @@ public class CreateGearForm {
                     //load Spec from file chooser
                     loadSpecIntoForm(spec);
                 }
+                else {
+                    showLoadErrorDialog();
+                }
             }
         });
     }
@@ -418,6 +421,18 @@ public class CreateGearForm {
         Object[] options = {"OK"};
         int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(MasterPanel),
                 "There was a problem saving your Gear Spec. Please try again.",
+                "Lint Error",
+                JOptionPane.OK_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+    }
+
+    private void showLoadErrorDialog() {
+        Object[] options = {"OK"};
+        int answer = JOptionPane.showOptionDialog(SwingUtilities.getWindowAncestor(MasterPanel),
+                "There was a problem loading your Gear Spec. Please try again.",
                 "Lint Error",
                 JOptionPane.OK_OPTION,
                 JOptionPane.QUESTION_MESSAGE,

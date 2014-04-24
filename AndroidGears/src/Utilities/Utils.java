@@ -3,6 +3,7 @@ package Utilities;
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecSource;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
 
@@ -70,7 +71,12 @@ public class Utils {
                     return null;
                 }
                 //Get spec
-                spec = new Gson().fromJson(specString, GearSpec.class);
+                try{
+                    spec = new Gson().fromJson(specString, GearSpec.class);
+                }
+                catch (JsonSyntaxException e){
+                    e.printStackTrace();
+                }
             }
         }
 

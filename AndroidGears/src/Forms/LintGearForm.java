@@ -95,30 +95,38 @@ public class LintGearForm extends Component {
         //Generate spec
         GearSpec spec = Utils.specForFile(specFile);
 
-        //Lint spec
-        LintGearSpecWorker worker = new LintGearSpecWorker(spec){
+        if(spec != null){
+            //Lint spec
+            LintGearSpecWorker worker = new LintGearSpecWorker(spec){
 
-            @Override
-            protected void done() {
-                super.done();
+                @Override
+                protected void done() {
+                    super.done();
 
-                GearSpecLintResult result = this.result;
+                    GearSpecLintResult result = this.result;
 
-                //Show final linting results
-                if (result != null){
+                    //Show final linting results
+                    if (result != null){
+                        LintResultsTextArea.setText(result.getResponseMessage());
+                    }
+                    else {
+                        LintResultsTextArea.setText("Linting Error. Please try again");
+                    }
 
-                    LintResultsTextArea.setText(result.getResponseMessage());
+                    //Hide linting spinner at the bottom
+                    LintingStatusLabel.setVisible(false);
+                    LoadingSpinnerLabel.setVisible(false);
                 }
-                else {
-                    LintResultsTextArea.setText("Linting Error. Please try again");
-                }
+            };
+            worker.execute();
+        }
+        else {
+            LintResultsTextArea.setText("Linting Error\n\n- JSON syntax error.\n  Please ensure your gearspec is a valid JSON object");
 
-                //Hide linting spinner at the bottom
-                LintingStatusLabel.setVisible(false);
-                LoadingSpinnerLabel.setVisible(false);
-            }
-        };
-        worker.execute();
+            //Hide linting spinner at the bottom
+            LintingStatusLabel.setVisible(false);
+            LoadingSpinnerLabel.setVisible(false);
+        }
     }
 
 
