@@ -55,6 +55,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
             if (reposDirectory != null){
                 if (reposDirectory.exists()){
                     if (reposDirectory.list().length > 1){
+                        git.close();
                         return true;
                     }
                 }
@@ -71,6 +72,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
         try {
             Git git = Git.open(new File(androidGearsDirectory.getAbsolutePath()+ Utils.pathSeparator()+".git"));
             PullResult result = git.pull().setTimeout(DEFAULT_TIMEOUT).call();
+            git.close();
             return result.isSuccessful();
 
             /*

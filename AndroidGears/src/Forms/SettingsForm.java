@@ -207,7 +207,7 @@ public class SettingsForm {
                 FileUtils.copyDirectory(gearsDirectory, gearsDirectoryCopy);
 
                 //Delete original
-                FileUtils.forceDelete(gearsDirectory);
+                FileUtils.deleteQuietly(gearsDirectory);
 
                 //Download new copy
                 GitWorker worker = new GitWorker(){
@@ -218,7 +218,7 @@ public class SettingsForm {
                         try {
                             if (successful){
                                 //Delete the copy you made
-                                FileUtils.deleteDirectory(gearsDirectoryCopy);
+                                FileUtils.deleteQuietly(gearsDirectoryCopy);
 
                                 //Close the dialog
                                 showResyncSuccessMessage();
@@ -226,7 +226,7 @@ public class SettingsForm {
                             else {
                                 //Delete the original, just in case
                                 if (gearsDirectory.exists()){
-                                    FileUtils.deleteDirectory(gearsDirectory);
+                                    FileUtils.deleteQuietly(gearsDirectory);
                                 }
 
                                 //Make local copy
