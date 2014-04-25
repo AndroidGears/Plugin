@@ -30,7 +30,7 @@ public class Utils {
         File defaultDirectory;
         //Setup file
         if (OSValidator.isWindows()) {
-            defaultDirectory = new File(System.getProperty("user.home")+"\\AndroidGears"); //C drive
+            defaultDirectory = new File(System.getProperty("user.home")+"/AndroidGears"); //C drive
         } else if (OSValidator.isMac()) {
             defaultDirectory = new File(System.getProperty("user.home")+"/.androidgears"); //Home folder
         } else if (OSValidator.isUnix()) {
