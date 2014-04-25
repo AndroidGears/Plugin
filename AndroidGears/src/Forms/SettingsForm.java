@@ -1,6 +1,7 @@
 package Forms;
 
 import Singletons.SettingsManager;
+import Utilities.OSValidator;
 import Utilities.Utils;
 import Workers.Git.GitWorker;
 import Workers.Settings.SetCreateIgnoreEntryWorker;
@@ -76,28 +77,43 @@ public class SettingsForm {
         FindURLButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                //Get top level frame
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
-                //Create dialog for choosing gearspec file
-                System.setProperty("apple.awt.fileDialogForDirectories", "true");
-                FileDialog fd = new FileDialog(topFrame, "Choose a directory", FileDialog.LOAD);
-                fd.setDirectory(SettingsManager.getInstance().getSpecsPath());
-                fd.setVisible(true);
+                if(OSValidator.isWindows()){
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    chooser.setCurrentDirectory(new File(SettingsManager.getInstance().getSpecsPath()));
+                    int returnVal = chooser.showOpenDialog(MasterPanel.getTopLevelAncestor());
 
-                //Get file
-                String filename = fd.getFile();
-                if (filename == null)
-                    System.out.println("You cancelled the choice");
-                else {
-                    System.out.println("You chose " + filename);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File specsDirectory = chooser.getSelectedFile();
 
-                    //Get spec file
-                    File specsDirectory = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
+                        setSpecsRepoDirectory(specsDirectory);
+                    }
+                }
+                else if (OSValidator.isMac()){
+                    //Get top level frame
+                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
-                    //If it exists, set it as the selected file path
-                    setSpecsRepoDirectory(specsDirectory);
+                    //Create dialog for choosing gearspec file
+                    System.setProperty("apple.awt.fileDialogForDirectories", "true");
+                    FileDialog fd = new FileDialog(topFrame, "Choose a directory", FileDialog.LOAD);
+                    fd.setDirectory(SettingsManager.getInstance().getSpecsPath());
+                    fd.setVisible(true);
 
+                    //Get file
+                    String filename = fd.getFile();
+                    if (filename == null)
+                        System.out.println("You cancelled the choice");
+                    else {
+                        System.out.println("You chose " + filename);
+
+                        //Get spec file
+                        File specsDirectory = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
+
+                        //If it exists, set it as the selected file path
+                        setSpecsRepoDirectory(specsDirectory);
+
+                    }
                 }
             }
         });
