@@ -3,6 +3,7 @@ package Singletons;
 import Models.GearSpecRegister.GearSpecRegister;
 import Models.Settings.GearSpecSettings;
 import Models.Settings.ProjectSettings;
+import Utilities.OSValidator;
 import Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,8 +48,9 @@ public class SettingsManager {
     ///////////////////////
 
     public Boolean loadSettings(){
+
         //Get settings file
-        File settingsFile = new File(Utils.androidGearsDirectory().getParentFile().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
+        File settingsFile = new File(Utils.getDefaultDirectory().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
 
         if (settingsFile.exists()){
             //Create new Gson instance for use
@@ -75,8 +77,10 @@ public class SettingsManager {
     }
 
     public Boolean saveSettings(){
+
+
         //Get settings file
-        File settingsFile = new File(Utils.androidGearsDirectory().getParentFile().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
+        File settingsFile = new File(Utils.getDefaultDirectory().getAbsolutePath()+Utils.pathSeparator()+".gearssettings");
 
         //Create new Gson instance for use
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -377,6 +381,26 @@ public class SettingsManager {
                 projectSettings.mainModule = mainModule;
             }
             saveProjectSettings(project);
+        }
+    }
+
+    ///////////////////////
+    // Spec Repository Path
+    ///////////////////////
+
+    public String getSpecsPath(){
+        if (this.settings.specsPath == null){
+            this.settings.specsPath = Utils.getDefaultDirectory().getAbsolutePath();
+            saveSettings();
+        }
+
+        return this.settings.specsPath;
+    }
+
+    public void setSpecsPath(String path){
+        if (path != null){
+            this.settings.specsPath = path;
+            saveSettings();
         }
     }
 }

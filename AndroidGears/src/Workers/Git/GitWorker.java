@@ -1,5 +1,6 @@
 package Workers.Git;
 
+import Singletons.SettingsManager;
 import Utilities.OSValidator;
 import Utilities.Utils;
 import org.eclipse.jgit.api.Git;
@@ -21,6 +22,7 @@ public class GitWorker extends SwingWorker<Void, Void> {
 
     @Override
     protected Void doInBackground() throws Exception {
+        SettingsManager.getInstance().loadSettings();
         syncAndroidGears();
         return null;
     }

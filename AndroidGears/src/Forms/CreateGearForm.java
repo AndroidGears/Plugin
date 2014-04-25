@@ -330,7 +330,6 @@ public class CreateGearForm {
         if (!txtProjectName.getText().isEmpty())
             newSpec.setName(txtProjectName.getText());
 
-
         if (!txtProjectVersion.getText().isEmpty())
             newSpec.setVersion(txtProjectVersion.getText());
 

@@ -7,11 +7,13 @@ import Workers.Settings.SetCreateIgnoreEntryWorker;
 import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
@@ -31,6 +33,9 @@ public class SettingsForm {
     private JLabel LoadingSpinnerLabel;
     private JPanel ResyncProgressPanel;
     private JLabel ResyncStatusLabel;
+    private JTextField SpecUrlTextField;
+    private JButton FindURLButton;
+    private JButton DefaultSpecPathButton;
 
     public SettingsForm() {
         SettingsManager.getInstance().loadSettings();
@@ -67,10 +72,49 @@ public class SettingsForm {
                 resyncSpecs();
             }
         });
+
+        FindURLButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                //Get top level frame
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
+
+                //Create dialog for choosing gearspec file
+                System.setProperty("apple.awt.fileDialogForDirectories", "true");
+                FileDialog fd = new FileDialog(topFrame, "Choose a directory", FileDialog.LOAD);
+                fd.setDirectory(SettingsManager.getInstance().getSpecsPath());
+                fd.setVisible(true);
+
+                //Get file
+                String filename = fd.getFile();
+                if (filename == null)
+                    System.out.println("You cancelled the choice");
+                else {
+                    System.out.println("You chose " + filename);
+
+                    //Get spec file
+                    File specsDirectory = new File(fd.getDirectory()+Utils.pathSeparator()+filename);
+
+                    //If it exists, set it as the selected file path
+                    setSpecsRepoDirectory(specsDirectory);
+
+                }
+            }
+        });
+
+        DefaultSpecPathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                setSpecsRepoDirectory(Utils.getDefaultDirectory());
+            }
+        });
     }
 
     private void setupMiscUI() {
         ResyncProgressPanel.setVisible(false);
+
+        //Set spec repository path
+        SpecUrlTextField.setText(SettingsManager.getInstance().getSpecsPath());
     }
 
     private void setCreateIgnoreSelected(final Boolean selected){
@@ -175,6 +219,53 @@ public class SettingsForm {
         ResyncStatusLabel.setText("Resynchronizing Android Gears Repository...");
         resynchronizeAndroidGearsButton.setEnabled(false);
         ResyncProgressPanel.setVisible(true);
+    }
+
+    private void setSpecsRepoDirectory(File specsDirectory){
+        //Make sure the directory exists
+        if (specsDirectory.exists()){
+            //Double check that it is a directory
+            if (specsDirectory.isDirectory()){
+
+                if (Utils.androidGearsDirectory().exists()){
+                    //Make local copy of old specs directory
+                    File oldSpecsDirectory = Utils.androidGearsDirectory();
+
+                    Boolean failure = false;
+                    for (File file : oldSpecsDirectory.listFiles()){
+                        try {
+                            if (file.isDirectory()){
+                                FileUtils.moveDirectoryToDirectory(file, new File(specsDirectory.getAbsolutePath()+Utils.pathSeparator()+"repos"), true);
+                            }
+                        } catch (IOException e) {
+
+                            failure = true;
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
+
+                    if (!failure){
+                        //Save new setting!
+                        SettingsManager.getInstance().setSpecsPath(specsDirectory.getAbsolutePath());
+
+                        //Delete previous path, if it exists
+                        FileUtils.deleteQuietly(oldSpecsDirectory);
+
+                        //Set specs directory in UI
+                        SpecUrlTextField.setText(specsDirectory.getAbsolutePath());
+                    }
+                }
+                else {
+                    //Set new directory
+                    SettingsManager.getInstance().setSpecsPath(specsDirectory.getAbsolutePath());
+
+                    //Clone specs repo in new path
+                    showResyncLoadingMessage();
+                    resyncSpecs();
+                }
+            }
+        }
     }
 
     private void resyncSpecs() {

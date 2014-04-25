@@ -2,6 +2,7 @@ package Utilities;
 
 import Models.GearSpec.GearSpec;
 import Models.GearSpec.GearSpecSource;
+import Singletons.SettingsManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.openapi.project.Project;
@@ -21,21 +22,26 @@ public class Utils {
     }
 
     public static File androidGearsDirectory(){
-        File androidGearsDirectory = null;
+
+        return new File(SettingsManager.getInstance().getSpecsPath()+Utils.pathSeparator()+"repos");
+    }
+
+    public static File getDefaultDirectory(){
+        File defaultDirectory;
         //Setup file
         if (OSValidator.isWindows()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/AndroidGears"+pathSeparator()+"repos"); //C drive
+            defaultDirectory = new File(System.getProperty("user.home")+"\\AndroidGears"); //C drive
         } else if (OSValidator.isMac()) {
-            androidGearsDirectory = new File(System.getProperty("user.home")+"/.androidgears"+pathSeparator()+"repos"); //Home folder
+            defaultDirectory = new File(System.getProperty("user.home")+"/.androidgears"); //Home folder
         } else if (OSValidator.isUnix()) {
-            androidGearsDirectory = new File("~/.androidgears"); //Home folder
+            defaultDirectory = new File("~/.androidgears"); //Home folder
         } else if (OSValidator.isSolaris()) {
-            androidGearsDirectory = new File("~/AndroidGears");//Home folder
+            defaultDirectory = new File("~/AndroidGears");//Home folder
         } else {
-            androidGearsDirectory = new File("~/AndroidGears");//Home folder
+            defaultDirectory = new File("~/AndroidGears");//Home folder
         }
 
-        return androidGearsDirectory;
+        return defaultDirectory;
     }
 
     public static String pathSeparator(){

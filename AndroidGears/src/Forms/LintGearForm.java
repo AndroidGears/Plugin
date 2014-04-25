@@ -38,6 +38,7 @@ public class LintGearForm extends Component {
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MasterPanel);
 
                 //Create dialog for choosing gearspec file
+                System.setProperty("apple.awt.fileDialogForDirectories", "false");
                 FileDialog fd = new FileDialog(topFrame, "Choose a .gearspec file", FileDialog.LOAD);
                 fd.setDirectory(System.getProperty("user.home"));
                 fd.setFile("*.gearspec");
