@@ -9,4 +9,6 @@ import javax.swing.*;
  */
 public interface AndroidGearIcons {
     public Icon ANDROID_GEAR_ICON = IconLoader.getIcon("/gears.png");
+    public Icon declaredIcon =IconLoader.getIcon("/GearStateDeclared.png");//Fix
+    public Icon installedIcon =IconLoader.getIcon("/GearStateInstalled.png");//Fix
 }

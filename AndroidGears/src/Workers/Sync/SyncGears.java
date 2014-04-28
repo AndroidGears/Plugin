@@ -34,7 +34,7 @@ public class SyncGears extends SwingWorker<Void, Void>{
         //Get gear spec register
         GearSpecRegister register = GearSpecRegistrar.getRegister(project);
 
-        //Handle any gears that should be deleted (i.e. aren't in the specs register)
+        //Handle any gears that should be deleted (i.e. aren't in the specNames register)
         handleNewDeletions(register);
 
         //Handle any new gears that need to be installed
@@ -92,7 +92,7 @@ public class SyncGears extends SwingWorker<Void, Void>{
                 if (gearDirectory.isDirectory()){
                     Boolean match = false;
 
-                    //Iterate through specs register to find a match.
+                    //Iterate through specNames register to find a match.
                     for (GearSpec spec : register.declaredGears){
                         //If there is a spec listed, by that name, check its version
                         if (gearDirectory.getName().equals(spec.getName())){

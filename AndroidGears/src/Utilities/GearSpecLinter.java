@@ -226,7 +226,7 @@ public class GearSpecLinter {
                         failureReasons.add("Spec dependencies must have a name.");
                     }
                     else if(!versionExistsForDependency(dependency)){
-                        failureReasons.add("Could not find dependency "+dependency.getName()+" for version "+dependency.getVersion()+"Consider syncing Android Gears to pull any new changes from the specs repository.");
+                        failureReasons.add("Could not find dependency "+dependency.getName()+" for version "+dependency.getVersion()+"Consider syncing Android Gears to pull any new changes from the specNames repository.");
                     }
                     else {
                         successReasons.add("Spec has valid dependency: "+dependency.getName());

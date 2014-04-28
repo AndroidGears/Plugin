@@ -5,6 +5,8 @@ import Models.GearSpec.GearSpecAuthor;
 import Models.GearSpec.GearSpecDependency;
 import Models.GearSpec.GearSpecSource;
 import Models.GearSpecLinter.GearSpecLintResult;
+import Services.AutoCompleteSerivce.AutoCompleteDocument;
+import Services.AutoCompleteSerivce.GearsService;
 import Utilities.Utils;
 import Workers.Lint.LintGearSpecWorker;
 import com.google.gson.Gson;
@@ -13,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -70,7 +73,19 @@ public class CreateGearForm {
         initAuthorTable();
         initDependenciesTable();
         initButtons();
+        initAutoCompleteDependencies();
     }
+
+    private void initAutoCompleteDependencies() {
+        GearsService gearsService = new GearsService();
+
+
+        // Create the auto completing document model with a reference to the
+        // service and the input field.
+        Document autoCompleteDocument = new AutoCompleteDocument(gearsService,txtDependencyName);
+        txtDependencyName.setDocument(autoCompleteDocument);
+    }
+
     //Initialize the Table so that you are able to add authors to the table.
     private void initAuthorTable() {//TODO add lint for the same author being added twice
         ArrayList<GearSpecAuthor> authors = new ArrayList<GearSpecAuthor>();
