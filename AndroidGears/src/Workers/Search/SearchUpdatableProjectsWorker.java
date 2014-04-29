@@ -28,7 +28,7 @@ public class SearchUpdatableProjectsWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
 
-        //Get specs register
+        //Get specNames register
         GearSpecRegister register = GearSpecRegistrar.getRegister(this.project);
 
         //Populate a list of installed gears

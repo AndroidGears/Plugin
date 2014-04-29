@@ -15,7 +15,7 @@ public class GitComponent implements ApplicationComponent {
 
     public void initComponent() {
 
-        //Clones/Pulls on the specs repo
+        //Clones/Pulls on the specNames repo
         GitWorker worker = new GitWorker(){
             @Override
             protected void done() {

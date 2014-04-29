@@ -89,7 +89,7 @@ public class GearSpecRegistrar {
             register.declaredGears.add(spec);
         }
 
-        //Write specs to file
+        //Write specNames to file
         try {
             FileUtils.write(getRegisterPath(project), gson.toJson(register));
         } catch (IOException e) {

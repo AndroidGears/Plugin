@@ -41,10 +41,10 @@ public class SearchProjectListWorker  extends SwingWorker<Void, Void> {
             return new ArrayList<GearSpec>();
         }*/
 
-        //Create gson instance for use in parsing specs
+        //Create gson instance for use in parsing specNames
         final Gson gson = new Gson();
 
-        //Create array for storing matched specs
+        //Create array for storing matched specNames
         final ArrayList<GearSpec> projectList = new ArrayList<GearSpec>();
 
         //If there is a searchstring, get matches!

@@ -290,7 +290,7 @@ public class SettingsForm {
         final File gearsDirectoryCopy = new File(Utils.androidGearsDirectory().getParentFile().getAbsolutePath()+Utils.pathSeparator()+"reposCopy");
 
 
-        //First, make local copy of specs for possible rollback
+        //First, make local copy of specNames for possible rollback
         try {
             if (!gearsDirectory.exists()){
                 GitWorker worker = new GitWorker(){
