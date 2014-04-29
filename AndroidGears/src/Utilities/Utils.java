@@ -18,6 +18,7 @@ import java.net.URL;
 public class Utils {
 
     public static String wrappedStringForString(String inputString, int wrapWidth){
+        inputString = inputString.replace("\n", "<br/>");
         return String.format("<html><div style=\"width:%dpx;\">%s</div><html>", wrapWidth, inputString);
     }
 
