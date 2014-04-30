@@ -33,20 +33,15 @@ An example of searching for, downloading and using an Android library in your pr
 ##Installation
 
 - Download and install [Android Studio](http://developer.android.com/sdk/installing/studio.html)
-- [Download a release](https://github.com/AndroidGears/Plugin/releases) of the Android Gears Plugin and unzip to get the "Android Gears" plugin folder
+- [Download a release](https://github.com/AndroidGears/Plugin/releases) 
 
 **Mac**
-- With th IDE closed, go to Applications -> Android Studio, right click on the icon and select "Show Package Contents". You should see a plugin folder in the package contents
-- Drag the Android Gears folder into the the plugin folder to install Android Gears.
+## In Android Studio 
 - Open Android Studio
+- Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 
-**Windows**
-- With th IDE closed, navigate to <code>C:\Users\$USER$\\.AndroidStudioPreview\config\Plugins</code>
-- Drag the Android Gears folder into the the plugin folder to install Android Gears.
-- Open Android Studio
-
-**Linux**
-- Coming soon!
+**Windows & Linux ( Ubuntu 14.04 tested )**
+- Go To Android Studio > Settings... ( Ctrl+Alt+S ) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 
 
 Finally, to access the Android Gears menu, navigate to Tools -> Android Gears
