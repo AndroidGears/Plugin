@@ -257,7 +257,7 @@ We envision Android Gears to be a complete solution for managing dependencies in
 
 * Creating **separate Gear areas** for debug, release and test run configurations (Better lifecycle management).
 * **Better dependency resolution** for projects involving many dependencies of potentially conflicting version numbers. Right now, only basic management is done. For instance, if two libs are dependent on the same lib of different versions, how does this get handled effectively? That is an open question we would like to discuss.
-* **Icons** for the menu items. Right now there is a "gears.png" icon that we cannot get recognized in the plugin.xml. Any help here would be great.
+* **Toolbar Icons** for Manage and Create Gears ( Mostly Manage Gears ).  We would like to create Toolbar Actions so that you don't have to dig into the Tools > Android Gears Menu to find the Manage Gears Form. Any help would be greatly appreciated. 
 
 ##Credits
 
