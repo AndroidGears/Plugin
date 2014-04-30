@@ -39,13 +39,13 @@ An example of searching for, downloading and using an Android library in your pr
 - Open Android Studio
 - Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 - And you are DONE!!
-- Time to go get some **GEARS!**(#basic-usage)
+- Time to go get some [GEARS!](#basic-usage)
 
 **Windows (Win8 tested) & Linux (Ubuntu 14.04 tested)**
 - Open Android Studio
 - Go To Android Studio > Settings... ( Ctrl+Alt+S ) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 - And you are DONE!!
-- Time to go get some **GEARS!**(#basic-usage)
+- Time to go get some [GEARS!](#basic-usage)
 
 
 ( Android Gears also tested in Community version of Intellij )
