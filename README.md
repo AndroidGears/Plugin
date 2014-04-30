@@ -50,7 +50,7 @@ An example of searching for, downloading and using an Android library in your pr
 
 ( Android Gears also tested in Community version of Intellij )
 
-![InstallDemo1](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-mac-install-1.png)![InstallDemo2](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-mac-install-2.png)![InstallDemo3](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-mac-install-3.png)![InstallDemo4](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-mac-install-4.png)
+![InstallDemo1](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-Install-Steps.png)
 
 
 Finally, to access the Android Gears menu, navigate to Tools -> Android Gears (Win&Linux-Crtl+Alt+Shift+G , M)(OSX - Command+Alt+Shift+G,M)
