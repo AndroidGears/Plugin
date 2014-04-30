@@ -52,6 +52,9 @@ An example of searching for, downloading and using an Android library in your pr
 
 ![InstallDemo1](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-Install-Steps.png)
 
+(**Note For updating plugin**) 
+When updating first Navigate back to Plugins in IDE then uninstall plugin first then go through installation process again to get the plugin to update correctly.
+
 
 Finally, to access the Android Gears menu, navigate to Tools -> Android Gears (Win&Linux-Crtl+Alt+Shift+G , M)(OSX - Command+Alt+Shift+G,M)
 
