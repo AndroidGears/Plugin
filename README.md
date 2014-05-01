@@ -32,24 +32,31 @@ An example of searching for, downloading and using an Android library in your pr
 
 ##Installation
 
-- Download and install [Android Studio](http://developer.android.com/sdk/installing/studio.html)
-- [Download a release](https://github.com/AndroidGears/Plugin/releases) of the Android Gears Plugin and unzip to get the "Android Gears" plugin folder
+- Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
+- [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
 
-**Mac**
-- With th IDE closed, go to Applications -> Android Studio, right click on the icon and select "Show Package Contents". You should see a plugin folder in the package contents
-- Drag the Android Gears folder into the the plugin folder to install Android Gears.
+**Mac (OSX 10.9.2 & 10.9.1)**
 - Open Android Studio
+- Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
+- And you are DONE!!
+- Time to go get some [GEARS!](#basic-usage)
 
-**Windows**
-- With th IDE closed, navigate to <code>C:\Users\$USER$\\.AndroidStudioPreview\config\Plugins</code>
-- Drag the Android Gears folder into the the plugin folder to install Android Gears.
+**Windows (Win8 tested) & Linux (Ubuntu 14.04 tested)**
 - Open Android Studio
+- Go To File > Settings... ( Ctrl+Alt+S ) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
+- And you are DONE!!
+- Time to go get some [GEARS!](#basic-usage)
 
-**Linux**
-- Coming soon!
+
+( Android Gears also tested in Community version of Intellij )
+
+![InstallDemo1](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/Installing/Android-Gears-Install-Steps.png)
+
+(**Note For updating plugin**) 
+When updating first Navigate back to Plugins in IDE then uninstall plugin first then go through installation process again to get the plugin to update correctly.
 
 
-Finally, to access the Android Gears menu, navigate to Tools -> Android Gears
+Finally, to access the Android Gears menu, navigate to Tools -> Android Gears (Win&Linux-Crtl+Alt+Shift+G , M)(OSX - Command+Alt+Shift+G,M)
 
 ![ToolsMenuScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/MenuScreenshot.png)
 
@@ -250,7 +257,7 @@ We envision Android Gears to be a complete solution for managing dependencies in
 
 * Creating **separate Gear areas** for debug, release and test run configurations (Better lifecycle management).
 * **Better dependency resolution** for projects involving many dependencies of potentially conflicting version numbers. Right now, only basic management is done. For instance, if two libs are dependent on the same lib of different versions, how does this get handled effectively? That is an open question we would like to discuss.
-* **Icons** for the menu items. Right now there is a "gears.png" icon that we cannot get recognized in the plugin.xml. Any help here would be great.
+* **Toolbar Icons** for Manage and Create Gears ( Mostly Manage Gears ).  We would like to create Toolbar Actions so that you don't have to dig into the Tools > Android Gears Menu to find the Manage Gears Form. Any help would be greatly appreciated. 
 
 ##Credits
 

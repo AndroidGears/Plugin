@@ -31,10 +31,12 @@ public class GearsService implements CompletionService<String> {
 
     /** {@inheritDoc} */
     public String autoComplete(String startsWith) {
+        startsWith = startsWith.toLowerCase();
+
         // Naive implementation, but good enough for the sample
         String hit = null;
         for (String o : data) {
-            if (o.startsWith(startsWith)) {
+            if (o.toLowerCase().startsWith(startsWith)) {
                 // CompletionService contract states that we only
                 // should return completion for unique hits.
                 if (hit == null) {
