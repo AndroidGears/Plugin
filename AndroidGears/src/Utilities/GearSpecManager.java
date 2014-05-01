@@ -40,11 +40,12 @@ public class GearSpecManager {
 
         //Install dependency and sub-dependencies
         File specDirectory = Utils.fileInstallPathForSpec(spec, project);
+        File specTopLevelDirectory = specDirectory.getParentFile();
 
         //Delete the directory. This is for other versions installed
-        if (specDirectory.exists()) {
+        if (specTopLevelDirectory.exists()) {
             try {
-                FileUtils.forceDelete(specDirectory);
+                FileUtils.forceDelete(specTopLevelDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -183,17 +184,22 @@ public class GearSpecManager {
         String pathSeparator = Utils.pathSeparator();
 
         //Create GearsJars directory if not already there
-        File libsDirectory = new File(project.getBasePath()+pathSeparator+ "Gears"+ pathSeparator + "Jars"+ pathSeparator + spec.getName() + pathSeparator + spec.getVersion());
-        if (!libsDirectory.exists()){
+        //Install dependency and sub-dependencies
+        File specDirectory = Utils.fileInstallPathForSpec(spec, project);
+        File specTopLevelDirectory = specDirectory.getParentFile();
+
+        //Delete the directory. This is for other versions installed
+        if (specTopLevelDirectory.exists()) {
             try {
-                FileUtils.forceMkdir(libsDirectory);
+                FileUtils.forceDelete(specTopLevelDirectory);
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
 
         //Build jar file
-        File jarFile = new File(libsDirectory.getAbsolutePath() + pathSeparator + Utils.jarFileNameForSpecSource(spec.getSource()));
+        File jarFile = new File(specDirectory.getAbsolutePath() + pathSeparator + Utils.jarFileNameForSpecSource(spec.getSource()));
 
         //Build url for gear
         String jarUrl;
