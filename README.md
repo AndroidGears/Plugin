@@ -35,7 +35,7 @@ An example of searching for, downloading and using an Android library in your pr
 - Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
 - [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
 
-**Mac (OSX 10.9.2 & 10.9.1)**
+**Mac (OSX 10.9.2 & 10.9.1 tested)**
 - Open Android Studio
 - Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 - And you are DONE!!
