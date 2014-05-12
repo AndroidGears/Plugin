@@ -175,7 +175,7 @@ public class GearSpecManager {
         }
 
         //Update internal dependencies
-        if (!updateInstallInternalDependencies(spec, parentSpec, project)){
+        if (!installInternalDependencies(spec, parentSpec, project)){
             return false;
         }
 
@@ -260,7 +260,7 @@ public class GearSpecManager {
         }
 
         //Update internal dependencies
-        if (!updateInstallInternalDependencies(spec, parentSpec, project)){
+        if (!installInternalDependencies(spec, parentSpec, project)){
             return false;
         }
 
@@ -401,7 +401,7 @@ public class GearSpecManager {
      * @param parentSpec
      * @return
      */
-    private static Boolean updateInstallInternalDependencies(GearSpec spec, GearSpec parentSpec, Project project){
+    private static Boolean installInternalDependencies(GearSpec spec, GearSpec parentSpec, Project project){
         if (parentSpec != null){
             if (parentSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
 
@@ -719,4 +719,21 @@ public class GearSpecManager {
         return true;
     }
 
+    /**
+     * Removes internal dependency listings to modules that require them. JARs are unaffected.
+     * @param spec
+     * @param parentSpec
+     * @param project
+     * @return
+     */
+    private static Boolean uninstallInternalDependencies(GearSpec spec, GearSpec parentSpec, Project project){
+
+        if (parentSpec != null){
+            if (parentSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)) {
+                
+            }
+        }
+
+        return true;
+    }
 }
