@@ -23,18 +23,22 @@ public class GearSpecManager {
     ///////////////////////
 
     public static Boolean installGear(GearSpec spec, Project project, Module module){
+        return GearSpecManager.installGear(spec, project, module, null);
+    }
+
+    public static Boolean installGear(GearSpec spec, Project project, Module module, GearSpec parentSpec){
         if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-            return GearSpecManager.installModule(spec, project, module);
+            return GearSpecManager.installModule(spec, project, module, parentSpec);
         }
         else if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-            return GearSpecManager.installJar(spec, project, module);
+            return GearSpecManager.installJar(spec, project, module, parentSpec);
         }
         else {
             return false;
         }
     }
 
-    public static Boolean installModule(GearSpec spec, Project project, Module module){
+    public static Boolean installModule(GearSpec spec, Project project, Module module, GearSpec parentSpec){
         //Create local path separator for speed
         String pathSeparator = Utils.pathSeparator();
 
@@ -154,10 +158,10 @@ public class GearSpecManager {
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                                installJar(dependencySpec, project, module);
+                                installJar(dependencySpec, project, module, spec);
                             }
                             else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                                installModule(dependencySpec, project, module);
+                                installModule(dependencySpec, project, module, spec);
                             }
                         }
                     }
@@ -170,6 +174,11 @@ public class GearSpecManager {
             return false;
         }
 
+        //Update internal dependencies
+        if (!updateInstallInternalDependencies(spec, parentSpec, project)){
+            return false;
+        }
+
         //Register spec
         if (GearSpecRegistrar.registerGear(spec, project, GearSpec.GearState.GearStateInstalled)){
             return true;
@@ -179,7 +188,7 @@ public class GearSpecManager {
         }
     }
 
-    public static Boolean installJar(GearSpec spec, Project project, Module module){
+    public static Boolean installJar(GearSpec spec, Project project, Module module, GearSpec parentSpec){
         //Create local path separator for speed
         String pathSeparator = Utils.pathSeparator();
 
@@ -234,10 +243,10 @@ public class GearSpecManager {
 
                             //Install dependency
                             if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                                installJar(dependencySpec, project, module);
+                                installJar(dependencySpec, project, module, spec);
                             }
                             else if (dependencySpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                                installModule(dependencySpec, project, module);
+                                installModule(dependencySpec, project, module, spec);
                             }
                         }
                     }
@@ -247,6 +256,11 @@ public class GearSpecManager {
 
         //Update project settings
         if (!updateInstallProjectSettingsForJar(spec, module)){
+            return false;
+        }
+
+        //Update internal dependencies
+        if (!updateInstallInternalDependencies(spec, parentSpec, project)){
             return false;
         }
 
@@ -378,6 +392,68 @@ public class GearSpecManager {
 
 
 
+        return true;
+    }
+
+    /**
+     * Adds internal dependency listings to modules that require it. JARs are unaffected.
+     * @param spec
+     * @param parentSpec
+     * @return
+     */
+    private static Boolean updateInstallInternalDependencies(GearSpec spec, GearSpec parentSpec, Project project){
+        if (parentSpec != null){
+            if (parentSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+
+                //Get parent gradle build file. Remember this is already cloned down, so we should be good!
+                File parentModuleBuildFile = new File(Utils.fileInstallPathForSpec(parentSpec, project).getAbsolutePath()+Utils.pathSeparator()+"build.gradle");
+
+                //Check to see if it exists
+                if (parentModuleBuildFile.exists()){
+                    //Create comment string
+                    String commentString = "\n/////////////////////\n" +
+                            "// Gears Dependencies\n" +
+                            "/////////////////////";
+
+                    //Read build file
+                    try {
+                        String buildFileString = FileUtils.readFileToString(parentModuleBuildFile);
+
+                        //Create new addition
+                        String newDependencyString = "";
+
+                        //Build new dependency string based on type
+                        if (spec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
+                            newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"')}";
+                        }
+                        else if (spec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
+                            newDependencyString = "\ndependencies{compile fileTree(dir: '../../../../Gears/Jars/"+spec.getName()+"/"+spec.getVersion()+"', include: ['*.jar'])}";
+                        }
+
+                        //Check for and insert dependency string
+                        if (!buildFileString.contains(newDependencyString)){
+                            int commentIndex = buildFileString.lastIndexOf(commentString);
+
+                            //If the comment exists...
+                            if (commentIndex != -1){
+                                buildFileString = buildFileString.concat(newDependencyString);
+                            }
+                            else {
+                                buildFileString = buildFileString.concat(commentString+newDependencyString);
+                            }
+
+                            //Write changes to settings.gradle
+                            FileUtils.forceDelete(parentModuleBuildFile);
+                            FileUtils.write(parentModuleBuildFile, buildFileString);
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
 

@@ -46,10 +46,10 @@ public class UpdateGearWorker extends SwingWorker<Void, Void> {
         if (updateSpec != null){
             //Install either the new jar or module. We have to do it this way in case someone changes library types
             if (updateSpec.getType().equals(GearSpec.SPEC_TYPE_JAR)){
-                this.successful = GearSpecManager.installJar(updateSpec, project, module);
+                this.successful = GearSpecManager.installJar(updateSpec, project, module, null);
             }
             else if (selectedSpec.getType().equals(GearSpec.SPEC_TYPE_MODULE)){
-                this.successful = GearSpecManager.installModule(updateSpec, project, module);
+                this.successful = GearSpecManager.installModule(updateSpec, project, module, null);
             }
         }
 
