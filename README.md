@@ -12,16 +12,16 @@ An example of searching for, downloading and using an Android library in your pr
 
 * [**Installation**](#installation)
 * [**Basic Usage**](#basic-usage)
-* [**Core Concepts**](#core-concepts)
-  * [Gears](#gears)
-  * [The Specs Repository](#the-specs-repository)
-  * [Accessing the Specs Repository](#accessing-the-specs-repository)
-  * [Gitignore Considerations and Working in Teams](#gitignore-considerations-and-working-in-teams)
 * [**Android Studio Plugin**](#android-studio-plugin)
   * [Managing Android Gears](#managing-android-gears)
   * [Creating a Gear Spec](#creating-a-gear-spec)
   * [Linting a Gear Spec](#linting-a-gear-spec)
   * [Settings](#settings) 
+* [**Core Concepts**](#core-concepts)
+  * [Gears](#gears)
+  * [The Specs Repository](#the-specs-repository)
+  * [Accessing the Specs Repository](#accessing-the-specs-repository)
+  * [Gitignore Considerations and Working in Teams](#gitignore-considerations-and-working-in-teams)
 * [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears)
   * [Packaging Your Library](#packaging-your-library)
   * [Pull Requests](pull-requests)
@@ -35,7 +35,7 @@ An example of searching for, downloading and using an Android library in your pr
 - Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
 - [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
 
-**Mac (OSX 10.9.2 & 10.9.1)**
+**Mac (OSX 10.9.2 & 10.9.1 tested)**
 - Open Android Studio
 - Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
 - And you are DONE!!
@@ -65,6 +65,51 @@ Finally, to access the Android Gears menu, navigate to Tools -> Android Gears (W
 - Search for and install a library.
 - Once you have installed all the gears, click "Done"
 - All done! You should now be able to use the code from the gears you selected.
+
+##Android Studio Plugin
+
+The Android Gears plugin for Android Studio and IntelliJ is the engine that makes Android Gears work. It coordinates with the Specs Repository and your project to ensure that managing libraries is as painless as possible. This section will cover the basics of the plugin including how to install and uninstall Gears, as well as finer points like auto-syncing Gears across teams.
+
+####Managing Android Gears
+
+To manage the Android Gears for a given project, select Tools -> Android Gears -> Manage Android Gears.
+
+####Creating a Gear Spec
+
+Gear Specs is a text file that holds information about an Android library listed in Android Gears. The Android Gears plugin for Android Studio comes with a GUI for creating a Gear Spec that may be pulled into the Specs Repository. Use this tool to create a listing for your library. For more information about the process, see [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears).
+
+When using GUI First go to Tools > Android Gears > Create GearSpec
+![CreateGearSpecMenu](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearMenu.png)
+
+Then fill out form as best you can and we will tell you if you have done it correctly. 
+
+![CreateGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearScreen.png)
+
+Things to take into consideration. 
+* All fields must be filled out unless you are pointing your Url Source directly to a .jar file. Then "Tag" and "Location" are to be left blank.
+* Dependencies for your libraries must already be gearspecs in the Specs Repository.
+* A Gearspec can have more then one Author but you must have at least one author.
+* Each Author must have a name and email address.
+* A library's version must be [semantic versioning](http://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning)
+* Use tags to create greater visibility for your library. 
+* When creating tag use commas to seprate out each tag.
+* When you are searching for your Gear after it has been added to the Specs Repository it is a full text search so Author name and project name are not required to be in the tags as well they are already part of the search algorithm.
+* Source must be a valid .git repository or .jar file. See the [Packaging](#packaging) section for a complete list of your options.
+* The homepage is the face or your library. Link it to a site that looks good and/or has alot of detailed information about your library. The library's Github page is a wonderful place to start.
+* If you have already created a gearspec and would like to edit it and reupload it. Use the "Load Android Gear Spec" button in the bottom left corner for quick and easy filler and editing.
+* To remove authors or dependencies just click on the the listing in the table and then click on the - Remove Author or Dependency button below the selected table.
+* Dependency addition requires both fields to be filled. These need to be the name and version of a valid gearspec in the specs repo.
+* License is the **name** of the License not the entire license text.
+* Click "Create Android Gear Spec" in the bottom right corner. This will summon the Android Gear Spec Linter. If your spec makes it past the linter you are ready to create a pull request to the Android Gears Specs Repository and add your library to our ever growing community. 
+* HAPPY CODING!
+
+####Linting a Gear Spec
+
+The plugin also has a built-in linting tool for making sure your <code>.gearspec</code> file is valid before issuing a pull request to the Specs Repository. This tool will tell you if there is anything wrong. This same linting tool is used by the "Create Gear Spec" mechanism.
+
+![LintGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/LintGearSpecScreenshot.png)
+
+####Settings
 
 ##Core Concepts
 
@@ -145,51 +190,6 @@ You may ask the question, <b>"How does the Android Gears plugin communicate with
 A great example of this system's utility is when someone inherits a mature project using Android Gears. This person may checkout the repository and then sync (that is, download and install) the Gears declared in the <code>GearSpecRegister</code>. All of this is streamlined through the [Manage Android Gears](#managing-android-gears) portion of the plugin, and is a simple as clicking a button. 
 
 *Note:** There is no need to actually open the <code>GearSpecRegister</code> file, but if you do, you will find a simple array of Gear Specs. If there is ever a conflict in this file due to more than one team member manipulating it, resolving the conflict is as easy as shuffling a few JSON objects around. 
-
-##Android Studio Plugin
-
-The Android Gears plugin for Android Studio and IntelliJ is the engine that makes Android Gears work. It coordinates with the Specs Repository and your project to ensure that managing libraries is as painless as possible. This section will cover the basics of the plugin including how to install and uninstall Gears, as well as finer points like auto-syncing Gears across teams.
-
-####Managing Android Gears
-
-To manage the Android Gears for a given project, select Tools -> Android Gears -> Manage Android Gears.
-
-####Creating a Gear Spec
-
-Gear Specs is a text file that holds information about an Android library listed in Android Gears. The Android Gears plugin for Android Studio comes with a GUI for creating a Gear Spec that may be pulled into the Specs Repository. Use this tool to create a listing for your library. For more information about the process, see [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears).
-
-When using GUI First go to Tools > Android Gears > Create GearSpec
-![CreateGearSpecMenu](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearMenu.png)
-
-Then fill out form as best you can and we will tell you if you have done it correctly. 
-
-![CreateGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/CreateGearScreen.png)
-
-Things to take into consideration. 
-* All fields must be filled out unless you are pointing your Url Source directly to a .jar file. Then "Tag" and "Location" are to be left blank.
-* Dependencies for your libraries must already be gearspecs in the Specs Repository.
-* A Gearspec can have more then one Author but you must have at least one author.
-* Each Author must have a name and email address.
-* A library's version must be [semantic versioning](http://en.wikipedia.org/wiki/Software_versioning#Semantic_versioning)
-* Use tags to create greater visibility for your library. 
-* When creating tag use commas to seprate out each tag.
-* When you are searching for your Gear after it has been added to the Specs Repository it is a full text search so Author name and project name are not required to be in the tags as well they are already part of the search algorithm.
-* Source must be a valid .git repository or .jar file. See the [Packaging](#packaging) section for a complete list of your options.
-* The homepage is the face or your library. Link it to a site that looks good and/or has alot of detailed information about your library. The library's Github page is a wonderful place to start.
-* If you have already created a gearspec and would like to edit it and reupload it. Use the "Load Android Gear Spec" button in the bottom left corner for quick and easy filler and editing.
-* To remove authors or dependencies just click on the the listing in the table and then click on the - Remove Author or Dependency button below the selected table.
-* Dependency addition requires both fields to be filled. These need to be the name and version of a valid gearspec in the specs repo.
-* License is the **name** of the License not the entire license text.
-* Click "Create Android Gear Spec" in the bottom right corner. This will summon the Android Gear Spec Linter. If your spec makes it past the linter you are ready to create a pull request to the Android Gears Specs Repository and add your library to our ever growing community. 
-* HAPPY CODING!
-
-####Linting a Gear Spec
-
-The plugin also has a built-in linting tool for making sure your <code>.gearspec</code> file is valid before issuing a pull request to the Specs Repository. This tool will tell you if there is anything wrong. This same linting tool is used by the "Create Gear Spec" mechanism.
-
-![LintGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/LintGearSpecScreenshot.png)
-
-####Settings
 
 ##Adding Your Library to Android Gears
 
