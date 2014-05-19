@@ -807,12 +807,14 @@ public class ManageAndroidGearsForm {
 
         if (spec.getGearState() == GearSpec.GearState.GearStateInstalled) {
             ArrayList<GearSpec> gearsToUninstall = new ArrayList<GearSpec>();
-            gearsToUninstall.add(spec);
 
             //Prompt to add dependents
             ArrayList<GearSpec> dependents = spec.dependentGears(targetProject);
             if (dependents.size() > 0) {
-                gearsToUninstall.addAll(warnOfDependents(dependents));
+                gearsToUninstall.addAll(warnOfDependents(dependents, spec));
+            }
+            else {
+                gearsToUninstall.add(spec);
             }
 
             //Prompt to add dependencies
@@ -822,7 +824,10 @@ public class ManageAndroidGearsForm {
                 }
             }
 
-            uninstallDependencies(gearsToUninstall, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]);
+            //Uninstall gears, if necessary
+            if (gearsToUninstall.size() > 0) {
+                uninstallDependencies(gearsToUninstall, targetProjects[TargetProjectComboBox.getSelectedIndex()], targetModules[TargetModuleComboBox.getSelectedIndex()]);
+            }
         } else {
             //Set UI in download state
             StatusLabel.setText("Installing Gear and its dependencies: " + spec.getName());
@@ -925,7 +930,7 @@ public class ManageAndroidGearsForm {
         }
     }
 
-    private ArrayList<GearSpec> warnOfDependents(ArrayList<GearSpec> dependents) {
+    private ArrayList<GearSpec> warnOfDependents(ArrayList<GearSpec> dependents, final GearSpec selectedSpec) {
         String dependentString = "";
         for (GearSpec dependentGear : dependents) {
             dependentString = dependentString + dependentGear.getName() + " - " + dependentGear.getVersion() + "\n";
@@ -947,8 +952,9 @@ public class ManageAndroidGearsForm {
 
         //Process answer
         if (answer == AGREE_TO_UNINSTALL_GEAR) {
-            return new ArrayList<GearSpec>();
+            return new ArrayList<GearSpec>() {{add(selectedSpec);}};
         } else if (answer == AGREE_TO_UNINSTALL_GEAR_AND_DEPENDENTS) {
+            dependents.add(selectedSpec);
             return dependents;
         } else {
             return new ArrayList<GearSpec>();
