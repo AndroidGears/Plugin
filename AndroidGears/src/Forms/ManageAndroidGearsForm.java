@@ -864,6 +864,9 @@ public class ManageAndroidGearsForm {
                     } else {
                         StatusLabel.setText("Installation failed for: " + spec.getName());
                     }
+
+                    //Refresh updatable specs
+                    refreshUpdatedList("");
                 }
             };
             worker.execute();
@@ -1022,6 +1025,8 @@ public class ManageAndroidGearsForm {
                     StatusLabel.setText("Successfully uninstalled gear.");
                     UpdateGearButton.setVisible(false);
                     refreshSelectedTabList(SearchTextField.getText());
+                    //Refresh updatable specs
+                    refreshUpdatedList("");
 
                     //If on the updates page, hide everything
                     if (SearchTabbedPane.getSelectedIndex() >= 1) {

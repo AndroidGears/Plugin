@@ -93,16 +93,19 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="875a8" class="javax.swing.JList" binding="InstalledList">
+                  <scrollpane id="9166e">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <minimum-size width="-1" height="400"/>
-                        <preferred-size width="500" height="500"/>
-                        <maximum-size width="-1" height="500"/>
-                      </grid>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
-                  </component>
+                    <border type="none"/>
+                    <children>
+                      <component id="875a8" class="javax.swing.JList" binding="InstalledList">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
               <grid id="6943e" binding="UpdatesTabPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -113,14 +116,19 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="1bf9f" class="javax.swing.JList" binding="UpdatesList">
+                  <scrollpane id="e54e9">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="50"/>
-                      </grid>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
-                  </component>
+                    <border type="none"/>
+                    <children>
+                      <component id="1bf9f" class="javax.swing.JList" binding="UpdatesList">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
             </children>
