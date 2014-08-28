@@ -5,6 +5,7 @@ import Models.GearSpec.GearSpecDependency;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import org.apache.commons.io.FileUtils;
+import org.apache.velocity.runtime.directive.Foreach;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -280,6 +281,7 @@ public class GearSpecManager {
         //Install dependency and sub-dependencies
         File settingsFile = new File(project.getBasePath() + pathSeparator + "settings.gradle");
         File buildFile = new File(new File(module.getModuleFilePath()).getParentFile().getAbsolutePath() + pathSeparator + "build.gradle");
+        File gearBuildFile = new File(Utils.fileInstallPathForSpec(spec, project).getParentFile().getAbsolutePath() + pathSeparator + spec.getVersion() + pathSeparator + "build.gradle");
 
         //Create comment string
         String commentString = "\n/////////////////////\n" +
@@ -322,7 +324,6 @@ public class GearSpecManager {
             //Create new addition
             String newDependencyString = "\ndependencies{compile project (':Gears:Modules:"+spec.getName()+":"+spec.getVersion()+"')}";
 
-
             if (!buildFileString.contains(newDependencyString)){
                 int commentIndex = buildFileString.lastIndexOf(commentString);
 
@@ -339,10 +340,55 @@ public class GearSpecManager {
                 FileUtils.write(buildFile, buildFileString);
             }
 
+            //Get compileSDK version and buildTools version
+            String[] appLines = buildFileString.split("\n");
+            String compileSDKVersion = null;
+            String buildToolsVersion = null;
+            for(String line : appLines){
+                if (line.contains("compileSdkVersion")){
+                    compileSDKVersion = line.replace("compileSdkVersion", "").replace(" ", "");
+                }
+                else if (line.contains("buildToolsVersion")){
+                    buildToolsVersion = line.replace("buildToolsVersion", "").replace(" ", "");
+                }
+            }
+
+            //Apply collected compile version and build tools version
+            if (compileSDKVersion != null || buildToolsVersion != null) {
+                String gearBuildFileString = FileUtils.readFileToString(gearBuildFile);
+
+                //Apply compiled sdk and build tools sdk to new module
+                String[] moduleLines = gearBuildFileString.split("\n");
+                String modifiedModuleBuildFileString = "";
+                for(String line : moduleLines) {
+                    if (line.contains("'android-library'")){
+                        modifiedModuleBuildFileString = modifiedModuleBuildFileString + "apply plugin: 'com.android.library'" + "\n";
+                    }
+                    else if (line.contains("compileSdkVersion")){
+                        modifiedModuleBuildFileString = modifiedModuleBuildFileString+ "compileSdkVersion "+compileSDKVersion+"\n";
+                    }
+                    else if (line.contains("buildToolsVersion")){
+                        modifiedModuleBuildFileString = modifiedModuleBuildFileString + "buildToolsVersion "+buildToolsVersion+"\n";
+                    }
+                    else {
+                        modifiedModuleBuildFileString = modifiedModuleBuildFileString + line+"\n";
+                    }
+                }
+
+                //Write changes to build.gradle
+                FileUtils.forceDelete(gearBuildFile);
+                FileUtils.write(gearBuildFile, modifiedModuleBuildFileString);
+
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+
+
+
 
         return true;
     }
