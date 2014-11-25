@@ -53,11 +53,13 @@ public class GitWorker extends SwingWorker<Void, Void> {
             //Get repos directory
            File reposDirectory = git.getRepository().getDirectory().getParentFile();
 
-            //Check that we cloned down correctly
+            //Close git connection!
+            git.close();
+
+            //If everything was created successfully, return true
             if (reposDirectory != null){
                 if (reposDirectory.exists()){
                     if (reposDirectory.list().length > 1){
-                        git.close();
                         return true;
                     }
                 }

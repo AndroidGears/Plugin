@@ -59,11 +59,12 @@ public class GearSpecManager {
 
         //Clone down repo
         try {
-            Git.cloneRepository()
+            Git git = Git.cloneRepository()
                     .setURI(spec.getSource().getUrl())
                     .setBranch(spec.getSource().getTag())
                     .setDirectory(specDirectory)
                     .call();
+            git.close();
         } catch (GitAPIException e) {
             e.printStackTrace();
 
