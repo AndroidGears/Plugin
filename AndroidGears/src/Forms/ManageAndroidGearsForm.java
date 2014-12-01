@@ -393,7 +393,20 @@ public class ManageAndroidGearsForm {
         //Setup Module Combo Box
         TargetModuleComboBox.setModel(new ListComboBoxModel<Module>(Arrays.asList(targetModules)));
         if (targetModules.length > 0) {
-            TargetModuleComboBox.setSelectedIndex(targetModules.length - 1);
+            //Look for the default name "app". This should cover most cases of selecting the right module by default
+            Boolean defaultNameFound = false;
+            for (int ii = 0; ii < targetModules.length; ii++){
+                Module module = targetModules[ii];
+                if (module.getName() == "app"){
+                    TargetModuleComboBox.setSelectedIndex(ii);
+                    defaultNameFound = true;
+                }
+            }
+
+            //If "app" is not found, select the first module in the list
+            if (!defaultNameFound){
+                TargetModuleComboBox.setSelectedIndex(0);
+            }
         }
         TargetModuleComboBox.setRenderer(new ModuleCellRenderer());
         TargetModuleComboBox.addActionListener(new ActionListener() {
