@@ -421,7 +421,7 @@ public class ManageAndroidGearsForm {
         //Get/Set selected module
         String mainModule = SettingsManager.getInstance().getMainModule();
         if (mainModule.equals("")) { //Save default
-            SettingsManager.getInstance().setMainModule(targetModules[targetModules.length - 1].getName(), p);
+            SettingsManager.getInstance().setMainModule(targetModules[TargetModuleComboBox.getSelectedIndex()].getName(), p);
         } else { //Pull back selected module
             for (int ii = 0; ii < targetModules.length; ii++) {
                 if (targetModules[ii].getName().equals(mainModule)) {
