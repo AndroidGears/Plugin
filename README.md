@@ -1,5 +1,7 @@
 ![Banner](https://raw.githubusercontent.com/AndroidGears/Resources/master/Images/AndroidGearsBanner.png)
 
+## [Click here to get the newest release! (0.5.2)](https://github.com/AndroidGears/Plugin/releases/download/v0.5.2/AndroidGears-0.5.2.zip)
+
 ## Android Gears - Android Studio Plugin
 
 Android Gears is a new <b>dependency management system</b> built on open source technology through Github. Gears is fully integrated with the Gradle build processes of Android Studio and IntelliJ. In addition to providing a robust search interface for library discovery, Gears greatly reduces the effort it takes to share your library with others. Listing your library with Android Gears is just a pull request away.
