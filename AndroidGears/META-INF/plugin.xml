@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>com.github.androidgears.plugin5</id>
     <name>Android Gears</name>
-    <version>0.5.2</version>
+    <version>0.5.3</version>
     <vendor email="myork@cs.ua.edu" url="http://www.androidgears.org">Android Gears</vendor>
 
     <description><![CDATA[
@@ -72,8 +72,11 @@
                     description="Manage the settings for your Android Gears Plugin">
                 <keyboard-shortcut first-keystroke="control alt shift G" second-keystroke="S" keymap="$default"/>
             </action>
+            <action id="AndroidGears.AboutGearsAction" class="Actions.AboutGearsAction" text="About Android Gears"
+                    description="Credits and Information About Android Gears">
+                <keyboard-shortcut first-keystroke="control alt shift G" second-keystroke="A" keymap="$default"/>
+            </action>
         </group>
-
     </actions>
 
 </idea-plugin>
