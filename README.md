@@ -267,7 +267,7 @@ We envision Android Gears to be a complete solution for managing dependencies in
 
 [**Aaron Fleshner**](https://github.com/adfleshner) - Creator of Android Gears, Senior Android Developer for the [Center for Advanced Public Safety](https://github.com/uacaps)
 
-[**Ben Gordon**](https://github.com/bennyguitar) - Senior iOS Developer at [Intermark](https://github.com/Intermark) and creator of [androidgears.org](http://androidgears.org)
+[**Ben Gordon**](https://github.com/bennyguitar) - Senior Developer at [Curse](http://www.curse.com/) and creator of [androidgears.org](http://androidgears.org)
 
 [**CocoaPods.org**](http://cocoapods.org) - The iOS dependency manager which much of the structure for Android Gears is based on.
 
