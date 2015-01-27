@@ -22,7 +22,7 @@ public class SettingsManager {
     //Singleton instance for settings
     private static SettingsManager settingsManager;
     private Project[] targetProjects;
-    private static String IGNORE_STRING = "\n#Android Gears\nGears/";
+    private static String IGNORE_STRING = Utils.newLine()+Utils.newLine()+"#Android Gears"+Utils.newLine()+"Gears/";
     private static String IGNORE_COMMENT_STRING = "#Android Gears";
     private static String IGNORE_CONTENT_STRING = "Gears/";
 
@@ -257,7 +257,7 @@ public class SettingsManager {
                     String ignoreFileString = FileUtils.readFileToString(ignoreFile);
 
                     //Check if it exists already. If it does, we're good
-                    if (!ignoreFileString.contains(IGNORE_STRING)){
+                    if (!ignoreFileString.contains(IGNORE_COMMENT_STRING) && !ignoreFileString.contains(IGNORE_CONTENT_STRING)){
                         //Add entry
                         ignoreFileString = ignoreFileString+IGNORE_STRING;
 

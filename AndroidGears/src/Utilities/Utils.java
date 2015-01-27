@@ -49,6 +49,10 @@ public class Utils {
         return (OSValidator.isWindows()) ? "\\":"/";
     }
 
+    public static String newLine(){
+        return (OSValidator.isWindows()) ? "\r\n":"\n";
+    }
+
     public static boolean ping(String url, int timeout) {
         //url = url.replaceFirst("https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
 
