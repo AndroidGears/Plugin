@@ -36,7 +36,7 @@ An example of searching for, downloading and using an Android library in your pr
 
 1. Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
 
-2A. Install the Android Gears IntelliJ plugin by going to Android Studio > Preferences> Plugins and searching "Android Gears"
+2A. Install the Android Gears [IntelliJ plugin](https://plugins.jetbrains.com/plugin/7671?pr=idea_ce) by going to Android Studio > Preferences> Plugins and searching "Android Gears"
 
 or
 
