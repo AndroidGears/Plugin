@@ -34,22 +34,24 @@ An example of searching for, downloading and using an Android library in your pr
 
 ##Installation
 
-- Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
-- Install the Android Gears IntelliJ plugin by going to Android Studio > Preferences> Plugins and searching "Android Gears"
+1. Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
+
+2A. Install the Android Gears IntelliJ plugin by going to Android Studio > Preferences> Plugins and searching "Android Gears"
 
 or
 
-- [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
+2B. [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
 
+####2B Additional Instructions
 **Mac (OSX 10.9+ tested)**
 - Open Android Studio
-- Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
+- Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer (do not unzip!). Click "OK" and restart your IDE.
 - And you are DONE!!
 - Time to go get some [GEARS!](#basic-usage)
 
 **Windows (Win8 tested) & Linux (Ubuntu 14.04 tested)**
 - Open Android Studio
-- Go To File > Settings... ( Ctrl+Alt+S ) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer. Click "OK" and restart your IDE.
+- Go To File > Settings... ( Ctrl+Alt+S ) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer (do not unzip!). Click "OK" and restart your IDE.
 - And you are DONE!!
 - Time to go get some [GEARS!](#basic-usage)
 
