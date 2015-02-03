@@ -1,6 +1,6 @@
 ![Banner](https://raw.githubusercontent.com/AndroidGears/Resources/master/Images/AndroidGearsBanner.png)
 
-## [Click here to get the newest release! (0.5.3)](https://github.com/AndroidGears/Plugin/releases/download/v0.5.3/AndroidGears-0.5.3.zip)
+## [Click here to get the newest release! (0.5.4)](https://github.com/AndroidGears/Plugin/releases/download/v0.5.4/AndroidGears-0.5.4.zip)
 
 ## Android Gears - Android Studio Plugin
 
