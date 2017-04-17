@@ -32,7 +32,7 @@ An example of searching for, downloading and using an Android library in your pr
 * [**License**](#license)
 
 
-##Installation
+## Installation
 
 1. Download and install (and Update) [Android Studio](http://developer.android.com/sdk/installing/studio.html)
 
@@ -42,7 +42,7 @@ or
 
 2B. [Download latest Android Gears release](https://github.com/AndroidGears/Plugin/releases)
 
-####2B Additional Instructions
+#### 2B Additional Instructions
 **Mac (OSX 10.9+ tested)**
 - Open Android Studio
 - Go To Android Studio > Preferences... ( Command+,) > Go to "Plugins" under IDE Settings > Click Install plugin from disk... > find the Android Gears latest release on your computer (do not unzip!). Click "OK" and restart your IDE.
@@ -68,21 +68,21 @@ Finally, to access the Android Gears menu, navigate to Tools -> Android Gears (W
 
 ![ToolsMenuScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/MenuScreenshot.png)
 
-##Basic Usage
+## Basic Usage
 - To manage your Android Gears, click on Tools -> Android Gears -> Manage Android Gears
 - Search for and install a library.
 - Once you have installed all the gears, click "Done"
 - All done! You should now be able to use the code from the gears you selected.
 
-##Android Studio Plugin
+## Android Studio Plugin
 
 The Android Gears plugin for Android Studio and IntelliJ is the engine that makes Android Gears work. It coordinates with the Specs Repository and your project to ensure that managing libraries is as painless as possible. This section will cover the basics of the plugin including how to install and uninstall Gears, as well as finer points like auto-syncing Gears across teams.
 
-####Managing Android Gears
+#### Managing Android Gears
 
 To manage the Android Gears for a given project, select Tools -> Android Gears -> Manage Android Gears.
 
-####Creating a Gear Spec
+#### Creating a Gear Spec
 
 Gear Specs is a text file that holds information about an Android library listed in Android Gears. The Android Gears plugin for Android Studio comes with a GUI for creating a Gear Spec that may be pulled into the Specs Repository. Use this tool to create a listing for your library. For more information about the process, see [**Adding Your Library to Android Gears**](#adding-your-library-to-android-gears).
 
@@ -111,19 +111,19 @@ Things to take into consideration.
 * Click "Create Android Gear Spec" in the bottom right corner. This will summon the Android Gear Spec Linter. If your spec makes it past the linter you are ready to create a pull request to the Android Gears Specs Repository and add your library to our ever growing community. 
 * HAPPY CODING!
 
-####Linting a Gear Spec
+#### Linting a Gear Spec
 
 The plugin also has a built-in linting tool for making sure your <code>.gearspec</code> file is valid before issuing a pull request to the Specs Repository. This tool will tell you if there is anything wrong. This same linting tool is used by the "Create Gear Spec" mechanism.
 
 ![LintGearSpec](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/LintGearSpecScreenshot.png)
 
-####Settings
+#### Settings
 
-##Core Concepts
+## Core Concepts
 
 Before getting started with Android Gears, you may find it helpful to gain a better understanding of how things work "under the hood". This section will detail some core terminology that helps make sense of the Gears system.
 
-####Gears
+#### Gears
 
 A <b>Gear</b> is simply another name for an Android or Java library. Gears come in two well-known flavors, JARs and modules. Both are downloaded, installed and maintained in the same way by the Android Gears plugin. Gears will show up in the root of your project folder with JARs and Modules stored in separate folders for easy access.
 
@@ -133,7 +133,7 @@ Both will be available to view in your project immediately after installing them
 
 ![GearsProjectDirectoryScreenshot](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/GearsProjectFolderScreenshot.png)
 
-####The Specs Repository
+#### The Specs Repository
 
 <b>The Specs Repository</b> is a [**Github repository**](https://github.com/AndroidGears/Specs) owned by the Android Gears organization. It houses all the metadata on Gears that are available for download through the Android Gears plugin. The repository is laid out with the following rules:
 
@@ -146,7 +146,7 @@ Below is an annotated screenshot of a cloned copy of the specs repository:
 
 ![SpecsRepository](https://raw.githubusercontent.com/AndroidGears/Resources/master/Screenshots/SpecsRepositoryScreenshot.png)
 
-####Gearspec Files
+#### Gearspec Files
 
 A <code>.gearspec</code> file is a text file containing a JSON packet with information about a library and its version. These files are the fundamental unit of the repository and let the Android Gears plugin know about a specific version number. Information includes the library <b>name</b>, <b>version number</b>, <b>location for download</b>, <b>release notes for the specific version</b> and a host of other data. The contents of a sample .gearspec file can be found below:
 
@@ -187,11 +187,11 @@ A <code>.gearspec</code> file is a text file containing a JSON packet with infor
 
 You can use your favorite text editor like Sublime Text or Atom to create a .gearspec, or you can use the GUI based [.gearspec creator](#creating-a-gear-spec) available as part of the Android Gears plugin.
 
-####Accessing the Specs Repository
+#### Accessing the Specs Repository
 
 You may ask the question, <b>"How does the Android Gears plugin communicate with the Specs Repository?"</b> Whenever Android Gears opens for the first time, it clones down a copy of the Specs Repository (typically a very small download) to your user directory. Once the initial clone is complete, any updates to the specs repository on Github are automatically pulled down whenever you open your IDE giving you access to the latest available Gears.
 
-####Gitignore Considerations and Working in Teams
+#### Gitignore Considerations and Working in Teams
 
 [Recall](#gears) that all the libraries you download through Android Gears are housed in a special directory in your project folder called "Gears". **To keep the size of your repository as small as possible**, this folder is automatically ignored by creating an entry in your .gitignore file. To keep track of what gears are included in the project, another file <code>GearSpecRegister</code> is created that contains a list of all Gears associated with a given project. This helps those working in teams by **declaring** dependencies instead of including them in the repository. 
 
@@ -199,7 +199,7 @@ A great example of this system's utility is when someone inherits a mature proje
 
 *Note:** There is no need to actually open the <code>GearSpecRegister</code> file, but if you do, you will find a simple array of Gear Specs. If there is ever a conflict in this file due to more than one team member manipulating it, resolving the conflict is as easy as shuffling a few JSON objects around. 
 
-##Adding Your Library to Android Gears
+## Adding Your Library to Android Gears
 
 So you have created your shiny, new Android library and you want to make it available to all the world through Android Gears! Adding your library is as simple as initiating a properly formatted pull request to the [Specs Repository](https://github.com/AndroidGears/Specs). At the high level, the entire process is as follows:
 
@@ -211,7 +211,7 @@ So you have created your shiny, new Android library and you want to make it avai
 * Initiate a pull-request to the Android Gears Specs master repository
 * Your new spec will be reviewed for integrity and, when approved, immediately allow your library to be accessed through the Android Gears plugin
 
-####Packaging Your Library
+#### Packaging Your Library
 
 Your code must be stored somewhere online to be available for download through Android Gears. A few options are available with small variations. It is recommended that you use the [Create Gear Spec](creating-a-gear-spec) portion of the Android Gears plugin, but, as this simply outputs a text file with JSON inside, you may also use your favorite text editor.
 
@@ -255,11 +255,11 @@ The final way of housing Gear is through a static JAR file. This choice is the o
   }
 ```
 
-####Pull Requests
+#### Pull Requests
 
 Pull requests to the Specs master repo will be reviewed and linted so as not to harm the integrity of the Specs repository. To avoid having your request denied, please use the linting and/or creation tools available in the plugin. We will review all requests as FIFO as possible and do our best to ensure the process is quick. If you would like to help become a reviewer, please contact gearshelp@gmail.com
 
-##Future Enhancements
+## Future Enhancements
 
 We envision Android Gears to be a complete solution for managing dependencies in Android apps. As such, there are many enhancements that we would like to see in the future. **We hope for much community involvement in the Android Gears project. Your pull requests and feature suggestions are welcome.** Here are just a few things we have in mind.
 
@@ -267,7 +267,7 @@ We envision Android Gears to be a complete solution for managing dependencies in
 * **Better dependency resolution** for projects involving many dependencies of potentially conflicting version numbers. Right now, only basic management is done. For instance, if two libs are dependent on the same lib of different versions, how does this get handled effectively? That is an open question we would like to discuss.
 * **Toolbar Icons** for Manage and Create Gears ( Mostly Manage Gears ).  We would like to create Toolbar Actions so that you don't have to dig into the Tools > Android Gears Menu to find the Manage Gears Form. Any help would be greatly appreciated. 
 
-##Credits
+## Credits
 
 [**Matthew York**](https://github.com/MatthewYork) - Creator of Android Gears, Senior iOS and Android Developer for the [Center for Advanced Public Safety](https://github.com/uacaps)
 
@@ -283,7 +283,7 @@ We envision Android Gears to be a complete solution for managing dependencies in
 
 I would also like to thank **God** through whom all things live and move and have their being. [Acts 17:28](http://www.biblegateway.com/passage/?search=Acts+17%3A16-34&version=NIV)
 
-##License
+## License
 
 The MIT License (MIT)
 
